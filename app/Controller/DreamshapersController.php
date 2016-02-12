@@ -6636,7 +6636,7 @@ public function outstanding()
 			
 				if($size_of_Q>1){
 				$item_id=$q[0];
-				$gross=$q[1];
+				 $gross=$q[1];
 				}
 				else
 				{  $item_id=$q[0];
@@ -6653,19 +6653,29 @@ public function outstanding()
 			$tax_id=$fetch_item_category[0]['master_item_type']['master_tax_id'];
 			$tax_id_explod =explode(',', $tax_id);
 				$this->loadmodel('master_tax');
-				$total_tax_amount=0;
+				$total_tax_amount=0;$total_actual=0;
 				foreach($tax_id_explod as $tax_id)
 				{
 					$tex_per_item=$this->master_tax->find('all', array('conditions' => array('flag' => "0", 'id' => $tax_id)));
+					//pr($tex_per_item); 
 					if(!empty($tex_per_item)){
-						$tax_applicable=$tex_per_item[0]['master_tax']['tax_applicable'];
+						 $tax_applicable=$tex_per_item[0]['master_tax']['tax_applicable'];
+						
 						if($size_of_Q>1){
-						$tax_calc=$gross / 100 ;
-						//echo $tax_calc;
-						}else
-						{$tax_calc=$billing_rate / 100 ;}
-						$tax_amount=$tax_calc * $tax_applicable;
-						$total_tax_amount+=$tax_amount;
+								$tax_amount=$gross * $tax_applicable/100;
+								$total_actual=$gross+$tax_amount;
+								$total_tax_amount+=$tax_amount; 
+								$gross=$total_actual;
+						}else{ 
+									$tax_amount=$billing_rate * $tax_applicable/100;
+									$total_actual=$billing_rate+$tax_amount;
+									$total_tax_amount+=$tax_amount; 
+									$billing_rate=$total_actual;
+								}
+						
+						
+						
+						
 					}
 				}
 				
