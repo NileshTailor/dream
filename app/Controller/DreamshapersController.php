@@ -17028,7 +17028,6 @@ $mail->addAddress($to);
 	
 	public function fetch_cashier_data_for_receipt($recpt)
 	{
-	
 		$this->loadmodel('receipt_checkout');
 		$conditions=array('recpt_type' => $recpt);
 		return $fetch_cashier_data_for_receipt=$this->receipt_checkout->find('all',array('conditions'=>$conditions));
@@ -17044,6 +17043,10 @@ $mail->addAddress($to);
 	
 	function journal(){
 		$this->layout='index_layout';
+		
+		$this->loadmodel('ledger_master');
+		$ledger_accounts=$this->ledger_master->find('all', array('fields' => array('name','id')));
+		$this->set(compact('ledger_accounts'));
 	}
     ///////////////////   End Php Function /////////////////////////////////////////////
 	function ajax_function()
