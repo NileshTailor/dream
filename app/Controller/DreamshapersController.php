@@ -15767,6 +15767,32 @@ public function ledger_master()
 			$this->set('fetch_ledger_category', $this->ledger_category->find('all'));
 			$this->set('fetch_ledger_master', $this->ledger_master->find('all'));
 	}
+	
+	function fetch_ledger_cr_dr_ledger_id($led_id){
+		
+			$this->loadmodel('ledger');
+			$conditions=array('transaction_type'=>'Receipt');
+
+			$result_ledger=$this->ledger->find('all',array('conditions'=>$conditions));
+		
+	}
+	function ledger_view(){
+		
+		 if($this->RequestHandler->isAjax()){
+			$this->layout='ajax_layout';
+		}
+		else{
+			$this->layout='index_layout';
+		}
+				$this->loadmodel('ledger');
+				$conditions=array('transaction_type'=>'Receipt');
+
+				$result_ledger=$this->ledger->find('all',array('conditions'=>$conditions));
+				
+				$this->set('result_ledger',$result_ledger);
+	}
+	
+	
 ////////////////....................../////////////////.....
 
 ////// rohit end ////////////////////////
