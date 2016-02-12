@@ -2199,11 +2199,9 @@ $conditions =array('or' => array(
 				$this->ledger_cr_dr->saveAll(array('ledger_id'=>$last_ledger_id,'ledger_master_id'=> '9','cr' => $tips));
 				}
 				if($service_charge>0){
-				$this->ledger_cr_dr->saveAll(array('ledger_id'=>$last_ledger_id,'ledger_master_id'=> '8','cr' => $tips));
+				$this->ledger_cr_dr->saveAll(array('ledger_id'=>$last_ledger_id,'ledger_master_id'=> '8','cr' => $service_charge));
 				}
-				if($taxes>0){
-				$this->ledger_cr_dr->saveAll(array('ledger_id'=>$last_ledger_id,'ledger_master_id'=> '29','cr' => $taxes));
-				}
+				
 				
 				foreach($kot_item_ledger as $lr_data)
 				{
@@ -2213,7 +2211,67 @@ $conditions =array('or' => array(
 					@$st1_cat=$lr_data['pos_kot_item']['item_category_id'];
 					$this->ledger_cr_dr->saveAll(array('ledger_id'=>$last_ledger_id,'ledger_master_id'=> $st1_cat,'cr' => $st1_amount));
 				}
+	////////// Rohit Joshi tax code //////
+	$this->loadModel('pos_kot_item');
+	$result_pos_kot_item=$this->pos_kot_item->find('all', array('conditions'=>array('pos_kots_id' =>$bill_no)));
+			foreach($result_pos_kot_item as $data_item){
+				$master_items_id=$data_item['pos_kot_item']['master_items_id'];
+				$gross_amount=$data_item['pos_kot_item']['gross'];
+				$this->loadModel('master_item');
+				$result_master_item=$this->master_item->find('all', array('conditions'=>array('id' =>$master_items_id)));
+				foreach($result_master_item as $data_master){
+					
+					$master_item_type_id=$data_master['master_item']['master_item_type_id'];
+					$this->loadModel('master_item_type');
+				   $result_master_item_type=$this->master_item_type->find('all', array('conditions'=>array('id' =>$master_item_type_id)));
+				   foreach($result_master_item_type as $data_item_type){
+					  $master_tax_id=$data_item_type['master_item_type']['master_tax_id'];
+					  $master_tax_id_modify= explode(',',$master_tax_id);
+					   $vat_gross=0;
+						foreach($master_tax_id_modify as $data_tax){
+							
+							$this->loadModel('master_tax');
+							$result_master_tax=$this->master_tax->find('all', array('conditions'=>array('id' =>$data_tax)));
+							$tax_applicable=$result_master_tax[0]['master_tax']['tax_applicable'];
+							$name=$result_master_tax[0]['master_tax']['name'];
+							if($name=='Service Tax'){
+								
+								$total_gro=$gross_amount*$tax_applicable/100;
+								$this->loadModel('ledger_cr_dr');
+								$this->ledger_cr_dr->saveAll(array('ledger_id'=>$last_ledger_id,'ledger_master_id'=> '29','cr' => $total_gro));
+				
+								
+								 $vat_gross=$gross_amount+$total_gro;
+								
+							}
+							if($name=='VAT'){
+								if(!empty($vat_gross)){
+									$vat_actual=$vat_gross;
+								}else{
+									$vat_actual=$gross_amount;
+								}
+								
+								 $total_vat=$vat_actual*$tax_applicable/100;
+								 $this->loadModel('ledger_cr_dr');
+								 $this->ledger_cr_dr->saveAll(array('ledger_id'=>$last_ledger_id,'ledger_master_id'=> '39','cr' => $total_vat));
+								
+							}
+							
+						}
+						
+				   }
+					
+					
+				}
+				
+	
+				
+			}
+
+
+
 			
+/////////end code//////////		
 			
 			
 			
@@ -2469,9 +2527,7 @@ $conditions =array('or' => array(
 				$this->ledger_cr_dr->saveAll(array('ledger_id'=>$last_ledger_id,'ledger_master_id'=> $l_id,'dr' => $net_amount));
 				if($discount>0){
 				$this->ledger_cr_dr->saveAll(array('ledger_id'=>$last_ledger_id,'ledger_master_id'=> '10','dr' => $discount));}
-				/*if($taxes>0){
-				$this->ledger_cr_dr->saveAll(array('ledger_id'=>$last_ledger_id,'ledger_master_id'=> '29','cr' => $taxes));
-				}*/
+				
 				
 				foreach($kot_item_ledger as $lr_data)
 				{
@@ -2481,6 +2537,70 @@ $conditions =array('or' => array(
 					@$st1_cat=$lr_data['pos_kot_item']['item_category_id'];
 					$this->ledger_cr_dr->saveAll(array('ledger_id'=>$last_ledger_id,'ledger_master_id'=> $st1_cat,'cr' => $st1_amount));
 				}
+				
+				////////// Rohit Joshi tax code //////
+	$this->loadModel('pos_kot_item');
+	$result_pos_kot_item=$this->pos_kot_item->find('all', array('conditions'=>array('pos_kots_id' =>$last_record_id)));
+			foreach($result_pos_kot_item as $data_item){
+				$master_items_id=$data_item['pos_kot_item']['master_items_id'];
+				$gross_amount=$data_item['pos_kot_item']['gross'];
+				$this->loadModel('master_item');
+				$result_master_item=$this->master_item->find('all', array('conditions'=>array('id' =>$master_items_id)));
+				foreach($result_master_item as $data_master){
+					
+					$master_item_type_id=$data_master['master_item']['master_item_type_id'];
+					$this->loadModel('master_item_type');
+				   $result_master_item_type=$this->master_item_type->find('all', array('conditions'=>array('id' =>$master_item_type_id)));
+				   foreach($result_master_item_type as $data_item_type){
+					  $master_tax_id=$data_item_type['master_item_type']['master_tax_id'];
+					  $master_tax_id_modify= explode(',',$master_tax_id);
+					   $vat_gross=0;
+						foreach($master_tax_id_modify as $data_tax){
+							
+							$this->loadModel('master_tax');
+							$result_master_tax=$this->master_tax->find('all', array('conditions'=>array('id' =>$data_tax)));
+							$tax_applicable=$result_master_tax[0]['master_tax']['tax_applicable'];
+							$name=$result_master_tax[0]['master_tax']['name'];
+							if($name=='Service Tax'){
+								
+								$total_gro=$gross_amount*$tax_applicable/100;
+								$this->loadModel('ledger_cr_dr');
+								$this->ledger_cr_dr->saveAll(array('ledger_id'=>$last_ledger_id,'ledger_master_id'=> '29','cr' => $total_gro));
+				
+								
+								 $vat_gross=$gross_amount+$total_gro;
+								
+							}
+							if($name=='VAT'){
+								if(!empty($vat_gross)){
+									$vat_actual=$vat_gross;
+								}else{
+									$vat_actual=$gross_amount;
+								}
+								
+								 $total_vat=$vat_actual*$tax_applicable/100;
+								 $this->loadModel('ledger_cr_dr');
+								 $this->ledger_cr_dr->saveAll(array('ledger_id'=>$last_ledger_id,'ledger_master_id'=> '39','cr' => $total_vat));
+								
+							}
+							
+						}
+						
+				   }
+					
+					
+				}
+				
+	
+				
+			}
+
+
+
+			
+/////////end code//////////		
+				
+				
 				
 			 $fetch_transaction_id_bill2=$this->ledger->find('count',array('conditions'=>array('transaction_type'=>'Receipt')));
              $t_id=$fetch_transaction_id_bill2+1;
