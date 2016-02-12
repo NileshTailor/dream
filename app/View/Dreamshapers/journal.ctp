@@ -29,7 +29,7 @@
 			<tr>
 				<td>
 					 <select class="form-control">
-						<option>Select ledger account</option>
+						<option value="">Select ledger account</option>
 						<?php foreach($ledger_accounts as $data){
 							$id=$data["ledger_master"]["id"];
 							$name=$data["ledger_master"]["name"]; ?>
@@ -48,7 +48,7 @@
 			<tr>
 				<td>
 					 <select class="form-control">
-						<option>Select ledger account</option>
+						<option value="">Select ledger account</option>
 						<?php foreach($ledger_accounts as $data){
 							$id=$data["ledger_master"]["id"];
 							$name=$data["ledger_master"]["name"]; ?>
@@ -92,11 +92,37 @@ $(document).ready(function () {
 		$('#journal_rows').append('<tr><td>'+sel+'</td><td><input class="form-control" placeholder="Debit" type="text"></td><td> <input class="form-control" placeholder="Credit" type="text"></td><td><a href="#" class="btn btn-xs red">&nbsp;<i class="fa fa-minus-circle"></i>&nbsp; </a></td></tr>');
 	})
 	
+	function check_validation(){
+		$('#journal_rows tr').each(function( index ) {
+			var ledger_account_id=$(this).find('td:nth-child(1) option:selected').val();
+			if(ledger_account_id==""){
+				$(this).find('td:nth-child(1) select').css('border','solid 1px red');
+			}else{
+				$(this).find('td:nth-child(1) select').css('border','');
+			}
+			
+			var debit=parseInt($(this).find('td:nth-child(2) input').val());
+			if(isNaN(debit)){debit=0;}
+			if(debit==0){
+				$(this).find('td:nth-child(2) input').css('border','solid 1px red');
+			}else{
+				$(this).find('td:nth-child(2) input').css('border','');
+			}
+			
+			var credit=parseInt($(this).find('td:nth-child(3) input').val());
+			if(isNaN(credit)){credit=0;}
+			if(credit==0){
+				$(this).find('td:nth-child(3) input').css('border','solid 1px red');
+			}else{
+				$(this).find('td:nth-child(3) input').css('border','');
+			}
+		});
+	}
+	
 	$('form').submit( function(e){
 		e.preventDefault();
-		$('#journal_rows tr').each(function( index ) {
-		  alert( index );
-		});
+		check_validation();
 	});
+	
 });
 </script>
