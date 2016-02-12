@@ -23,7 +23,7 @@
  */
 
 // Setup a 'default' cache configuration for use in the application.
-Cache::config('default', array('engine' => 'File'));
+//Cache::config('default', array('engine' => 'File'));
 
 /**
  * The settings below can be used to set additional paths to models, views and controllers.
@@ -69,7 +69,7 @@ Cache::config('default', array('engine' => 'File'));
  * 
  *
  */
-CakePlugin::load('DebugKit'); //Loads a single plugin named DebugKit
+//CakePlugin::load('DebugKit'); //Loads a single plugin named DebugKit
 /**
  * You can attach event listeners to the request lifecycle as Dispatcher Filter. By default CakePHP bundles two filters:
  *
@@ -87,15 +87,15 @@ CakePlugin::load('DebugKit'); //Loads a single plugin named DebugKit
  *
  * ));
  */
-Configure::write('Dispatcher.filters', array(
+/*Configure::write('Dispatcher.filters', array(
 	'AssetDispatcher',
 	'CacheDispatcher'
-));
+));*/
 
 /**
  * Configures default file logging options
  */
-App::uses('CakeLog', 'Log');
+/*App::uses('CakeLog', 'Log');
 CakeLog::config('debug', array(
 	'engine' => 'File',
 	'types' => array('notice', 'info', 'debug'),
@@ -105,4 +105,4 @@ CakeLog::config('error', array(
 	'engine' => 'File',
 	'types' => array('warning', 'error', 'critical', 'alert', 'emergency'),
 	'file' => 'error',
-));
+));*/
