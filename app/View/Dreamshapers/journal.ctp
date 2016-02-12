@@ -8,7 +8,7 @@
 		<div class="table-scrollable">
 			<table class="table table-hover">
 			<thead>
-			<tr>
+			<tr id="journal_rows">
 				<th width="40%">
 					 Legder Account
 				</th>
@@ -68,7 +68,18 @@
 			</tr>
 			</tbody>
 			</table>
-			<a href="#" class="btn btn-sm green"><i class="fa fa-plus"></i> Add row</a>
 		</div>
+		<button type="button" class="btn btn-sm green" id="add_row"><i class="fa fa-plus"></i> Add row</button>
+		<a href="#" class="btn btn-sm blue pull-right"><i class="fa fa-thumbs-up"></i> SUBMIT & CREATE VOUCHER</a>
 	</div>
 </div>
+<script>
+$(document).ready(function () {
+	$("#add_row").on("click",function(){
+		alert();
+		
+
+
+	})
+});
+</script>
