@@ -15659,6 +15659,16 @@ function fetch_ledger_category_name_by_id($ledger_category_id){
 	return $this->ledger_category->find('all',array('conditions'=>$conditions));
 	
 }
+
+function fetch_ledger_cr_dr_id($id){
+	
+	$this->loadmodel('ledger_cr_dr');
+	$conditions=array('ledger_id'=>(int)$id);
+	
+	return $this->ledger_cr_dr->find('all',array('conditions'=>$conditions));
+	
+}
+
 public function ledger_category()
 	{
 	    if($this->RequestHandler->isAjax())

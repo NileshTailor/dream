@@ -16,13 +16,18 @@
 				$ledger_id=$data['ledger']['id'];
 				$ledger_category_id=$data['ledger']['ledger_category_id'];
 				$transaction_date=$data['ledger']['transaction_date'];
+				 $result_ledger_category=$this->requestAction(array('controller' => 'Dreamshapers', 'action' => 'fetch_ledger_category_name_by_id'), array($ledger_category_id));
+				
+				 $category_name=$result_ledger_category[0]['ledger_category']['name'];
+				  $result_ledger_category=$this->requestAction(array('controller' => 'Dreamshapers', 'action' => 'fetch_ledger_category_name_by_id'), array($ledger_category_id));
+				 
 			?>
 			<tr>
-			<td>1</td>
-			<td>754</td>
-			<td>01-02-2016</td>
-			<td>PHP Poets</td>
-			<td>Nilesh Tailor</td>
+			<td><?php echo $transaction_date; ?></td>
+			<td><?php echo $category_name; ?></td>
+			<td><?php echo $category_name; ?></td>
+			<td><?php echo $category_name; ?></td>
+			<td><?php echo $category_name; ?></td>
 
 
 			</tr>
