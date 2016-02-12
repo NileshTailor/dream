@@ -3718,7 +3718,9 @@ $conditions =array('or' => array(
             {
                 
 				@$advance=$this->request->data["advance"];
-				@$tot_amount=$this->request->data["tot_amount"];
+				@$tot_amount=$this->request->data["tot_amt"];
+				@$outlet_venue_id=$this->request->data["outlet_venue_id"];
+				@$rate=$this->request->data["rate"];
 				$fun_zero=0;
 				$net_due_fun_amount=$tot_amount-$advance-$fun_zero;
 				
@@ -3778,32 +3780,19 @@ $conditions =array('or' => array(
 	
 				
 				
-			    $total_amount=$this->request->data["total_amount"];
 				$date=date("Y-m-d"); 
-				$cheque_date=date('Y-m-d', strtotime($this->request->data["cheque_date"]));
-		        $current_time=date("h:i:s A");
-				$last_record_id=$this->house_keeping->getLastInsertID();																																
-				$this->loadModel('house_keeping');
+				$last_record_id=$this->function_booking->getLastInsertID();																																
+				$this->loadModel('function_booking');
  				$this->loadModel('ledger');
 				$this->loadModel('receipt');
+				$totaltax=$this->data["totaltax"];
+				$advance=$this->data["advance"];
+				$gross=$this->data["gross"];
 				
-				
-			    $last_record_id=$this->house_keeping->getLastInsertID(); 		
-				$cheque_no=@(int)$this->data["cheque_no"];
-				$cheque_date=date('Y-m-d', strtotime($this->data["cheque_date"]));
-				$neft_no=@(int)$this->data["neft_no"];
-				$credit_card_name=$this->data["credit_card_name"];
-				$credit_card_no=@(int)$this->data["credit_card_no"];
-				$bank_name=$this->data["bank_name"];
-				$narration=$this->data["narration"];
 				
 				$date=date("Y-m-d");
 				$current_time=date("h:i:s A");
-				$total_amount=$this->request->data["total_amount"];
-				$house_amount=$this->request->data["house_amount"];
-				//$bill_no=$this->request->data["bill_no"];
-				$card_no=$this->request->data["card_no"];
-				$this->loadModel('house_keeping');
+				$this->loadModel('function_booking');
 				$this->loadModel('ledger');
 				$this->loadModel('ledger_master');
 				$this->loadModel('ledger_cr_dr');
@@ -3811,56 +3800,71 @@ $conditions =array('or' => array(
 			   
 			    $fetch_transaction_id_house=$this->ledger->find('count',array('conditions'=>array('transaction_type'=>' ')));
                 $t_id_b=$fetch_transaction_id_house+1;
-				$this->ledger->saveAll(array('ledger_category_id'=>6,'user_id'=> $house_user_id,'transaction_id'=> $t_id_b,'receipt_type'=> 'House Keeping','invoice_id' => $last_record_id, 'receipt_mode' => $payment_mode, 'transaction_date' => $t_date,'cheque_no'=>$cheque_no,'neft_no'=>$neft_no, 'cheque_date'=>$cheque_date,'bank_name'=>$bank_name,'neft_no'=>$neft_no,'credit_card_name'=>$credit_card_name,'credit_card_no'=>$credit_card_no,'narration'=>$narration,'date'=>$date,'status'=>0));
+				$this->ledger->saveAll(array('ledger_category_id'=>10,'user_id'=> 1,'transaction_id'=> $t_id_b,'receipt_type'=> 'Function Booking','invoice_id' => $last_record_id,'transaction_date' => $t_date,'date'=>$date,'status'=>0));
 				    $last_ledger_id=$this->ledger->getLastInsertID(); 
 				//
-				$house_m_ledger=$this->ledger_master->find('all', array('conditions'=>array('ledger_category_id' =>'1','user_id' =>$house_user_id)));
+				$house_m_ledger=$this->ledger_master->find('all', array('conditions'=>array('ledger_category_id' =>'10','user_id' =>1)));
 				$l_id=$house_m_ledger[0]['ledger_master']['id'];
 				//
-				$this->ledger_cr_dr->saveAll(array('ledger_id'=>$last_ledger_id,'ledger_master_id'=> $l_id,'dr' => $total_amount));
-				$this->ledger_cr_dr->saveAll(array('ledger_id'=>$last_ledger_id,'ledger_master_id'=> $l_id,'cr' => $total_amount));
+				$this->ledger_cr_dr->saveAll(array('ledger_id'=>$last_ledger_id,'ledger_master_id'=> $l_id,'dr' => $net_due_fun_amount));
+				if($advance>0){
+				$this->ledger_cr_dr->saveAll(array('ledger_id'=>$last_ledger_id,'ledger_master_id'=> $l_id,'dr' => $advance));	
+				}
+				
+				$this->ledger_cr_dr->saveAll(array('ledger_id'=>$last_ledger_id,'ledger_master_id'=> $l_id,'cr' => $gross));
+			//////////////////////////////////////////////////
 			
 			
-			 $fetch_transaction_id_house=$this->ledger->find('count',array('conditions'=>array('transaction_type'=>'Receipt')));
-             $t_id=$fetch_transaction_id_house+1;
-              if($house_amount>0)
-			  {
-				  $this->ledger->saveAll(array('ledger_category_id'=>6,'user_id'=> $house_user_id,'transaction_id'=> $t_id,'transaction_type'=> 'Receipt','receipt_type'=> 'House Keeping','invoice_id' => $last_record_id, 'receipt_mode' => $payment_mode, 'transaction_date' => $t_date,'cheque_no'=>$cheque_no,'neft_no'=>$neft_no, 'cheque_date'=>$cheque_date,'bank_name'=>$bank_name,'neft_no'=>$neft_no,'credit_card_name'=>$credit_card_name,'credit_card_no'=>$credit_card_no,'narration'=>$narration,'date'=>$date,'status'=>0));
-				 $last_ledger_id=$this->ledger->getLastInsertID();
-				  // 
-				$kot_m_ledger=$this->ledger_master->find('all', array('conditions'=>array('ledger_category_id' =>'1','user_id' =>$house_user_id)));
-				$l_id=$kot_m_ledger[0]['ledger_master']['id'];
-				//
-				  $this->ledger_cr_dr->saveAll(array('ledger_id'=>$last_ledger_id,'ledger_master_id'=>$l_id,'cr' => $house_amount));
-				  
-				if($payment_mode=='Cash')
-				{
-				$this->ledger_cr_dr->saveAll(array('ledger_id'=>$last_ledger_id,'ledger_master_id'=> '35','dr' => $house_amount));
-				}else
-				{
-				  $this->ledger_cr_dr->saveAll(array('ledger_id'=>$last_ledger_id,'ledger_master_id'=> '37','dr' => $house_amount));
-			    }
-			  }
-	//////////////////////////////////////////////////////////
+			$this->loadModel('master_outlet');
+	$result_pos_kot_item=$this->master_outlet->find('all', array('conditions'=>array('id' =>$outlet_venue_id)));
+			foreach($result_pos_kot_item as $data_item){
+					  $master_tax_id=$data_item['master_outlet']['master_tax_id'];
+					  $master_tax_id_modify= explode(',',$master_tax_id);
+					   $vat_gross=0;
+						foreach($master_tax_id_modify as $data_tax){
+							
+							$this->loadModel('master_tax');
+							$result_master_tax=$this->master_tax->find('all', array('conditions'=>array('id' =>$data_tax)));
+							$tax_applicable=$result_master_tax[0]['master_tax']['tax_applicable'];
+							$name=$result_master_tax[0]['master_tax']['name'];
+							if($name=='Service Tax'){
+								
+								$total_gro=$rate*$tax_applicable/100;
+								$this->loadModel('ledger_cr_dr');
+								$this->ledger_cr_dr->saveAll(array('ledger_id'=>$last_ledger_id,'ledger_master_id'=> '29','cr' => $total_gro));
 				
+								
+								 $vat_gross=$rate+$total_gro;
+								
+							}
+							if($name=='VAT'){
+								if(!empty($vat_gross)){
+									$vat_actual=$vat_gross;
+								}else{
+									$vat_actual=$rate;
+								}
+								
+								 $total_vat=$vat_actual*$tax_applicable/100;
+								 $this->loadModel('ledger_cr_dr');
+								 $this->ledger_cr_dr->saveAll(array('ledger_id'=>$last_ledger_id,'ledger_master_id'=> '39','cr' => $total_vat));
+								
+							}
+						
+				}
 				
+			}
+
+
+
+			
+/////////end code//////////		
+			
+		
+			
+			
+			
 				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
+
 				$this->set('active',1);
             }
             else if(isset($this->request->data["delete_function_booking_id"]))

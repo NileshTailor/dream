@@ -662,8 +662,6 @@ if(empty($active))
 					var da=data.split(",");
                     $("#rate").val(da[0]);
 					$("#tax_id").val(da[1]);
-					//alert(da[0]);
-					//alert(da[1]);
 					
 			   
 				
@@ -683,30 +681,15 @@ if(empty($active))
 							if($('#rate').val().length ==''){ 
 							rate = '0';
 						 }
-							
-							
-							
 							var tax_id=tx.split("-");
-							//alert(tax_id);
 							var total=rate;
 							$.each(tax_id, function( index, value) {
 								value=parseInt(value);
-								
-								//alert(value);
-								
 								if($.isNumeric(value)==false){
-								//alert("yes");	
 								}else{
 									total=parseInt(total);
-									
-									//alert(total);
 									value=value/100;
-									
-									//alert(value);
-									
 									total=(value*total)+ total;
-									
-									//alert(total);
 								}
 							});
 							
