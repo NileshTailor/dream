@@ -287,7 +287,9 @@ background-color:#82A0D1;
 						}
 					}
 				?>  
-					
+					<li>
+					<a href="<?php echo $this->webroot; ?>Dreamshapers/journal">Journal</a>
+					</li>
 				</ul>
 				<!-- END SIDEBAR MENU -->
 			</div>
