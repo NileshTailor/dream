@@ -17040,6 +17040,11 @@ $mail->addAddress($to);
 		$conditions=array('card_no' => $id);
 		return $fetch_dataa_for_receipt=$this->paid_receipt->find('all',array('conditions'=>$conditions));
 	}
+	
+	
+	function journal(){
+		$this->layout='index_layout';
+	}
     ///////////////////   End Php Function /////////////////////////////////////////////
 	function ajax_function()
 	{
