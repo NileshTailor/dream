@@ -6679,7 +6679,7 @@ public function outstanding()
 					}
 				}
 				
-			echo $total_tax_amount;
+			echo number_format($total_tax_amount,2);
 			}
 			exit;
 		}
