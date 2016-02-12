@@ -201,7 +201,7 @@ if(empty($active))
                      <input type="text"  class="form-control input-inline input-small ok" name="pax_r" id="pax_r" onkeyup="calc();">
                      </td>
                                 </tr>
-                        <input type="text"  name="totaltax" id="totaltax">
+                        <input type="hidden"  name="totaltax" id="totaltax">
                         <input type="hidden"  name="gross" id="gross">
                         <tr>
                         <td><label>Rate Per Person</label></td>
@@ -214,7 +214,7 @@ if(empty($active))
                         </tr>
                         <tr>
                         <td><label></label></td>
-              <td align="left"><input type="text" disabled="disabled" class="form-control input-inline input-small" placeholder="Tax" name="tax_id" id="tax_id"></td>
+              <td align="left"><input type="hidden" disabled="disabled" class="form-control input-inline input-small" placeholder="Tax" name="tax_id" id="tax_id"></td>
                         <td><label></label></td><td><label></label></td><td><label></label></td><td><label></label></td></tr>
                         
                         <tr style="background-color:#E26A6A">
@@ -682,19 +682,20 @@ if(empty($active))
 							rate = '0';
 						 }
 							var tax_id=tx.split("-");
+							
 							var total=rate;
 							$.each(tax_id, function( index, value) {
-								value=parseInt(value);
+								value=parseFloat(value);
 								if($.isNumeric(value)==false){
 								}else{
-									total=parseInt(total);
+									total=parseFloat(total);
 									value=value/100;
 									total=(value*total)+ total;
 								}
 							});
 							
 							gross= parseInt(pax_o * px) + parseInt(rate);
-						tx1 = Math.round(total-rate);
+						tx1 = parseFloat(total-rate);
 						
 						//nil=Math.round(tx1+rate+gross);
 						
