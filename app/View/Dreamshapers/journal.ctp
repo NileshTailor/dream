@@ -4,11 +4,13 @@
 			<i class="fa fa-cogs"></i>Create Journal Voucher
 		</div>
 	</div>
+	
 	<div class="portlet-body">
+	<form method="post">
 		<div class="table-scrollable">
 			<table class="table table-hover">
 			<thead>
-			<tr id="journal_rows">
+			<tr>
 				<th width="40%">
 					 Legder Account
 				</th>
@@ -23,7 +25,7 @@
 				</th>
 			</tr>
 			</thead>
-			<tbody>
+			<tbody id="journal_rows">
 			<tr>
 				<td>
 					 <select class="form-control">
@@ -41,9 +43,7 @@
 				<td>
 					 <input class="form-control" placeholder="Credit" type="text">
 				</td>
-				<td>
-					 <a href="#" class="btn btn-xs red">&nbsp;<i class="fa fa-minus-circle"></i>&nbsp; </a>
-				</td>
+				<td></td>
 			</tr>
 			<tr>
 				<td>
@@ -62,24 +62,41 @@
 				<td>
 					 <input class="form-control" placeholder="Credit" type="text">
 				</td>
-				<td>
-					 <a href="#" class="btn btn-xs red">&nbsp;<i class="fa fa-minus-circle"></i>&nbsp; </a>
-				</td>
+				<td></td>
 			</tr>
 			</tbody>
+			<tfoot>
+			<tr>
+				<td align="right"><b>Total</b></td>
+				<td>
+					 <input class="form-control" placeholder="Debit" type="text">
+				</td>
+				<td>
+					 <input class="form-control" placeholder="Credit" type="text">
+				</td>
+				<td></td>
+			</tr>
+			</tfoot>
 			</table>
 		</div>
 		<button type="button" class="btn btn-sm green" id="add_row"><i class="fa fa-plus"></i> Add row</button>
-		<a href="#" class="btn btn-sm blue pull-right"><i class="fa fa-thumbs-up"></i> SUBMIT & CREATE VOUCHER</a>
+		<button type="submit" class="btn btn-sm blue pull-right"><i class="fa fa-thumbs-up"></i> SUBMIT & CREATE VOUCHER</button>
+		</form>
 	</div>
+	
 </div>
 <script>
 $(document).ready(function () {
 	$("#add_row").on("click",function(){
-		alert();
-		
-
-
+		var sel=$('#journal_rows tr:first td:first').html();
+		$('#journal_rows').append('<tr><td>'+sel+'</td><td><input class="form-control" placeholder="Debit" type="text"></td><td> <input class="form-control" placeholder="Credit" type="text"></td><td><a href="#" class="btn btn-xs red">&nbsp;<i class="fa fa-minus-circle"></i>&nbsp; </a></td></tr>');
 	})
+	
+	$('form').submit( function(e){
+		e.preventDefault();
+		$('#journal_rows tr').each(function( index ) {
+		  alert( index );
+		});
+	});
 });
 </script>
