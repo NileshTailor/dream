@@ -15647,6 +15647,15 @@ function fetch_group_category_name_by_id($group_category_id){
 	
 }
 
+function fetch_ledger_master_id($id){
+	
+	$this->loadmodel('ledger_master');
+	$conditions=array('id'=>(int)$id);
+	
+	return $this->ledger_master->find('all',array('conditions'=>$conditions));
+	
+}
+
 function fetch_group_master_name_by_id($group_master_id){
 	
 	$this->loadmodel('group_master');
