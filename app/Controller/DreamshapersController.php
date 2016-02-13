@@ -15333,10 +15333,11 @@ public function companydiscount()
 				'master_plan_id' => @(string)$this->request->data["master_plan_id"],
 				'p_address' => $this->request->data["p_address"],'date' => $date,'time' => $cutrrent_time));
 				$success=$this->smtpmailer($this->request->data["authorized_email_id"],'Dreamshapers','Enquiry', "hello" ,$this->request->data["authorized_email_id"]);
-					$working_key='A1d987e6da856f0d2de06aa0456dcb04b';
-					$sms_sender='PHPHTL';
-					$sms1=str_replace(' ', '+', 'Thank you for choosing us for your stay.');
-					file_get_contents('http://alerts.sinfini.com/api/web2sms.php?workingkey='.$working_key.'&sender='.$sms_sender.'&to=8058483636&message='.$sms1.'');
+				
+				$working_key='A1d987e6da856f0d2de06aa0456dcb04b';
+				$sms_sender='PHPHTL';
+				$sms1=str_replace(' ', '+', 'Thank you for choosing us for your stay.');
+				file_get_contents('http://alerts.sinfini.com/api/web2sms.php?workingkey='.$working_key.'&sender='.$sms_sender.'&to=8058483636&message='.$sms1.'');
 				
 				$last_record_id=$this->company_registration->getLastInsertID();
 				$this->ledger_master->saveAll(array('ledger_category_id' => '1','name' => $company_name, 'name_id'=>$last_record_id));
