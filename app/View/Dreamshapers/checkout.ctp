@@ -177,7 +177,11 @@ if(empty($active))
                         name="edit_totalnetamount" id="edit_totalnetamount" readonly="readonly"></td>
                         </tr>
                         
-                      <tr><td colspan="8" >
+                        
+                        <tr><td><input name="transfer_check" type="checkbox" value="1" id="paid_check" /></td></tr>
+                        
+                        
+                      <tr id="hide_check" display><td colspan="8">
                     <fieldset>
                         <legend>
                         <span style="color:#4DB3A2 !important" class="caption-subject font-green-sharp bold"><h5><strong>Paid by Other</strong></h5></span>
@@ -581,5 +585,21 @@ function discount()
 					 }  
 			
 			<?php } ?>
+			
+			
+			$(document).ready(function(){
+		$('input[name=transfer_check]').click(function(){
+			
+			if($('input[name=transfer_check]').is(':checked'))
+		{
+			var transfer_check=1;
+		}
+		else
+		{
+			var transfer_check=0;
+		}
+		
+		});
+			});			
       
 </script>

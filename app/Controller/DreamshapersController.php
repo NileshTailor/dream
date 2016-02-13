@@ -7621,7 +7621,7 @@ public function outstanding()
 					 $company_id=$ftc_data['room_checkin_checkout']['company_id'];
 					 $edit_taxes=$ftc_data['room_checkin_checkout']['taxes'];
 					 $edit_room_type_id=$ftc_data['room_checkin_checkout']['room_type_id'];
-				// $extrabed=$ftc_data['room_checkin_checkout']['extra_bed_tot'];
+			     	// $extrabed=$ftc_data['room_checkin_checkout']['extra_bed_tot'];
 				
 						 $this->loadmodel('master_room');
 						 $master_room=$this->master_room->find('all',array('conditions' => array('master_room_type_id' => $edit_room_type_id, 'flag' => "0")));
@@ -7658,14 +7658,14 @@ public function outstanding()
 						 foreach($tax_applicable as $tax)
 						 {
 							$total_tax_amt+=($gross_amount*$tax)/100;
-						 $gross_amount=$gross_amount+$total_tax_amt;
+						 $gross_amounttt=$gross_amount+$total_tax_amt;
                          }
 						 
 						 //$room_dis=round(($gross_amount*$edit_room_discount)/100); //////////////// ROom DISCOUNT
 						 
 						 //$after_room_dis_amount=$gross_amount-$room_dis;    
 						  
-					 	$total_gross=$gross_amount+$total_tax_amt; //////////////// TOTAL GROSS
+					 	$total_gross=$gross_amounttt+$total_tax_amt; //////////////// TOTAL GROSS
 					 
 					 
 					 
@@ -7678,8 +7678,8 @@ public function outstanding()
 					<td align="center"><span style="font-size:12px;">'.$edit_room_charge.'</span></td>
 					<input type="hidden" name="edit_totaltax'.$i.'" value="'.$total_tax_amt.'">
 					<td align="center"><span style="font-size:12px;">'.round($total_tax_amt).'</span></td>
-					<input type="hidden" name="edit_room_discount'.$i.'" value="'.$edit_room_discount.'">
-					<td align="center"><span style="font-size:12px;">'.$edit_room_discount.'</span></td>
+					<input type="hidden" name="edit_room_discount'.$i.'" value="'.$room_dis.'">
+					<td align="center"><span style="font-size:12px;">'.$room_dis.'</span></td>
 					<input type="hidden" name="edit_tg'.$i.'" value="'.$total_gross.'">
 					<td align="center"><span style="font-size:12px;">'.round($total_gross).'</span></td>
 					<input type="hidden" name="edit_net_amount'.$i.'" value="'.$total_room_amount.'">
