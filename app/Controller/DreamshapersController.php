@@ -17137,6 +17137,10 @@ $mail->addAddress($to);
 		$ledger_master_id=$this->ledger_master->find('all',array('conditions'=>$conditions));
 		return $ledger_master_id[0]["ledger_master"]["name"];
 	}
+	
+	function purches_voucher(){
+		$this->layout='index_layout';
+	}
     ///////////////////   End Php Function /////////////////////////////////////////////
 	function ajax_function()
 	{

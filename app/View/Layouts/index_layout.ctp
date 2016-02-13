@@ -293,7 +293,9 @@ background-color:#82A0D1;
 					<li>
 					<a href="<?php echo $this->webroot; ?>journal_vouchers">Journal Vouchers</a>
 					</li>
-					
+					<li>
+					<a href="<?php echo $this->webroot; ?>purches_voucher">Create Purches Voucher</a>
+					</li>
 					<li>
 					<a href="<?php echo $this->webroot; ?>ledger_view">Ledger View</a>
 					</li>
