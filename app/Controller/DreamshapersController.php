@@ -17145,6 +17145,32 @@ $mail->addAddress($to);
 		$conditions=array('ledger_category_id' => 3);
 		$Suppliers=$this->ledger_master->find('all', array('conditions'=>$conditions,'fields' => array('name','id')));
 		$this->set(compact('Suppliers'));
+		
+		if(isset($this->request->data['submit'])){
+			$supplier_id=$this->request->data["supplier"];
+			$amount=$this->request->data["amount"];
+			$bill=$this->request->data["bill"];
+			$narration=$this->request->data["narration"];
+			
+			$this->loadmodel('ledger');
+			$fetch_transaction_id=$this->ledger->find('count',array('conditions'=>array('transaction_type'=>'Purches Voucher')));
+			$transaction_id=$fetch_transaction_id+1;
+			$transaction_type='Purches Voucher';
+			
+			$this->loadmodel('ledger');
+			$this->ledger->saveAll(array('transaction_id' => $transaction_id,'transaction_type' => $transaction_type, 'transaction_date' => date("Y-m-d"), 'narration' => $narration, 'date' => date("Y-m-d")));
+			$ledgerID=(int)$this->ledger->getLastInsertID();
+			
+			$this->loadmodel('ledger_cr_dr');
+			$this->ledger_cr_dr->saveAll(array('ledger_id' => $ledgerID,'ledger_master_id' => $supplier_id,'cr' => 0, 'dr' => $amount));
+			
+			$this->loadmodel('ledger_cr_dr');
+			$this->ledger_cr_dr->saveAll(array('ledger_id' => $ledgerID,'ledger_master_id' => 35,'cr' => $amount, 'dr' => 0));
+		}
+	}
+	
+	function purches_vouchers(){
+		$this->layout='index_layout';
 	}
     ///////////////////   End Php Function /////////////////////////////////////////////
 	function ajax_function()
