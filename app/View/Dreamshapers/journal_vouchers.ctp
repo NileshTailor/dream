@@ -17,9 +17,9 @@
 					<div>
 					 <b>Transaction date:</b> <?php echo date("d-m-Y",strtotime($transaction_date)); ?>
 					</div>
-						<table class="table table-condensed">
+						<table class="table table-bordered table-hover table-condensed">
 							<tr>
-								<th>Particulars</th>
+								<th width="50%">Particulars</th>
 								<th>Debit</th>
 								<th>Credit</th>
 							</tr>
@@ -27,9 +27,10 @@
 								$ledger_master_id=$data2["ledger_cr_dr"]["ledger_master_id"];
 								$cr=$data2["ledger_cr_dr"]["cr"];
 								$dr=$data2["ledger_cr_dr"]["dr"];
+								$ledger_master_name=$this->requestAction(array('controller' => 'Dreamshapers', 'action' => 'fetch_ledger_master_name'), array('pass' => array($ledger_master_id)));
 								?>
 								<tr>
-									<td><?php echo $ledger_master_id; ?></td>
+									<td><?php echo $ledger_master_name; ?></td>
 									<td><?php echo $cr; ?></td>
 									<td><?php echo $dr; ?></td>
 								</tr>

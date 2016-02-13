@@ -17155,6 +17155,13 @@ $mail->addAddress($to);
 		$conditions=array('ledger_id' => $ledger_id);
 		return $this->ledger_cr_dr->find('all',array('conditions'=>$conditions));
 	}
+	
+	function fetch_ledger_master_name($ledger_master_id){
+		$this->loadmodel('ledger_master');
+		$conditions=array('id' => $ledger_master_id);
+		$ledger_master_id=$this->ledger_master->find('all',array('conditions'=>$conditions));
+		return $ledger_master_id[0]["ledger_master"]["name"];
+	}
     ///////////////////   End Php Function /////////////////////////////////////////////
 	function ajax_function()
 	{
