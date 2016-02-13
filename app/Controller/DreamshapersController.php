@@ -7581,7 +7581,7 @@ public function outstanding()
 				<table class="table table-bordered table-hover">
 				<thead>                            
 				<tr>
-				<th style="text-align:center">RoomNo.</td>
+				
 				<th style="text-align:center">Duration</td>
 				<th style="text-align:center">Total Amount </td>
 				<th style="text-align:center">Tax</td>
@@ -7673,7 +7673,6 @@ public function outstanding()
 						$total_amount+=$total_room_amount; 
 						
 					$view_table.='<tr>
-					<td align="center"><span style="font-size:12px;">'.$room_no.'</span></td>
 					<input type="hidden" name="edit_duration'.$i.'" value="'.$total_duration.'">
 					<td align="center"><span style="font-size:12px;">'.$total_duration.'</span></td>
 					<td align="center"><span style="font-size:12px;">'.$edit_room_charge.'</span></td>
@@ -7717,7 +7716,7 @@ public function outstanding()
 					foreach($fetch_pos_no as $pos_data){
 					$pos_kot_id=$pos_data['pos_kot']['id'];
 					$payment_type=$pos_data['pos_kot']['payment_type'];
-					$pos_amountt=$pos_data['pos_kot']['due_amount'];
+					$pos_amountt=$pos_data['pos_kot']['pos_amountt'];
 					/*if($payment_type==2)
 					{
 						$pos_amountt=$pos_data['pos_kot']['pos_amountt'];
@@ -7757,7 +7756,7 @@ public function outstanding()
 			if(!empty($edit_card_no) && !empty($room_no))
 			{
 				$grandamt=0;
-			    $conditions=array('card_no' => $edit_card_no, 'flag' => "0",'status' => "0" , 'master_roomno_id' => $room_no);
+			    $conditions=array('card_no' => $edit_card_no, 'flag' => "0" , 'master_roomno_id' => $room_no , 'payment_id'=> 0);
 				$fetch_keeping_no=$this->house_keeping->find('all',array('conditions'=>$conditions));
 				
 				$check=sizeof($fetch_keeping_no);
@@ -7783,8 +7782,7 @@ public function outstanding()
 					$edit_gross=$ftc_data['house_keeping']['iron_no'];
 					$edit_taxes=$ftc_data['house_keeping']['iron_price'];
 					$edit_amount=$ftc_data['house_keeping']['total_amount'];
-					$edit_due_amount=$ftc_data['house_keeping']['due_amount'];
-					$grandamt+=$edit_due_amount;
+					$grandamt+=$edit_amount;
 					$view_table.='<tr>
 					<td align="center"><label><span style="font-size:12px;">'.$edit_quantity.'</span></label></td>
 					<td align="center"><label><span style="font-size:12px;">'.$edit_rate.'</span></label></td>
@@ -7806,7 +7804,7 @@ public function outstanding()
 			if(!empty($edit_card_no) && !empty($room_no))
 			{
 				$grandamt10=0;
-			    $conditions=array('card_no' => $edit_card_no, 'flag' => "0",'status' => "0", 'master_roomno_id' => $room_no);
+			    $conditions=array('card_no' => $edit_card_no, 'flag' => "0" , 'master_roomno_id' => $room_no);
 				$fetch_o_s=$this->other_service->find('all',array('conditions'=>$conditions));
 				
 				$check=sizeof($fetch_o_s);
@@ -7836,8 +7834,7 @@ public function outstanding()
 					$edit_quantity=$ftc_data['other_service']['quantity'];
 					$edit_charge=$ftc_data['other_service']['charge'];
 					$edit_amount=$ftc_data['other_service']['total'];
-					$edit_due_amount=$ftc_data['other_service']['due_amount'];
-					$grandamt10+=$edit_due_amount;
+					$grandamt10+=$edit_amount;
 					$view_table.='<tr>
 					<td align="center"><label><span style="font-size:12px;">'.$edit_master_roomno_id.'</span></label></td>
 					<td align="center"><label><span style="font-size:12px;">'.$edit_card_no.'</span></label></td>
@@ -15333,11 +15330,10 @@ public function companydiscount()
 				'master_plan_id' => @(string)$this->request->data["master_plan_id"],
 				'p_address' => $this->request->data["p_address"],'date' => $date,'time' => $cutrrent_time));
 				$success=$this->smtpmailer($this->request->data["authorized_email_id"],'Dreamshapers','Enquiry', "hello" ,$this->request->data["authorized_email_id"]);
-				
-				$working_key='A1d987e6da856f0d2de06aa0456dcb04b';
-				$sms_sender='PHPHTL';
-				$sms1=str_replace(' ', '+', 'Thank you for choosing us for your stay.');
-				file_get_contents('http://alerts.sinfini.com/api/web2sms.php?workingkey='.$working_key.'&sender='.$sms_sender.'&to=8058483636&message='.$sms1.'');
+					$working_key='A1d987e6da856f0d2de06aa0456dcb04b';
+					$sms_sender='PHPHTL';
+					$sms1=str_replace(' ', '+', 'Thank you for choosing us for your stay.');
+					file_get_contents('http://alerts.sinfini.com/api/web2sms.php?workingkey='.$working_key.'&sender='.$sms_sender.'&to=8058483636&message='.$sms1.'');
 				
 				$last_record_id=$this->company_registration->getLastInsertID();
 				$this->ledger_master->saveAll(array('ledger_category_id' => '1','name' => $company_name, 'name_id'=>$last_record_id));
@@ -15645,15 +15641,6 @@ function fetch_group_category_name_by_id($group_category_id){
 	$conditions=array('id'=>(int)$group_category_id);
 	
 	return $this->group_category->find('all',array('conditions'=>$conditions));
-	
-}
-
-function fetch_ledger_master_id($id){
-	
-	$this->loadmodel('ledger_master');
-	$conditions=array('id'=>(int)$id);
-	
-	return $this->ledger_master->find('all',array('conditions'=>$conditions));
 	
 }
 
@@ -17129,7 +17116,7 @@ $mail->addAddress($to);
                 $transaction_type='Journal';
 				
 				$this->loadmodel('ledger');
-				$this->ledger->saveAll(array('transaction_id' => $transaction_id,'transaction_type' => $transaction_type, 'transaction_date' => "", 'narration' => "", 'date' => date("Y-m-d")));
+				$this->ledger->saveAll(array('transaction_id' => $transaction_id,'transaction_type' => $transaction_type, 'transaction_date' => date("Y-m-d"), 'narration' => "", 'date' => date("Y-m-d")));
 				$ledgerID=(int)$this->ledger->getLastInsertID();
 			}
 			exit;
