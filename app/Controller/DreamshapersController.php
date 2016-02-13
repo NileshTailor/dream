@@ -15663,6 +15663,16 @@ function fetch_ledger_category_name_by_id($ledger_category_id){
 	
 }
 
+function fetch_ledger_master_id($id){
+	
+	$this->loadmodel('ledger_master');
+	$conditions=array('id'=>(int)$id);
+	
+	return $this->ledger_master->find('all',array('conditions'=>$conditions));
+	
+}
+
+
 function fetch_ledger_cr_dr_id($id){
 	
 	$this->loadmodel('ledger_cr_dr');
