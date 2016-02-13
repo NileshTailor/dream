@@ -15,10 +15,10 @@
 					 Legder Account
 				</th>
 				<th>
-					 Debit
+					 Amount
 				</th>
 				<th>
-					 Credit
+					 Debit/Credit
 				</th>
 				<th>
 					 Action
@@ -38,10 +38,14 @@
 					</select>
 				</td>
 				<td>
-					 <input class="form-control" placeholder="Debit" type="text">
+					 <input class="form-control" placeholder="Amount" type="text">
 				</td>
 				<td>
-					 <input class="form-control" placeholder="Credit" type="text">
+					 <select class="form-control">
+						<option value="">Select</option>
+						<option value="debit">Debit</option>
+						<option value="credit">Credit</option>
+					</select>
 				</td>
 				<td></td>
 			</tr>
@@ -57,22 +61,26 @@
 					</select>
 				</td>
 				<td>
-					 <input class="form-control" placeholder="Debit" type="text">
+					 <input class="form-control" placeholder="Amount" type="text">
 				</td>
 				<td>
-					 <input class="form-control" placeholder="Credit" type="text">
+					 <select class="form-control">
+						<option value="">Select</option>
+						<option value="debit">Debit</option>
+						<option value="credit">Credit</option>
+					</select>
 				</td>
 				<td></td>
 			</tr>
 			</tbody>
-			<tfoot>
+			<tfoot style="border-top: 2px solid #CCC;">
 			<tr>
-				<td align="right"><b>Total</b></td>
+				<td align="right"></td>
 				<td>
-					 <input class="form-control" placeholder="Debit" type="text">
+					 <b>Total Dr :</b><input class="form-control" placeholder="Debit" type="text" id="total_debit" />
 				</td>
 				<td>
-					 <input class="form-control" placeholder="Credit" type="text">
+					 <b>Total Cr :</b><input class="form-control" placeholder="Credit" type="text" id="total_credit" />
 				</td>
 				<td></td>
 			</tr>
@@ -89,39 +97,70 @@
 $(document).ready(function () {
 	$("#add_row").on("click",function(){
 		var sel=$('#journal_rows tr:first td:first').html();
-		$('#journal_rows').append('<tr><td>'+sel+'</td><td><input class="form-control" placeholder="Debit" type="text"></td><td> <input class="form-control" placeholder="Credit" type="text"></td><td><a href="#" class="btn btn-xs red">&nbsp;<i class="fa fa-minus-circle"></i>&nbsp; </a></td></tr>');
+		$('#journal_rows').append('<tr><td>'+sel+'</td><td><input class="form-control" placeholder="Amount" type="text"></td><td><select class="form-control"><option value="">Select</option><option value="debit">Debit</option><option value="credit">Credit</option></select></td><td><a href="#" class="btn btn-xs red">&nbsp;<i class="fa fa-minus-circle"></i>&nbsp; </a></td></tr>');
 	})
 	
 	function check_validation(){
+		var returnValue=true;
 		$('#journal_rows tr').each(function( index ) {
 			var ledger_account_id=$(this).find('td:nth-child(1) option:selected').val();
 			if(ledger_account_id==""){
 				$(this).find('td:nth-child(1) select').css('border','solid 1px red');
+				returnValue=false;
 			}else{
 				$(this).find('td:nth-child(1) select').css('border','');
 			}
 			
-			var debit=parseInt($(this).find('td:nth-child(2) input').val());
-			if(isNaN(debit)){debit=0;}
-			if(debit==0){
+			var amount=parseInt($(this).find('td:nth-child(2) input').val());
+			if(isNaN(amount)){amount=0;}
+			if(amount==0){
 				$(this).find('td:nth-child(2) input').css('border','solid 1px red');
+				returnValue=false;
 			}else{
 				$(this).find('td:nth-child(2) input').css('border','');
 			}
 			
-			var credit=parseInt($(this).find('td:nth-child(3) input').val());
-			if(isNaN(credit)){credit=0;}
-			if(credit==0){
-				$(this).find('td:nth-child(3) input').css('border','solid 1px red');
+			var amount_type=$(this).find('td:nth-child(3) option:selected').val();
+			if(amount_type==""){
+				$(this).find('td:nth-child(3) select').css('border','solid 1px red');
+				returnValue=false;
 			}else{
-				$(this).find('td:nth-child(3) input').css('border','');
+				$(this).find('td:nth-child(3) select').css('border','');
 			}
+			
 		});
+		return returnValue;
+	}
+	
+	function check_debit_credit(){
+		var toatl_dr=0; var toatl_cr=0; var returnSubmit=true;
+		$('#journal_rows tr').each(function( index ) {
+			var amount=parseInt($(this).find('td:nth-child(2) input').val());
+			var amount_type=$(this).find('td:nth-child(3) select').val();
+			if(amount_type=="debit"){toatl_dr=toatl_dr+amount;}
+			if(amount_type=="credit"){toatl_cr=toatl_cr+amount;}
+		});
+		$("#total_debit").val(toatl_dr);
+		$("#total_credit").val(toatl_cr);
+		var net_bal=toatl_dr-toatl_cr;
+		if(net_bal!=0){ returnSubmit=false; }
+		return returnSubmit;
 	}
 	
 	$('form').submit( function(e){
-		e.preventDefault();
-		check_validation();
+		
+		var returnValue=check_validation();
+		if(returnValue===true){
+			var checkNetBal=check_debit_credit();
+			if(checkNetBal===true){
+				$("form").submit();
+			}else{
+				e.preventDefault();
+			}
+		}
+		else{
+			e.preventDefault();
+		}
 	});
 	
 });
