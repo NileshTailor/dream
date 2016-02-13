@@ -17130,6 +17130,10 @@ $mail->addAddress($to);
 			
 		}
 	}
+	
+	function journal_vouchers(){
+		$this->layout='index_layout';
+	}
     ///////////////////   End Php Function /////////////////////////////////////////////
 	function ajax_function()
 	{
