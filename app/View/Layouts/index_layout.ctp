@@ -288,14 +288,14 @@ background-color:#82A0D1;
 					}
 				?>  
 					<li>
-					<a href="<?php echo $this->webroot; ?>Dreamshapers/journal">Journal</a>
+					<a href="<?php echo $this->webroot; ?>journal">Journal</a>
 					</li>
 					<li>
-					<a href="<?php echo $this->webroot; ?>Dreamshapers/journal_vouchers">Journal Vouchers</a>
+					<a href="<?php echo $this->webroot; ?>journal_vouchers">Journal Vouchers</a>
 					</li>
 					
 					<li>
-					<a href="<?php echo $this->webroot; ?>Dreamshapers/ledger_view">Ledger View</a>
+					<a href="<?php echo $this->webroot; ?>ledger_view">Ledger View</a>
 					</li>
 				</ul>
 				<!-- END SIDEBAR MENU -->

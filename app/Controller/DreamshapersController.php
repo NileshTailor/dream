@@ -17149,6 +17149,12 @@ $mail->addAddress($to);
 		$Journals=$this->ledger->find('all',array('conditions'=>$conditions));
 		$this->set(compact('Journals'));
 	}
+	
+	function fetch_journal_info($ledger_id){
+		$this->loadmodel('ledger_cr_dr');
+		$conditions=array('ledger_id' => $ledger_id);
+		return $this->ledger_cr_dr->find('all',array('conditions'=>$conditions));
+	}
     ///////////////////   End Php Function /////////////////////////////////////////////
 	function ajax_function()
 	{

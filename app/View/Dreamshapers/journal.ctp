@@ -98,7 +98,11 @@
 $(document).ready(function () {
 	$("#add_row").on("click",function(){
 		var sel=$('#journal_rows tr:first td:first').html();
-		$('#journal_rows').append('<tr><td>'+sel+'</td><td><input class="form-control" placeholder="Amount" type="text" name="amount[]" /></td><td><select class="form-control" name="amount_type[]"><option value="">Select</option><option value="debit">Debit</option><option value="credit">Credit</option></select></td><td><a href="#" class="btn btn-xs red">&nbsp;<i class="fa fa-minus-circle"></i>&nbsp; </a></td></tr>');
+		$('#journal_rows').append('<tr><td>'+sel+'</td><td><input class="form-control" placeholder="Amount" type="text" name="amount[]" /></td><td><select class="form-control" name="amount_type[]"><option value="">Select</option><option value="debit">Debit</option><option value="credit">Credit</option></select></td><td><a href="#" class="btn btn-xs red remove_row">&nbsp;<i class="fa fa-minus-circle"></i>&nbsp; </a></td></tr>');
+	})
+	
+	$("#remove_row").on("click",function(){
+		alert();
 	})
 	
 	function check_validation(){
