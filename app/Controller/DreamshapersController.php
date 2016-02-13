@@ -7581,7 +7581,7 @@ public function outstanding()
 				<table class="table table-bordered table-hover">
 				<thead>                            
 				<tr>
-				
+				<th style="text-align:center">RoomNo.</td>
 				<th style="text-align:center">Duration</td>
 				<th style="text-align:center">Total Amount </td>
 				<th style="text-align:center">Tax</td>
@@ -7673,6 +7673,7 @@ public function outstanding()
 						$total_amount+=$total_room_amount; 
 						
 					$view_table.='<tr>
+					<td align="center"><span style="font-size:12px;">'.$room_no.'</span></td>
 					<input type="hidden" name="edit_duration'.$i.'" value="'.$total_duration.'">
 					<td align="center"><span style="font-size:12px;">'.$total_duration.'</span></td>
 					<td align="center"><span style="font-size:12px;">'.$edit_room_charge.'</span></td>
@@ -7716,7 +7717,7 @@ public function outstanding()
 					foreach($fetch_pos_no as $pos_data){
 					$pos_kot_id=$pos_data['pos_kot']['id'];
 					$payment_type=$pos_data['pos_kot']['payment_type'];
-					$pos_amountt=$pos_data['pos_kot']['pos_amountt'];
+					$pos_amountt=$pos_data['pos_kot']['due_amount'];
 					/*if($payment_type==2)
 					{
 						$pos_amountt=$pos_data['pos_kot']['pos_amountt'];
@@ -7756,7 +7757,7 @@ public function outstanding()
 			if(!empty($edit_card_no) && !empty($room_no))
 			{
 				$grandamt=0;
-			    $conditions=array('card_no' => $edit_card_no, 'flag' => "0" , 'master_roomno_id' => $room_no , 'payment_id'=> 0);
+			    $conditions=array('card_no' => $edit_card_no, 'flag' => "0",'status' => "0" , 'master_roomno_id' => $room_no);
 				$fetch_keeping_no=$this->house_keeping->find('all',array('conditions'=>$conditions));
 				
 				$check=sizeof($fetch_keeping_no);
@@ -7782,7 +7783,8 @@ public function outstanding()
 					$edit_gross=$ftc_data['house_keeping']['iron_no'];
 					$edit_taxes=$ftc_data['house_keeping']['iron_price'];
 					$edit_amount=$ftc_data['house_keeping']['total_amount'];
-					$grandamt+=$edit_amount;
+					$edit_due_amount=$ftc_data['house_keeping']['due_amount'];
+					$grandamt+=$edit_due_amount;
 					$view_table.='<tr>
 					<td align="center"><label><span style="font-size:12px;">'.$edit_quantity.'</span></label></td>
 					<td align="center"><label><span style="font-size:12px;">'.$edit_rate.'</span></label></td>
@@ -7804,7 +7806,7 @@ public function outstanding()
 			if(!empty($edit_card_no) && !empty($room_no))
 			{
 				$grandamt10=0;
-			    $conditions=array('card_no' => $edit_card_no, 'flag' => "0" , 'master_roomno_id' => $room_no);
+			    $conditions=array('card_no' => $edit_card_no, 'flag' => "0",'status' => "0", 'master_roomno_id' => $room_no);
 				$fetch_o_s=$this->other_service->find('all',array('conditions'=>$conditions));
 				
 				$check=sizeof($fetch_o_s);
@@ -7834,7 +7836,8 @@ public function outstanding()
 					$edit_quantity=$ftc_data['other_service']['quantity'];
 					$edit_charge=$ftc_data['other_service']['charge'];
 					$edit_amount=$ftc_data['other_service']['total'];
-					$grandamt10+=$edit_amount;
+					$edit_due_amount=$ftc_data['other_service']['due_amount'];
+					$grandamt10+=$edit_due_amount;
 					$view_table.='<tr>
 					<td align="center"><label><span style="font-size:12px;">'.$edit_master_roomno_id.'</span></label></td>
 					<td align="center"><label><span style="font-size:12px;">'.$edit_card_no.'</span></label></td>
