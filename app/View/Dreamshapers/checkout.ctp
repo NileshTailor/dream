@@ -180,7 +180,6 @@ if(empty($active))
                         
                         <tr><td><input name="transfer_check" type="checkbox" value="1" id="paid_check" /></td></tr>
                         
-                        
                       <tr id="hide_check" display><td colspan="8">
                     <fieldset>
                         <legend>

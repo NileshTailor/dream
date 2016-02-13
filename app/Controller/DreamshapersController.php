@@ -5272,12 +5272,9 @@ public function debtor_receipt()
 			$this->room_checkin_checkout->updateAll(array('transfer_due_amount' => "'$multiple_transferamount_idd'", 'transfer_due_amount_roomno' => "'$multiple_transferto_idd'"), array('id' => $edit_transfer_dueamount_to));
 				  
 				  //////////////// FINAL  UPDaTE
-				$cash=$this->request->data["cash"];
-				$cheque_amt=$this->request->data["cheque_amt"];
-				$neft_amt=$this->request->data["neft_amt"];
-				$credit_card_amt=$this->request->data["credit_card_amt"];
-				@$given_amount=$cash+$cheque_amt+$neft_amt+$credit_card_amt;
-				$recpt_type=$this->request->data["recpt_type"];
+				$cash=$this->request->data["rec_amount"];
+				@$given_amount=$cash;
+				$recpt_type=$this->request->data["payment_mode"];
 				$room_due=$this->request->data["edit_due_amount".$i];
 				$amount=$this->request->data["amount"];
 				if($room_due=='0')
@@ -5320,12 +5317,9 @@ public function debtor_receipt()
 			
 			
 						////// DUE AMOUNT CALC
-			    $cash=$this->request->data["cash"];
-				$cheque_amt=$this->request->data["cheque_amt"];
-				$neft_amt=$this->request->data["neft_amt"];
-				$credit_card_amt=$this->request->data["credit_card_amt"];
-				@$given_amount=$cash+$cheque_amt+$neft_amt+$credit_card_amt;
-				$recpt_type=$this->request->data["recpt_type"];
+			    $cash=$this->request->data["rec_amount"];
+				@$given_amount=$cash;
+				$recpt_type=$this->request->data["payment_mode"];
 				$room_due=$this->request->data["edit_due_amount".$i];
 				$amount=$this->request->data["amount"];
 				if($room_due=='0')
@@ -5334,18 +5328,14 @@ public function debtor_receipt()
 				}
 				else
 				$due_amount1=$room_due;
-								
 				$this->gr_no->updateAll(array('checkout_no' =>$this->request->data["checkout_no"]+1), array('id' => 1));
 				
 		
 		
-		$cash=$this->request->data["cash"];
-		$neft_amt=$this->request->data["neft_amt"];
-		$cheque_amt=$this->request->data["cheque_amt"];
-		$credit_card_amt=$this->request->data["credit_card_amt"];
-		$transfer_due_amount=$this->request->data["transfer_due_amount"];
+		$cash=$this->request->data["rec_amount"];
+		@$transfer_due_amount=$this->request->data["transfer_due_amount"];
 		$fff=0;
-		$tit_amount=$cash+$neft_amt+$cheque_amt+$credit_card_amt+$fff;
+		$tit_amount=$cash+$fff;
 		$checkout_due=$tit_amount+$transfer_due_amount;
 		
 		$this->checkout->saveAll(array( 
@@ -5360,160 +5350,6 @@ public function debtor_receipt()
 				'due_amount' =>@$checkout_due));
 				$edit_card_no=$this->request->data["edit_card_no"];
 				///////////////////////////////////////////////////////////
-				
-				
-				
-			
-	///////////////////////////////////////////////////////////////////////
-	            $last_record_id=$this->checkout->getLastInsertID(); 		
-				$cheque_no=@(int)$this->data["cheque_no"];
-				$cheque_date=$this->data["cheque_date"];
-				$neft_no=@(int)$this->data["neft_no"];
-				$credit_card_name=$this->data["credit_card_name"];
-				$credit_card_no=@(int)$this->data["credit_card_no"];
-				$bank_name=$this->data["bank_name"];
-				$narration=$this->data["narration"];
-			    $discount=$this->data["discount"];
-				$date=date("Y-m-d");
-				$current_time=date("h:i:s A");
-				$edit_net_amount=$this->request->data["edit_net_amount".$i];
-				$edit_room_charge=$this->request->data["edit_room_charge".$i];
-				$edit_company_id=$this->request->data["edit_company_id"];
-				$payment_mode=$this->request->data["payment_mode"];
-				$this->loadModel('room_checkin_checkout');
-				$this->loadModel('checkout');
-				$this->loadModel('ledger');
-				$this->loadModel('ledger_master');
-				$this->loadModel('ledger_cr_dr');
-				$t_date=date('Y-m-d', strtotime($date));
-			   
-			    $fetch_transaction_id_bill2=$this->ledger->find('count',array('conditions'=>array('transaction_type'=>' ')));
-                $t_id_b=$fetch_transaction_id_bill2+1;
-				$this->ledger->saveAll(array('ledger_category_id'=>1,'user_id'=> $edit_company_id,'transaction_id'=> $t_id_b,'receipt_type'=> 'Room','invoice_id' => $last_record_id, 'receipt_mode' => $payment_mode, 'transaction_date' => $t_date,'cheque_no'=>$cheque_no,'neft_no'=>$neft_no, 'cheque_date'=>$cheque_date,'bank_name'=>$bank_name,'neft_no'=>$neft_no,'credit_card_name'=>$credit_card_name,'credit_card_no'=>$credit_card_no,'narration'=>$narration,'date'=>$date,'status'=>0));
-				    $last_ledger_id=$this->ledger->getLastInsertID(); 
-				//
-				$kot_m_ledger=$this->ledger_master->find('all', array('conditions'=>array('ledger_category_id' =>'1','user_id' =>$edit_company_id)));
-				$l_id=$kot_m_ledger[0]['ledger_master']['id'];
-				//
-				//
-				$this->ledger_cr_dr->saveAll(array('ledger_id'=>$last_ledger_id,'ledger_master_id'=> $l_id,'dr' => $net_amount));
-				if($discount>0){
-				$this->ledger_cr_dr->saveAll(array('ledger_id'=>$last_ledger_id,'ledger_master_id'=> '10','dr' => $discount));}
-				
-				
-				foreach($kot_item_ledger as $lr_data)
-				{
-				$this->loadModel('ledger');
-					@$st1_bill_no=$lr_data['pos_kot_item']['pos_kots_id'];
-				    @$st1_amount=$lr_data['pos_kot_item']['gross'];
-					@$st1_cat=$lr_data['pos_kot_item']['item_category_id'];
-					$this->ledger_cr_dr->saveAll(array('ledger_id'=>$last_ledger_id,'ledger_master_id'=> $st1_cat,'cr' => $st1_amount));
-				}
-				
-				////////// Rohit Joshi tax code //////
-	$this->loadModel('pos_kot_item');
-	$result_pos_kot_item=$this->pos_kot_item->find('all', array('conditions'=>array('pos_kots_id' =>$last_record_id)));
-			foreach($result_pos_kot_item as $data_item){
-				$master_items_id=$data_item['pos_kot_item']['master_items_id'];
-				$gross_amount=$data_item['pos_kot_item']['gross'];
-				$this->loadModel('master_item');
-				$result_master_item=$this->master_item->find('all', array('conditions'=>array('id' =>$master_items_id)));
-				foreach($result_master_item as $data_master){
-					
-					$master_item_type_id=$data_master['master_item']['master_item_type_id'];
-					$this->loadModel('master_item_type');
-				   $result_master_item_type=$this->master_item_type->find('all', array('conditions'=>array('id' =>$master_item_type_id)));
-				   foreach($result_master_item_type as $data_item_type){
-					  $master_tax_id=$data_item_type['master_item_type']['master_tax_id'];
-					  $master_tax_id_modify= explode(',',$master_tax_id);
-					   $vat_gross=0;
-						foreach($master_tax_id_modify as $data_tax){
-							
-							$this->loadModel('master_tax');
-							$result_master_tax=$this->master_tax->find('all', array('conditions'=>array('id' =>$data_tax)));
-							$tax_applicable=$result_master_tax[0]['master_tax']['tax_applicable'];
-							$name=$result_master_tax[0]['master_tax']['name'];
-							if($name=='Service Tax'){
-								
-								$total_gro=$gross_amount*$tax_applicable/100;
-								$this->loadModel('ledger_cr_dr');
-								$this->ledger_cr_dr->saveAll(array('ledger_id'=>$last_ledger_id,'ledger_master_id'=> '29','cr' => $total_gro));
-				
-								
-								 $vat_gross=$gross_amount+$total_gro;
-								
-							}
-							if($name=='VAT'){
-								if(!empty($vat_gross)){
-									$vat_actual=$vat_gross;
-								}else{
-									$vat_actual=$gross_amount;
-								}
-								
-								 $total_vat=$vat_actual*$tax_applicable/100;
-								 $this->loadModel('ledger_cr_dr');
-								 $this->ledger_cr_dr->saveAll(array('ledger_id'=>$last_ledger_id,'ledger_master_id'=> '39','cr' => $total_vat));
-								
-							}
-							
-						}
-						
-				   }
-					
-					
-				}
-				
-	
-				
-			}
-
-
-
-			
-/////////end code//////////		
-				
-				
-				
-			 $fetch_transaction_id_bill2=$this->ledger->find('count',array('conditions'=>array('transaction_type'=>'Receipt')));
-             $t_id=$fetch_transaction_id_bill2+1;
-              if($rec_amount>0)
-			  {
-				  $this->ledger->saveAll(array('ledger_category_id'=>13,'user_id'=> $pos_user_id,'transaction_id'=> $t_id,'transaction_type'=> 'Receipt','receipt_type'=> 'POS','invoice_id' => $last_record_id, 'receipt_mode' => $payment_mode, 'transaction_date' => $t_date,'cheque_no'=>$cheque_no,'neft_no'=>$neft_no, 'cheque_date'=>$cheque_date,'bank_name'=>$bank_name,'neft_no'=>$neft_no,'credit_card_name'=>$credit_card_name,'credit_card_no'=>$credit_card_no,'narration'=>$narration,'date'=>$date,'status'=>0));
-				  
-				  
-				 $last_ledger_id=$this->ledger->getLastInsertID();
-				  // 
-				$kot_m_ledger=$this->ledger_master->find('all', array('conditions'=>array('ledger_category_id' =>'1','user_id' =>$pos_user_id)));
-
-				$l_id=$kot_m_ledger[0]['ledger_master']['id'];
-				//
-				  $this->ledger_cr_dr->saveAll(array('ledger_id'=>$last_ledger_id,'ledger_master_id'=>$l_id,'cr' => $rec_amount));
-				  
-				if($payment_mode=='Cash')
-				{
-				$this->ledger_cr_dr->saveAll(array('ledger_id'=>$last_ledger_id,'ledger_master_id'=> '35','dr' => $rec_amount));
-				}else
-				{
-				  $this->ledger_cr_dr->saveAll(array('ledger_id'=>$last_ledger_id,'ledger_master_id'=> '37','dr' => $rec_amount));
-			    }
-			  }
-			
-				
-				
-				
-				
-				
-				
-				
-				//////////////////////////////////
-				
-				
-				
-				
-				
-				
-				
-				
 				
 				
 				//$room_no_id=$this->request->data["room_no_id"]; ///////////////////////////  looooooop
