@@ -39,86 +39,63 @@
 <tr>
 <td>
                     
-              <table class="table table-bordered" id="sub_table2">
-                    
-                    <tr style="background-color:#E8EAE8;">
-                            <th style="width:20%;">Transaction date</th>
-                            <th style="width:20%;">Date of Invoice</th>
-                            <th style="width:20%;">Due Date</th>
-                            <th style="width:20%;">Party Account Head</th>
-                            <th style="width:20%;">Invoice Reference</th>
-		    </tr>
-                    
-                    <tr style="background-color:#E8F3FF;">
-                    
-                    <td>
-                    <input type="text" class="date-picker form-control input-small" data-date-format="dd-mm-yyyy" value="<?php echo date("d-m-Y"); ?>" style="background-color:white !important;">
-                    </td>
-                    
-                    
-                    <td>
-                    <input type="text" class="date-picker form-control input-small" data-date-format="dd-mm-yyyy" style="background-color:white !important;">
-                    </td>
-                    
-                    
-                    <td>
-                    <input type="text" class="date-picker form-control input-small" data-date-format="dd-mm-yyyy"  style="background-color:white !important;">
-                    </td>
-                    
-                    
-                    <td>
-                                <select class="form-control input-small  select2 select2-offscreen">
-                                <option value="">Select</option>
-                                <?php 
-                                foreach($account_head_ledger_master as $data)
-								{
-                                
-                                ?>
-                                <option value="<?php echo $data['ledger_master']['id']; ?>"><?php echo $data['ledger_master']['name']; ?> </option>	
-                                
-                                <?php }	?>
-                                </select>
-                    </td>
-                    
-                    
-                    <td>
-                    <input type="text" class="form-control input-small" style="text-align:right; background-color:white !important;">
-                    </td>
-                        
-                    </tr>
-                    
-                    <tr style="background-color:#E8EAE8;">
-                      <th>Expense Head</th>
-                      <th>Amount of Invoice</th>
-                      <th>Attachment</th>
-                      <th colspan="2">Description</th>
-                    </tr>
-             
-                     <tr style="background-color:#E8F3FF;">
-                     <td>
-                        <select class="form-control input-small  select2 select2-offscreen">
-                        <option value="">Select</option>
-                        <?php
-                        foreach($expenses_ledger_master as $data)
-                        {
-                        ?>
-                        <option value="<?php echo $data['ledger_master']['id']; ?>"><?php echo $data['ledger_master']['name']; ?> </option>	
-                        <?php  } ?>
-                        
-                        </select>
-                     </td>
-                     <td>
-                     <input type="text" class="form-control input-small amt1" style="text-align:right; background-color:white !important;" onkeyup="amt_val(this.value,1)" maxlength="7" id="ammmttt1">
-                     </td>
-                     <td>
-                                <input type="file" class="default">
-                     </td>
-                     <td colspan="2">
-                     <input type="text" class="form-control input-medium" maxlength="100" style="background-color:white !important;">
-                     </td>
-                     </tr>
-                    
-                    </table>
+<table class="table table-bordered">
+    
+    <tr style="background-color:#E8EAE8;">
+            <th >Transaction date</th>
+            <th>Party Account Head</th>
+            <th>Expense Head</th>
+    </tr>
+    
+    <tr style="background-color:#E8F3FF;">
+    
+    <td>
+    <input type="text" class="date-picker form-control input-medium" data-date-format="dd-mm-yyyy" name="transaction_date[]" value="<?php echo date("d-m-Y"); ?>" style="background-color:white !important;">
+    </td>
+    <td>
+        <select class="form-control input-medium  select2 select2-offscreen" name="user_id[]">
+        <option value="">Select</option>
+        <?php 
+        foreach($account_head_ledger_master as $data)
+        {
+        
+        ?>
+        <option value="<?php echo $data['ledger_master']['id']; ?>"><?php echo $data['ledger_master']['name']; ?> </option>	
+        
+        <?php }	?>
+        </select>
+    </td>
+     <td>
+        <select class="form-control input-medium  select2 select2-offscreen" name="ledger_master_id[]">
+        <option value="">Select</option>
+        <?php
+        foreach($expenses_ledger_master as $data)
+        {
+        ?>
+        <option value="<?php echo $data['ledger_master']['id']; ?>"><?php echo $data['ledger_master']['name']; ?> </option>	
+        <?php  } ?>
+        
+        </select>
+     </td>
+    </tr>
+    
+    <tr style="background-color:#E8EAE8;">
+      
+      <th>Amount of Invoice</th>
+      <th colspan="2">Naration</th>
+    </tr>
+     <tr style="background-color:#E8F3FF;">
+    
+     <td>
+     <input type="text" class="form-control input-medium amt1" style="text-align:right; background-color:white !important;" onkeyup="amt_val(this.value,1)" maxlength="7" id="ammmttt1" name="amount[]">
+     </td>
+   
+     <td colspan="2">
+     <input type="text" class="form-control input-medium" maxlength="100" style="background-color:white !important;" name="narration[]">
+     </td>
+     </tr>
+    
+    </table>
 
 </td>
 <td >

@@ -15924,12 +15924,32 @@ public function receipt_payment()              ////////  Ashish
         {
             $this->layout='index_layout';
         }
-       
+		$this->loadmodel('ledger');
+        $this->loadmodel('ledger_master');
         if($this->request->is('post'))
         {
-           
+			$date=date('Y-m-d');
+			$this->loadmodel('ledger_cr_dr');
+			
+			
+			for($i=0; $i<sizeof($this->request->data["transaction_date"]); $i++)
+			{
+				$fetch_transaction_id=$this->ledger->find('count',array('conditions'=>array('transaction_type'=>'Expences')));
+				$transaction_id=$fetch_transaction_id+1;
+				$transaction_type='Expences';
+				$narration=$this->request->data['narration'][$i];
+				$user_id=$this->request->data['user_id'][$i];
+				$this->request->data=array_filter($this->request->data);
+				$this->ledger->saveAll(array('transaction_date'=>date('Y-m-d', strtotime($this->request->data["transaction_date"][$i])),'transaction_id'=>$transaction_id,'transaction_type'=>$transaction_type,'narration'=>$narration,'user_id'=>$user_id,'date'=>$date));
+				
+				$ledger_id=$this->ledger->getLastInsertID();
+				
+				$this->ledger_cr_dr->saveAll(array('ledger_id'=>$ledger_id,'ledger_master_id'=>$this->request->data['ledger_master_id'][$i],'dr'=>$this->request->data['amount'][$i]));
+				
+				$this->ledger_cr_dr->saveAll(array('ledger_id'=>$ledger_id,'ledger_master_id'=>35,'cr'=>$this->request->data['amount'][$i]));
+			}
         }
-        $this->loadmodel('ledger_master');
+        
         $this->set('expenses_ledger_master', $this->ledger_master->find('all',array('fields'=>array('id','name'),'conditions'=>array('ledger_category_id'=>14))));
         $this->set('account_head_ledger_master', $this->ledger_master->find('all',array('fields'=>array('id','name'),'conditions'=>array('ledger_category_id'=>1))));
     }
