@@ -20,6 +20,8 @@
 				
 				 $category_name=$result_ledger_category[0]['ledger_category']['name'];
 				  $result_ledger_category=$this->requestAction(array('controller' => 'Dreamshapers', 'action' => 'fetch_ledger_category_name_by_id'), array($ledger_category_id));
+				  
+				   $result_ledger_category=$this->requestAction(array('controller' => 'Dreamshapers', 'action' => 'fetch_ledger_category_name_by_id'), array($ledger_id));
 				 
 			?>
 			<tr>
