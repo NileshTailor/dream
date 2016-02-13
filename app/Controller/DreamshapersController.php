@@ -17113,6 +17113,27 @@ $mail->addAddress($to);
 		$this->loadmodel('ledger_master');
 		$ledger_accounts=$this->ledger_master->find('all', array('fields' => array('name','id')));
 		$this->set(compact('ledger_accounts'));
+		
+		if(isset($this->request->data['submit'])){
+			$ledger_accounts=$this->request->data;
+			pr($ledger_accounts); 
+			for($i=0; $i<sizeof($ledger_accounts['ledger_account']); $i++)
+			{
+				$ledger_account_id=$ledger_accounts['ledger_account'][$i];
+				$amount=$ledger_accounts['amount'][$i];
+				$amount_type=$ledger_accounts['amount_type'][$i];
+				
+				$this->loadmodel('ledger');
+				$fetch_transaction_id=$this->ledger->find('count',array('conditions'=>array('transaction_type'=>'Journal')));
+                $transaction_id=$fetch_transaction_id+1;
+                $transaction_type='Journal';
+				
+				$this->loadmodel('ledger');
+				$this->ledger->saveAll(array('transaction_id' => $transaction_id,'transaction_type' => $transaction_type, 'transaction_date' => "", 'narration' => "", 'date' => date("Y-m-d")));
+				$ledgerID=(int)$this->ledger->getLastInsertID();
+			}
+			exit;
+		}
 	}
     ///////////////////   End Php Function /////////////////////////////////////////////
 	function ajax_function()

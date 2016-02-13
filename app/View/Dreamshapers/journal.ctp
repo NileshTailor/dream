@@ -28,7 +28,7 @@
 			<tbody id="journal_rows">
 			<tr>
 				<td>
-					 <select class="form-control">
+					 <select class="form-control" name="ledger_account[]">
 						<option value="">Select ledger account</option>
 						<?php foreach($ledger_accounts as $data){
 							$id=$data["ledger_master"]["id"];
@@ -38,10 +38,10 @@
 					</select>
 				</td>
 				<td>
-					 <input class="form-control" placeholder="Amount" type="text">
+					 <input class="form-control" placeholder="Amount" type="text" name="amount[]">
 				</td>
 				<td>
-					 <select class="form-control">
+					 <select class="form-control" name="amount_type[]">
 						<option value="">Select</option>
 						<option value="debit">Debit</option>
 						<option value="credit">Credit</option>
@@ -51,7 +51,7 @@
 			</tr>
 			<tr>
 				<td>
-					 <select class="form-control">
+					 <select class="form-control" name="ledger_account[]">
 						<option value="">Select ledger account</option>
 						<?php foreach($ledger_accounts as $data){
 							$id=$data["ledger_master"]["id"];
@@ -61,10 +61,10 @@
 					</select>
 				</td>
 				<td>
-					 <input class="form-control" placeholder="Amount" type="text">
+					 <input class="form-control" placeholder="Amount" type="text" name="amount[]">
 				</td>
 				<td>
-					 <select class="form-control">
+					 <select class="form-control" name="amount_type[]">
 						<option value="">Select</option>
 						<option value="debit">Debit</option>
 						<option value="credit">Credit</option>
@@ -75,7 +75,7 @@
 			</tbody>
 			<tfoot style="border-top: 2px solid #CCC;">
 			<tr>
-				<td align="right"></td>
+				<td align="right"><span id="error_net_bal" class="pull-right" style="color:red;"></span></td>
 				<td>
 					 <b>Total Dr :</b><input class="form-control" placeholder="Debit" type="text" id="total_debit" />
 				</td>
@@ -88,7 +88,8 @@
 			</table>
 		</div>
 		<button type="button" class="btn btn-sm green" id="add_row"><i class="fa fa-plus"></i> Add row</button>
-		<button type="submit" class="btn btn-sm blue pull-right"><i class="fa fa-thumbs-up"></i> SUBMIT & CREATE VOUCHER</button>
+		<button type="submit" name="submit" class="btn btn-sm blue pull-right"><i class="fa fa-thumbs-up"></i> SUBMIT & CREATE VOUCHER</button>
+		
 		</form>
 	</div>
 	
@@ -97,7 +98,7 @@
 $(document).ready(function () {
 	$("#add_row").on("click",function(){
 		var sel=$('#journal_rows tr:first td:first').html();
-		$('#journal_rows').append('<tr><td>'+sel+'</td><td><input class="form-control" placeholder="Amount" type="text"></td><td><select class="form-control"><option value="">Select</option><option value="debit">Debit</option><option value="credit">Credit</option></select></td><td><a href="#" class="btn btn-xs red">&nbsp;<i class="fa fa-minus-circle"></i>&nbsp; </a></td></tr>');
+		$('#journal_rows').append('<tr><td>'+sel+'</td><td><input class="form-control" placeholder="Amount" type="text"></td><td><select class="form-control" name="amount_type[]"><option value="">Select</option><option value="debit">Debit</option><option value="credit">Credit</option></select></td><td><a href="#" class="btn btn-xs red">&nbsp;<i class="fa fa-minus-circle"></i>&nbsp; </a></td></tr>');
 	})
 	
 	function check_validation(){
@@ -143,7 +144,8 @@ $(document).ready(function () {
 		$("#total_debit").val(toatl_dr);
 		$("#total_credit").val(toatl_cr);
 		var net_bal=toatl_dr-toatl_cr;
-		if(net_bal!=0){ returnSubmit=false; }
+		if(net_bal!=0){ returnSubmit=false; $("#error_net_bal").html("Total Debit is not equal to Credit.");}
+		else{$("#error_net_bal").html("");}
 		return returnSubmit;
 	}
 	
