@@ -17103,23 +17103,31 @@ $mail->addAddress($to);
 		
 		if(isset($this->request->data['submit'])){
 			$ledger_accounts=$this->request->data;
-			pr($ledger_accounts); 
+			
+			
+			$this->loadmodel('ledger');
+			$fetch_transaction_id=$this->ledger->find('count',array('conditions'=>array('transaction_type'=>'Journal')));
+			$transaction_id=$fetch_transaction_id+1;
+			$transaction_type='Journal';
+			
+			$this->loadmodel('ledger');
+			$this->ledger->saveAll(array('transaction_id' => $transaction_id,'transaction_type' => $transaction_type, 'transaction_date' => date("Y-m-d"), 'narration' => "", 'date' => date("Y-m-d")));
+			$ledgerID=(int)$this->ledger->getLastInsertID();
+			
 			for($i=0; $i<sizeof($ledger_accounts['ledger_account']); $i++)
 			{
 				$ledger_account_id=$ledger_accounts['ledger_account'][$i];
 				$amount=$ledger_accounts['amount'][$i];
-				$amount_type=$ledger_accounts['amount_type'][$i];
+				 $amount_type=$ledger_accounts['amount_type'][$i];
+				if($amount_type=="debit"){ $dr=$amount; $cr=0; }
+				if($amount_type=="credit"){ $dr=0; $cr=$amount; }
 				
-				$this->loadmodel('ledger');
-				$fetch_transaction_id=$this->ledger->find('count',array('conditions'=>array('transaction_type'=>'Journal')));
-                $transaction_id=$fetch_transaction_id+1;
-                $transaction_type='Journal';
 				
-				$this->loadmodel('ledger');
-				$this->ledger->saveAll(array('transaction_id' => $transaction_id,'transaction_type' => $transaction_type, 'transaction_date' => date("Y-m-d"), 'narration' => "", 'date' => date("Y-m-d")));
-				$ledgerID=(int)$this->ledger->getLastInsertID();
+				$this->loadmodel('ledger_cr_dr');
+				$this->ledger_cr_dr->saveAll(array('ledger_id' => $ledgerID,'ledger_master_id' => $ledger_account_id,'cr' => $cr, 'dr' => $dr));
+				
 			}
-			exit;
+			
 		}
 	}
     ///////////////////   End Php Function /////////////////////////////////////////////
