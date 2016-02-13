@@ -1,8 +1,8 @@
 
-<div style="text-align:center"">
+<!--<div style="text-align:center"">
 <table align="center" width="100%" style="margin-top:20px;">
 <tr><td align="center"><div class="page-logo"><img src="expenset/dremn.png" width="800px" /></div></td>
-</tr></table></div>
+</tr></table></div>-->
 
 
 <div style="text-align:center">

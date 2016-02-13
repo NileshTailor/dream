@@ -107,7 +107,7 @@ background-color:#82A0D1;
 	
 	<!-- BEGIN HEADER MENU -->
 	<div class="page-header-inner">
-    <div class="page-logo"><img src="expenset/SPECTRUM.png" align="left" style="margin-top:5px" width="100px"/></div>
+   <div class="page-logo"><img src="expenset/SPECTRUM.png" align="left" style="margin-top:5px" width="100px"/></div>
 		<div class="top-menu">
         
         
