@@ -17143,6 +17143,11 @@ $mail->addAddress($to);
 	
 	function journal_vouchers(){
 		$this->layout='index_layout';
+		
+		$this->loadmodel('ledger');
+		$conditions=array('transaction_type' => "Journal");
+		$Journals=$this->ledger->find('all',array('conditions'=>$conditions));
+		$this->set(compact('Journals'));
 	}
     ///////////////////   End Php Function /////////////////////////////////////////////
 	function ajax_function()
