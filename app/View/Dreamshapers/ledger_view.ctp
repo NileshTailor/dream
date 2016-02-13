@@ -4,7 +4,7 @@
 	</center>
 </div>
 
-<table class="table table-striped table-bordered table-hover" style="margin-top:1px" id="sample_1">
+<table class="table  table-bordered " style="margin-top:1px" id="sample_1">
 	<thead>
     <tr>
     	<th>Transaction Date</th>
@@ -29,7 +29,7 @@
 				  $result_ledger_category=$this->requestAction(array('controller' => 'Dreamshapers', 'action' => 'fetch_ledger_category_name_by_id'), array($ledger_category_id));
 				  
 				   $result_ledger_cr_dr=$this->requestAction(array('controller' => 'Dreamshapers', 'action' => 'fetch_ledger_cr_dr_id'), array($ledger_id));
-				   
+				   $total_cat_cr=0;  $total_cat_dr=0;
 						foreach($result_ledger_cr_dr as $data){
 					 
 							$ledger_master_id=$data['ledger_cr_dr']['ledger_master_id'];
@@ -42,14 +42,21 @@
 							}
 			  ?>
 			<tr>
-			<td><?php echo $transaction_date; ?></td>
+			<td><?php echo $transaction_date; $transaction_date=''; ?></td>
 			<td><?php echo $category_name; $category_name=''; ?></td>
 			<td><?php echo $ledger_master_name; $ledger_master_name=''; ?></td>
-			<td><?php echo $cr; ?></td>
-			<td><?php echo $dr; ?></td>
+			<td><?php echo $cr; $total_cat_cr+=$cr; ?></td>
+			<td><?php echo $dr; $total_cat_dr+=$dr; ?></td>
 
 
 			</tr>
-			<?php } }?>
+			<?php } ?>
+			<tr>
+			<td colspan="3" align="right"><span> <b></b></span></td>
+			<td colspan=""><b><?php echo $total_cat_cr; ?></b> </td>
+			<td colspan=""><b><?php echo $total_cat_dr; ?></b></td>
+			</tr>
+
+			<?php }?>
      </tbody>
          </table>
