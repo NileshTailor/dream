@@ -17188,6 +17188,10 @@ $mail->addAddress($to);
 		$Suppliers=$this->ledger->find('all',array('conditions'=>$conditions));
 		$this->set(compact('Suppliers'));
 	}
+	
+	function advance_receipt(){
+		$this->layout='index_layout';
+	}
     ///////////////////   End Php Function /////////////////////////////////////////////
 	function ajax_function()
 	{
