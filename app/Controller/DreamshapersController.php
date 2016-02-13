@@ -5210,7 +5210,6 @@ public function debtor_receipt()
                 $edit_net_amount=$this->request->data["edit_net_amount".$i];
                 @$edit_remarks=$this->request->data["edit_remarks"];
 				//$room_no_id=$this->request->data["room_no_id"];
-            	
 				@$edit_posnet_amount=$this->request->data["edit_posnet_amount".$i];
 				@$edit_house_amount=$this->request->data["edit_house_amount".$i];
 				@$edit_extra_bed=$this->request->data["edit_extra_bed".$i];
@@ -5312,11 +5311,7 @@ public function debtor_receipt()
 				$x++;
 				//////////////////////////////
 			}
-			
-			
-			
-			
-						////// DUE AMOUNT CALC
+			////// DUE AMOUNT CALC
 			    $cash=$this->request->data["rec_amount"];
 				@$given_amount=$cash;
 				$recpt_type=$this->request->data["payment_mode"];
@@ -5332,7 +5327,7 @@ public function debtor_receipt()
 				
 		
 		
-		$cash=$this->request->data["rec_amount"];
+		/*$cash=$this->request->data["rec_amount"];
 		@$transfer_due_amount=$this->request->data["transfer_due_amount"];
 		$fff=0;
 		$tit_amount=$cash+$fff;
@@ -5348,7 +5343,7 @@ public function debtor_receipt()
 				'total_amount' => @$this->request->data["edit_totalnetamount"],
 				'receive_amount' => @$tit_amount,
 				'due_amount' =>@$checkout_due));
-				$edit_card_no=$this->request->data["edit_card_no"];
+				$edit_card_no=$this->request->data["edit_card_no"];*/
 				///////////////////////////////////////////////////////////
 				
 				
