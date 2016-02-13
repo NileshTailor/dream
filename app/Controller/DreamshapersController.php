@@ -7652,22 +7652,19 @@ public function outstanding()
 							$room_dis=round(($gross_a*$edit_room_discount)/100);
 							
 							
-						 $gross_amount=round(($total_duration*$edit_room_charge)-$room_dis);
-						
+						$gross_amount=round(($total_duration*$edit_room_charge)-$room_dis);
 						 $total_tax_amt=0;
 						 foreach($tax_applicable as $tax)
 						 {
 							$total_tax_amt+=($gross_amount*$tax)/100;
-						 $gross_amounttt=$gross_amount+$total_tax_amt;
+						   // $gross_amount=$gross_amount+$total_tax_amt;
                          }
-						 
 						 //$room_dis=round(($gross_amount*$edit_room_discount)/100); //////////////// ROom DISCOUNT
 						 
 						 //$after_room_dis_amount=$gross_amount-$room_dis;    
 						  
-					 	$total_gross=$gross_amounttt+$total_tax_amt; //////////////// TOTAL GROSS
-					 
-					 
+					 $total_gross=$gross_amount+$total_tax_amt; //////////////// TOTAL GROSS
+
 					 
 					 $total_room_amount=round($total_gross); //////////// TOTAL ROOM AMOUNT
 						$total_amount+=$total_room_amount; 
@@ -7678,8 +7675,8 @@ public function outstanding()
 					<td align="center"><span style="font-size:12px;">'.$edit_room_charge.'</span></td>
 					<input type="hidden" name="edit_totaltax'.$i.'" value="'.$total_tax_amt.'">
 					<td align="center"><span style="font-size:12px;">'.round($total_tax_amt).'</span></td>
-					<input type="hidden" name="edit_room_discount'.$i.'" value="'.$room_dis.'">
-					<td align="center"><span style="font-size:12px;">'.$room_dis.'</span></td>
+					<input type="hidden" name="edit_room_discount'.$i.'" value="'.$edit_room_discount.'">
+					<td align="center"><span style="font-size:12px;">'.$edit_room_discount.'</span></td>
 					<input type="hidden" name="edit_tg'.$i.'" value="'.$total_gross.'">
 					<td align="center"><span style="font-size:12px;">'.round($total_gross).'</span></td>
 					<input type="hidden" name="edit_net_amount'.$i.'" value="'.$total_room_amount.'">
@@ -7716,7 +7713,7 @@ public function outstanding()
 					foreach($fetch_pos_no as $pos_data){
 					$pos_kot_id=$pos_data['pos_kot']['id'];
 					$payment_type=$pos_data['pos_kot']['payment_type'];
-					$pos_amountt=$pos_data['pos_kot']['pos_amountt'];
+					$pos_amountt=$pos_data['pos_kot']['due_amount'];
 					/*if($payment_type==2)
 					{
 						$pos_amountt=$pos_data['pos_kot']['pos_amountt'];
@@ -7756,7 +7753,7 @@ public function outstanding()
 			if(!empty($edit_card_no) && !empty($room_no))
 			{
 				$grandamt=0;
-			    $conditions=array('card_no' => $edit_card_no, 'flag' => "0" , 'master_roomno_id' => $room_no , 'payment_id'=> 0);
+			    $conditions=array('card_no' => $edit_card_no, 'flag' => "0" , 'master_roomno_id' => $room_no, 'status' => "0",);
 				$fetch_keeping_no=$this->house_keeping->find('all',array('conditions'=>$conditions));
 				
 				$check=sizeof($fetch_keeping_no);
@@ -7782,7 +7779,8 @@ public function outstanding()
 					$edit_gross=$ftc_data['house_keeping']['iron_no'];
 					$edit_taxes=$ftc_data['house_keeping']['iron_price'];
 					$edit_amount=$ftc_data['house_keeping']['total_amount'];
-					$grandamt+=$edit_amount;
+					$edit_due_amount=$ftc_data['house_keeping']['due_amount'];
+					$grandamt+=$edit_due_amount;
 					$view_table.='<tr>
 					<td align="center"><label><span style="font-size:12px;">'.$edit_quantity.'</span></label></td>
 					<td align="center"><label><span style="font-size:12px;">'.$edit_rate.'</span></label></td>
@@ -7804,7 +7802,7 @@ public function outstanding()
 			if(!empty($edit_card_no) && !empty($room_no))
 			{
 				$grandamt10=0;
-			    $conditions=array('card_no' => $edit_card_no, 'flag' => "0" , 'master_roomno_id' => $room_no);
+			    $conditions=array('card_no' => $edit_card_no, 'flag' => "0",'status' => "0", 'master_roomno_id' => $room_no);
 				$fetch_o_s=$this->other_service->find('all',array('conditions'=>$conditions));
 				
 				$check=sizeof($fetch_o_s);
@@ -7834,7 +7832,8 @@ public function outstanding()
 					$edit_quantity=$ftc_data['other_service']['quantity'];
 					$edit_charge=$ftc_data['other_service']['charge'];
 					$edit_amount=$ftc_data['other_service']['total'];
-					$grandamt10+=$edit_amount;
+					$edit_due_amount=$ftc_data['other_service']['due_amount'];
+					$grandamt10+=$edit_due_amount;
 					$view_table.='<tr>
 					<td align="center"><label><span style="font-size:12px;">'.$edit_master_roomno_id.'</span></label></td>
 					<td align="center"><label><span style="font-size:12px;">'.$edit_card_no.'</span></label></td>
