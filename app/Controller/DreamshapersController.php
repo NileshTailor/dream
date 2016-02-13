@@ -17183,6 +17183,9 @@ $mail->addAddress($to);
 	
 	function advance_receipt(){
 		$this->layout='index_layout';
+       
+        $this->loadmodel('ledger_category');
+		$this->set('fetch_ledger_category', $this->ledger_category->find('all'));
 	}
     ///////////////////   End Php Function /////////////////////////////////////////////
 	function ajax_function()
