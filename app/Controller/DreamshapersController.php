@@ -5255,8 +5255,6 @@ public function debtor_receipt()
 			{
 			$multiple_transferamount_idd=$multiple_transferamount_id;
 			}
-			//pr($multiple_transferamount_idd);
-			//exit;
 			
 			@$tra1=$all[0]['room_checkin_checkout']['transfer_due_amount_roomno'];
 			$transfer_roomno_id=explode(',', $tra1);
@@ -5271,8 +5269,6 @@ public function debtor_receipt()
 			{
 			 $multiple_transferto_idd=$multiple_transferto_id;
 			}
-			//pr($multiple_transferto_idd);
-			//exit;
 
 			$this->room_checkin_checkout->updateAll(array('transfer_due_amount' => "'$multiple_transferamount_idd'", 'transfer_due_amount_roomno' => "'$multiple_transferto_idd'"), array('id' => $edit_transfer_dueamount_to));
 				  
@@ -5298,7 +5294,6 @@ public function debtor_receipt()
                 $this->room_checkin_checkout->updateAll(array(
                 'guest_name' => "'$edit_guest_name'",
 				'card_no' => "'$edit_card_no'",
-                'arrival_date' => "'$edit_arrival_date'",
 				'checkout_date' => "'$edit_checkout_date'",
                 'billing_instruction' => "'$edit_billing_instruction'",
                 'source_of_booking' => "'$edit_source_of_booking'", 'duration' => "'$edit_duration'", 'pax' => "'$edit_pax'",
@@ -5342,47 +5337,28 @@ public function debtor_receipt()
 								
 				$this->gr_no->updateAll(array('checkout_no' =>$this->request->data["checkout_no"]+1), array('id' => 1));
 				
-		$this->bill->saveAll(array( 
+		
+		
+		$cash=$this->request->data["cash"];
+		$neft_amt=$this->request->data["neft_amt"];
+		$cheque_amt=$this->request->data["cheque_amt"];
+		$credit_card_amt=$this->request->data["credit_card_amt"];
+		$transfer_due_amount=$this->request->data["transfer_due_amount"];
+		$fff=0;
+		$tit_amount=$cash+$neft_amt+$cheque_amt+$credit_card_amt+$fff;
+		$checkout_due=$tit_amount+$transfer_due_amount;
+		
+		$this->checkout->saveAll(array( 
 				'master_roomno_id' => $room_no_id,
-				'bill_no_id' => @$id_chekin,
-				'checkout_no' => @$checkout_no,
 				'date' => @$edit_checkout_date,
-                'company_id' => $this->request->data["edit_company_id"],
+				'checkout_no' => @$checkout_no,
+                'user_id' => $this->request->data["edit_company_id"],
 				'card_no' => $this->request->data["edit_card_no"],
 				'guest_name' => $this->request->data["edit_guest_name"],
-				'total' => @$edit_totalnetamount,
-				'due' => @$due_amount1,
-				'cash' => @$this->request->data["cash"],
-				'neft_amt' => @$this->request->data["neft_amt"],
-				'cheque_amt' => @$this->request->data["cheque_amt"],
-				'credit_card_amt' => @$this->request->data["credit_card_amt"],
-				'checkout_id' =>@$id_chekin,
-				'flag' => 0));		
-				
-				
-				if(($cash>0 || $cheque_amt>0 ||  $neft_amt>0 || $credit_card_amt>0 || $due_amount1>0) && $amount==''){	
-		$this->receipt_checkout->saveAll(array( 
-				'master_roomno_id' => $room_no_id,
-				'bill_no_id' => @$id_chekin,
-				'date_to' => @$edit_checkout_date,
-				'plan_id' => @$edit_plan_id,
-                'company_id' => $this->request->data["edit_company_id"],
-				'card_no' => $this->request->data["edit_card_no"],
-				'guest_name' => $this->request->data["edit_guest_name"],
-				'recpt_type' => @$this->request->data["recpt_type"],
-				'cash' => @$this->request->data["cash"],
-				'cheque_amt' => @$this->request->data["cheque_amt"],
-				'cheque_no' => @$this->request->data["cheque_no"],
-				'neft_amt' => @$this->request->data["neft_amt"],
-				'neft_no' => @$this->request->data["neft_no"],
-				'credit_card_amt' => @$this->request->data["credit_card_amt"],
-				'credit_card_name' => @$this->request->data["credit_card_name"],
-				'credit_card_no' => @$this->request->data["credit_card_no"],
-				'credit_card_no' => @$this->request->data["billing_ins"],
-				'due_amount' => @$due_amount1,
-				'checkout_id' =>@$id_chekin,
-				'flag1' => 0));
-				}	
+				'total_amount' => @$this->request->data["edit_totalnetamount"],
+				'receive_amount' => @$tit_amount,
+				'due_amount' =>@$checkout_due));
+					
 				$edit_card_no=$this->request->data["edit_card_no"];
 				//$room_no_id=$this->request->data["room_no_id"]; ///////////////////////////  looooooop
 				
