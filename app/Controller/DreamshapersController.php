@@ -15782,14 +15782,25 @@ public function ledger_master()
 		else{
 			$this->layout='index_layout';
 		}
-				$this->loadmodel('ledger');
-				$conditions=array('transaction_type'=>'Receipt');
-
-				$result_ledger=$this->ledger->find('all',array('conditions'=>$conditions));
-				
-				$this->set('result_ledger',$result_ledger);
+			$this->loadmodel('ledger_category');
+			$this->set('fetch_ledger_category', $this->ledger_category->find('all'));
 	}
-	
+
+	function ledger_view_ajax(){
+		$this->layout='ajax_layout';
+			
+			 $ledger_category_id=$this->request->query('ledger_master_id');
+			 $user_id=$this->request->query('user_id');
+			 $from=$this->request->query('from');
+			 $to=$this->request->query('to');
+				$conditions =array ('transaction_date between ? and ?' => array($from, $to), array('transaction_type'=>'Receipt','ledger_category_id'=>$ledger_category_id,'user_id'=>$user_id));
+					
+			$this->loadmodel('ledger'); 
+			
+			$result_ledger=$this->ledger->find('all',array('conditions'=>$conditions));
+			$this->set('result_ledger',$result_ledger);
+		
+	}
 	
 ////////////////....................../////////////////.....
 
