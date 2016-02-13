@@ -17182,6 +17182,11 @@ $mail->addAddress($to);
 	
 	function purches_vouchers(){
 		$this->layout='index_layout';
+		
+		$this->loadmodel('ledger');
+		$conditions=array('transaction_type' => "Purches Voucher");
+		$Suppliers=$this->ledger->find('all',array('conditions'=>$conditions));
+		$this->set(compact('Suppliers'));
 	}
     ///////////////////   End Php Function /////////////////////////////////////////////
 	function ajax_function()
