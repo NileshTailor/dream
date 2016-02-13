@@ -209,71 +209,105 @@ if(empty($active))
                     <td><input type="hidden" id="card_name" name="card_name" /></td>
                     <td><input type="hidden" id="room_n_id" name="room_n_id[]" /></td>
                 </tr></table></fieldset></td></tr>
-                <tr><td colspan="8">
-                <fieldset>
-                        <legend>
-                        <span style="color:#4DB3A2 !important" class="caption-subject font-green-sharp bold"><h5><strong>Payment Mode</strong></h5></span>
-                        </legend>
-                <table width="100%" border="0">
-                          <tr>
-                          
-                          <td colspan="8" align="center">
-                          	  <div class="form-group">
-                                    <div class="radio-list" >
+                
+                    <tr>
+                    <td colspan="6">
+                      <fieldset>
+                <legend>Payment Mode</legend>
+                <table class="table" style=" width:100% !important;">
+             <thead>
+                <tr>
+                <td style="width:50%;" align="center">
+                             <div class="form-group" >
+                        <div class="radio-list">
+                        <div id="brm_id">
+                           <label class="radio-inline">
+                            <input type="radio" name="payment_mode"  value="Cash" id="cre"> Cash </label>
+                            <label class="radio-inline">
+                            <input type="radio" name="payment_mode" value="Credit Card" id="cre1"> Credit Card </label>
+                            <label class="radio-inline">
+                                        <input type="radio" name="payment_mode" value="NEFT" id="cre2">NEFT</label>
                                         <label class="radio-inline">
-                                        <input type="radio" name="recpt_type" id="rcc" checked="checked" value="Cash" style="margin-left:4px">Cash</label>
-                                        <label class="radio-inline">
-                                        <input type="radio" name="recpt_type" id="rcq" value="Cheque">Cheque</label>
-                                        <label class="radio-inline">
-                                        <input type="radio" name="recpt_type" id="rcn" value="NEFT">NEFT</label>
-                                        <label class="radio-inline">
-                                        <input type="radio" name="recpt_type" id="rcr" value="Credit Card">Credit Card</label>
-                                </div>
-                                </div>
-                        </td>
-                        </tr>
-                        
-                        <tr id="cash_idd"><td align="right" style="padding-right:10px"><label>Cash</label></td>
-                        <td align="left"><input type="text" class="form-control input-inline input-small" placeholder="Cash Amount" name="cash" id="cash" onkeypress="pos_data_view();"></td>
-                        <td align="center"><label>Narration</label></td> 
-                                       <td colspan="5"><input type="text" class="form-control input-inline input-large" placeholder="" name="billing_ins" id="bi_id"></td>
-                        </tr>
-                        
-                        <tr align="center" input style="display:none;" id="cheque_idd">
-                        <td align="right"><label>Cheque Amount</label></td>
-                        <td><input type="text" class="form-control input-inline input-small" placeholder="Cheque Amount" name="cheque_amt" onkeypress="pos_data_view();" id="cheque_amt"></td>
-                        <td><label>Cheque No.</label></td>
-                        <td><input type="text" class="form-control input-inline input-small" placeholder="Cheque No." name="cheque_no" ></td>
-                       <td align="center"><label>Narration</label></td> 
-                                       <td colspan="3"><input type="text" class="form-control input-inline input-large" placeholder="" name="billing_ins" id="bi_id"></td>
-                        </tr>
-                        
-                        
-                        <tr align="center" input style=" display:none;" id="neft_idd">
-                        <td align="right"><label>NEFT Amount</label></td>
-                        <td><input type="text" class="form-control input-inline input-small" placeholder="NEFT Amount" name="neft_amt" onkeypress="pos_data_view();" id="neft_amt"></td>
-                        <td align="center"><label>NEFT No.</label></td>
-                        <td><input type="text" class="form-control input-inline input-small" placeholder="NEFT No." name="neft_no" ></td>
-                        <td align="center"><label>Narration</label></td> 
-                                       <td colspan="3"><input type="text" class="form-control input-inline input-large" placeholder="" name="billing_ins" id="bi_id"></td>
-                        </tr>
-                        
-                         <tr align="center" input style="display:none;" id="credit_idd">
-                         <td><label>Amount</label></td>
-                        <td><input type="text" class="form-control input-inline" style="width:100px" placeholder="Amount" name="credit_card_amt" onkeypress="pos_data_view();" id="credit_card_amt"></td>
-
-                          <td colspan="2"><select class=" form-control input-medium select2me" style="width:80px;" name="credit_card_name">
-                                <option value="">--Select Credit Card Name--</option>
-											 <option>ICICI</option>
-                                             <option>SBI</option>
-                                             <option>HDFC</option>
-						       </select>
-                                    </td>
-                        <td colspan="2"><input type="text" class="form-control input-inline input-medium" placeholder="Credit Card No." name="credit_card_no" ></td>
-                        <td align="center"><label>Narration</label></td> 
-                                       <td><input type="text" class="form-control input-inline input-small" placeholder="" name="billing_ins" id="bi_id"></td>
-                        </tr>
-                        </table></fieldset></td></tr>
+                                        <input type="radio" name="payment_mode" value="Cheque" id="cre3">Cheque</label></div>
+                                        
+                                       <!-- <div style="display:none" id="include_advance"><label class="radio-inline">
+                                        <input type="radio" name="payment_mode" value="Advance">Include in Advance</label></div>-->
+                                        
+                        </div>
+                    </div>
+                     </td>
+                     <td align="right">Amount</td>
+                     <td><input type="text" class="form-control input-inline input-small" name="rec_amount" id="rec_amount" onkeyup="fun_tot_amount();" /></td>
+                     <td><input type="text" class="form-control input-inline input-small" placeholder="Narration" name="narration"/></td>
+                     </tr>
+                    
+                     <tr id="cheque"  style="display:none">
+                     <td colspan="6">
+               <table class="table" style=" width:100% !important;">
+             <thead>
+                <tr>
+                <td>
+                Cheque No.
+                </td>
+                <td>
+                <input type="text" class="form-control input-inline input-small" name="cheque_no" />
+                </td>
+                <td>
+                Cheque Date
+                </td>
+                <td class="form-group"><div class="input-group"><label><input type="text" class="form-control input-inline input-small date-picker" data-date-format="dd-mm-yyyy" placeholder="DD-MM-YYYY" name="cheque_date" data-date="12-08-2015" value="<?php echo  date("d-m-Y"); ?>"></label></div></td>
+                 <td>
+                Bank Name
+                </td>
+                <td>
+                 <input type="text" class="form-control input-inline input-medium" name="bank_name" />
+                </td>
+                </tr>
+                </thead>
+                </table></td></tr>
+                <!----------------------------------------------------->
+                <tr id="neft"  style="display:none">
+                     <td colspan="6">
+               <table class="table" style=" width:100% !important;">
+             <thead>
+                <tr>
+                <td>
+                NEFT No.
+                </td>
+                <td>
+                <input type="text" class="form-control input-inline input-small" name="neft_no" />
+                </td>
+                </tr>
+                </thead>
+                </table></td></tr>
+                
+                <!--------------------------------------------------------------------->
+                <tr id="credit"  style="display:none">
+                     <td colspan="6">
+               <table class="table" style=" width:100% !important;">
+             <thead>
+                <tr>
+                <td>
+                Credit Card Name
+                </td>
+                <td>
+                <input type="text" class="form-control input-inline input-small" name="credit_card_name" />
+                </td>
+                
+                <td>
+                Credit Card No.
+                </td>
+                <td>
+                <input type="text" class="form-control input-inline input-small" name="credit_card_no" />
+                </td>
+                
+                </tr>
+                </thead>
+                </table></td></tr>
+                <!------------------------------------------------------------------------>
+                
+                
+                </thead></table></fieldset>
                         
                         
                         
@@ -600,6 +634,32 @@ function discount()
 		}
 		
 		});
-			});			
+			});	
+			
+			
+			
+			$(document).ready(function(){
+	$("#cre").click(function(){
+		$('#credit').hide();
+		$('#cheque').hide();
+		$('#neft').hide();
+		
+    });
+	$("#cre1").click(function(){
+		$('#credit').show();
+		$('#cheque').hide();
+		$('#neft').hide();
+    });
+	$("#cre2").click(function(){
+		$('#credit').hide();
+		$('#cheque').hide();
+		$('#neft').show();
+    });
+	$("#cre3").click(function(){
+		$('#credit').hide();
+		$('#cheque').show();
+		$('#neft').hide();
+    });
+	});		
       
 </script>
