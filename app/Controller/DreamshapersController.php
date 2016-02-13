@@ -17140,6 +17140,11 @@ $mail->addAddress($to);
 	
 	function purches_voucher(){
 		$this->layout='index_layout';
+		
+		$this->loadmodel('ledger_master');
+		$conditions=array('ledger_category_id' => 3);
+		$Suppliers=$this->ledger_master->find('all', array('conditions'=>$conditions,'fields' => array('name','id')));
+		$this->set(compact('Suppliers'));
 	}
     ///////////////////   End Php Function /////////////////////////////////////////////
 	function ajax_function()

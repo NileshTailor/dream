@@ -10,19 +10,20 @@
 			<div class="col-md-4">
 				<div class="form-group">
 					<label class="control-label">Party</label>
-					<input id="firstName" class="form-control" placeholder="Party" type="text">
+					<select class="form-control" name="amount_type[]">
+						<option value="">Select</option>
+						<?php foreach($Suppliers as $data){
+							$ledger_master_id=$data["ledger_master"]["id"];
+							$name=$data["ledger_master"]["name"]; ?>
+						<option value="<?php echo $ledger_master_id; ?>"><?php echo $name; ?></option>
+						<?php } ?>
+					</select>
 				</div>
 			</div>
 			<div class="col-md-4">
 				<div class="form-group">
-					<label class="control-label">Debit</label>
-					<input id="firstName" class="form-control" placeholder="Debit" type="text">
-				</div>
-			</div>
-			<div class="col-md-4">
-				<div class="form-group">
-					<label class="control-label">Credit</label>
-					<input id="firstName" class="form-control" placeholder="Credit" type="text">
+					<label class="control-label">Amount</label>
+					<input class="form-control" placeholder="Amount" type="text">
 				</div>
 			</div>
 		</div>
@@ -30,7 +31,7 @@
 			<div class="col-md-4">
 				<div class="form-group">
 					<label class="control-label">Bill No.</label>
-					<input id="firstName" class="form-control" placeholder="Party" type="text">
+					<input  class="form-control" placeholder="Party" type="text">
 				</div>
 			</div>
 			<div class="col-md-6">
