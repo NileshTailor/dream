@@ -6537,7 +6537,7 @@ public function outstanding()
 									<div class="modal-content">
 										<div class="modal-header">
 											<button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
-											<h4 class="modal-title">Modal Title</h4>
+											<h4 class="modal-title">Receipt Mode</h4>
 										</div>
 										<div class="modal-body">
 											<div class="form-group">
@@ -15513,6 +15513,7 @@ public function companydiscount()
 				'master_plan_id' => @(string)$this->request->data["master_plan_id"],
 				'p_address' => $this->request->data["p_address"],'date' => $date,'time' => $cutrrent_time));
 				$success=$this->smtpmailer($this->request->data["authorized_email_id"],'Dreamshapers','Enquiry', "hello" ,$this->request->data["authorized_email_id"]);
+				
 					$working_key='A1d987e6da856f0d2de06aa0456dcb04b';
 					$sms_sender='PHPHTL';
 					$sms1=str_replace(' ', '+', 'Thank you for choosing us for your stay.');
