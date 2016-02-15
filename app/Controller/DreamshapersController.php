@@ -5214,8 +5214,8 @@ public function debtor_receipt()
 				@$edit_other_discount=$this->request->data["edit_other_discount"];
                 $edit_advance_taken=$this->request->data["edit_advance_taken"];
 				@$edit_tg=$this->request->data["edit_tg".$i];
-                $edit_foo_discount=$this->request->data["edit_foo_discount".$i];
-                $edit_net_amount=$this->request->data["edit_net_amount".$i];
+                @$edit_foo_discount=$this->request->data["edit_foo_discount".$i];
+                @$edit_net_amount=$this->request->data["edit_net_amount".$i];
                 @$edit_remarks=$this->request->data["edit_remarks"];
 				//$room_no_id=$this->request->data["room_no_id"];
 				@$edit_posnet_amount=$this->request->data["edit_posnet_amount".$i];
@@ -5280,7 +5280,7 @@ public function debtor_receipt()
 				$cash=$this->request->data["rec_amount"];
 				@$given_amount=$cash;
 				$recpt_type=$this->request->data["payment_mode"];
-				$room_due=$this->request->data["edit_due_amount".$i];
+				@$room_due=$this->request->data["edit_due_amount".$i];
 				$amount=$this->request->data["amount"];
 				if($room_due=='0')
 				{
@@ -5288,7 +5288,8 @@ public function debtor_receipt()
 				}
 				else
 				$due_amount1=$room_due;
-				$pos_room_update=$curry1[$x];
+				
+				@$pos_room_update=$curry1[$x];
 				
 				//////////////////////////////////////////////////////////////////////////
                 $this->room_checkin_checkout->updateAll(array(
@@ -5341,11 +5342,8 @@ public function debtor_receipt()
 				$credit_card_no=@(int)$this->data["credit_card_no"];
 				$bank_name=$this->data["bank_name"];
 				$narration=$this->data["narration"];
-			    $discount=$this->data["discount"];
 				$date=date("Y-m-d");
 				$current_time=date("h:i:s A");
-				$edit_net_amount=$this->request->data["edit_net_amount".$i];
-				$edit_room_charge=$this->request->data["edit_room_charge".$i];
 				$edit_company_id=$this->request->data["edit_company_id"];
 				$payment_mode=$this->request->data["payment_mode"];
 				$this->loadModel('room_checkin_checkout');
@@ -5362,8 +5360,6 @@ public function debtor_receipt()
 				$kot_m_ledger_checkout=$this->ledger_master->find('all', array('conditions'=>array('ledger_category_id' =>'1','user_id' =>$edit_company_id)));
 				$l_id=$kot_m_ledger_checkout[0]['ledger_master']['id'];
 				/////////////////////////////////////////////////////////////////////////////
-				
-				
 			$x=0;
 			$i=0;
 			foreach($id_chekin_ary as $id_chekin)
@@ -5373,25 +5369,17 @@ public function debtor_receipt()
                 $edit_advance_taken=$this->request->data["edit_advance_taken"];
 				@$edit_tg=$this->request->data["edit_tg".$i];
                 $edit_foo_discount=$this->request->data["edit_foo_discount".$i];
+				//$totaly_charge=$this->request->data["totaly_charge".$i];
                 $edit_net_amount=$this->request->data["edit_net_amount".$i];
 				@$edit_totaltax=$this->request->data["edit_totaltax".$i];
 				@$discount_type=$this->request->data["discount_type"];
 				@$edit_room_discount=$this->request->data["edit_room_discount"];
-			$x++;	
+				$this->ledger_cr_dr->saveAll(array('ledger_id'=>$last_ledger_id,'ledger_master_id'=> $l_id,'dr' => $edit_net_amount));
+				if($edit_other_discount>0){
+				$this->ledger_cr_dr->saveAll(array('ledger_id'=>$last_ledger_id,'ledger_master_id'=> '10','dr' => $edit_other_discount));}
+			$x++;
 			}
 				////////////////////////////////////////////////////////end/////////////////////////////////////////////////////
-						
-						
-						
-						
-						
-						
-						
-						
-						
-						
-						
-						
 		///////////////////////////////////////////////////////////////Ledger2/////////////////////
 		    	$fetch_transaction_id_bill2=$this->ledger->find('count',array('conditions'=>array('transaction_type'=>'Receipt')));
                 $t_id=$fetch_transaction_id_bill2+1;
@@ -5415,25 +5403,11 @@ public function debtor_receipt()
 			    }
 			  }
 				///////////////////////////////////////////////////////////////////////////////////////////////////
-						
-						
-						
-						
-						
-						
-						
-						
-						
-						
-						
-						
-						
-								
-								
-		
-				
+				$this->loadmodel('master_room');
 				$this->pos_kot->updateAll(array('flag1' => 1), array('master_roomnos_id' => @$pos_room_update, 'card_no'=>$edit_card_no));
+				$this->loadmodel('house_keeping');
 				$this->house_keeping->updateAll(array('status' => 1), array('master_roomno_id' => $pos_room_update, 'card_no'=>$edit_card_no));
+				$this->loadmodel('other_service');
 				$this->other_service->updateAll(array('status' => 1), array('master_roomno_id' => $pos_room_update, 'card_no'=>$edit_card_no));
 			    $roomstatus='Dirty';
                 $this->room_serviceing->saveAll(array('master_roomno_id' => @(int)$pos_room_update,'room_status' =>@$roomstatus,'service_date' =>@$date, 'flag' =>1));
@@ -5458,12 +5432,6 @@ public function debtor_receipt()
 		
 				$edit_card_no=$this->request->data["edit_card_no"];
 				///////////////////////////////////////////////////////////
-				
-				
-				//$room_no_id=$this->request->data["room_no_id"]; ///////////////////////////  looooooop
-				
-				//$this->pos_kot->updateAll(array('foo_discount' => "'$edit_foo_discount'"),array('flag' => 0, 'master_roomnos_id'=> $room_no_id, 'card_no'=>$edit_card_no), array('order'=>array('id'=> 'DESC')));
-				////////////////////////  PAID RECIPT
 				//////////// RooM STATUS 
 				if(sizeof($id_chekin_ary)>1)
 				{
@@ -7650,13 +7618,13 @@ public function outstanding()
 				<table class="table table-bordered table-hover">
 				<thead>                            
 				<tr>
-				
+				<th style="text-align:center">Room No.</td>
 				<th style="text-align:center">Duration</td>
 				<th style="text-align:center">Amount </td>
 				<th style="text-align:center">Total Amount </td>
 				<th style="text-align:center">Tax</td>
-				<th style="text-align:center">Discount(%)</td>
 				<th style="text-align:center">Gross Amount</td>
+				<th style="text-align:center">Discount(%)</td>
 				
 				<th style="text-align:center">Room Amount</th>
 				</tr></thead>';
@@ -7738,23 +7706,26 @@ public function outstanding()
 						 //$after_room_dis_amount=$gross_amount-$room_dis;    
 						  
 					 $total_gross=$gross_amount+$total_tax_amt; //////////////// TOTAL GROSS
-
+                     $main_gross=$gross_a+$total_tax_amt;
 					 
 					 $total_room_amount=round($total_gross); //////////// TOTAL ROOM AMOUNT
 						$total_amount+=$total_room_amount; 
 						
 					$view_table.='<tr>
+					<input type="hidden" name="edit_rnoo'.$i.'" value="'.$room_no.'">
 					<input type="hidden" name="edit_duration'.$i.'" value="'.$total_duration.'">
+					<td align="center"><span style="font-size:12px;">'.$room_no.'</span></td>
 					<td align="center"><span style="font-size:12px;">'.$total_duration.'</span></td>
 					<td align="center"><span style="font-size:12px;">'.$edit_room_charge.'</span></td>
-					<input type="hidden" name="edit_totaltax'.$i.'" value="'.$totaly_charge.'">
+					<input type="hidden" name="edit_totaly_charge'.$i.'" value="'.$totaly_charge.'">
 					<td align="center"><span style="font-size:12px;">'.$totaly_charge.'</span></td>
 					<input type="hidden" name="edit_totaltax'.$i.'" value="'.$total_tax_amt.'">
 					<td align="center"><span style="font-size:12px;">'.round($total_tax_amt).'</span></td>
+					<input type="hidden" name="edit_tg'.$i.'" value="'.$main_gross.'">
+					<td align="center"><span style="font-size:12px;">'.round($main_gross).'</span></td>
+                    <input type="hidden" name="edit_room_discount'.$i.'" value="'.$room_dis.'">					
 					<input type="hidden" name="edit_room_discount'.$i.'" value="'.$edit_room_discount.'">
 					<td align="center"><span style="font-size:12px;">'.$edit_room_discount.'</span></td>
-					<input type="hidden" name="edit_tg'.$i.'" value="'.$total_gross.'">
-					<td align="center"><span style="font-size:12px;">'.round($total_gross).'</span></td>
 					<input type="hidden" name="edit_net_amount'.$i.'" value="'.$total_room_amount.'">
 					<td align="center"><span style="font-size:12px;">'.$total_room_amount.'</span></td>
 					</tr>';
