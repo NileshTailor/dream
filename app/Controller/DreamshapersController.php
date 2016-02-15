@@ -5225,7 +5225,6 @@ public function debtor_receipt()
                 $edit_totalnetamount=$this->request->data["edit_totalnetamount"];
 				@$transfer_due_amount=$this->request->data["transfer_due_amount"];
 				@$card_name=$this->request->data["card_name"];
-				@$room_name=$this->request->data["room_name"];
 				@$edit_due_amount=$this->request->data["edit_due_amount".$i];
 				//@$edit_extra_bed_tot=$this->request->data["edit_extra_bed_tot"];
 				@$discount_type=$this->request->data["discount_type"];
@@ -5304,22 +5303,35 @@ public function debtor_receipt()
 				'other_discount' => "'$edit_other_discount'",
 				'discount_type' => "'$discount_type'",
                 'net_amount' => "'$edit_net_amount'",
-				'cash_paid' => $given_amount,
-				'paid_room' => "'$room_name'",'tg' => "'$edit_tg'", 'status' => 1, 'house_amount' => "'$edit_house_amount'", 'extra_bed' => "'$edit_extra_bed'",
+				'cash_paid' => "'$given_amount'",
+				'tg' => "'$edit_tg'", 'status' => 1, 'house_amount' => "'$edit_house_amount'", 'extra_bed' => "'$edit_extra_bed'",
                 'remarks' => "'$edit_remarks'", 'posnet_amount' => "'$edit_posnet_amount'", 'paid_amt' => "'$multiple_transferamount_idd'", 
 				'totalnetamount' => "'$edit_totalnetamount'", 'totaltax' => "'$edit_totaltax'", 'due_amount' => "'$edit_due_amount'", 'multi_flag' => "' $room_checkin_checkout_flag'", 'multi_combine_id' => @$pos_room_update), array('id' => $id_chekin));
 				/////////////////////////////////////end////////////////////////////////////////////
 				
-				/////////////////////////checkout///////////////////////////
+				$this->loadmodel('master_room');
+				$this->pos_kot->updateAll(array('flag1' => 1), array('master_roomnos_id' => @$pos_room_update, 'card_no'=>$edit_card_no));
+				$this->loadmodel('house_keeping');
+				$this->house_keeping->updateAll(array('status' => 1), array('master_roomno_id' => $pos_room_update, 'card_no'=>$edit_card_no));
+				$this->loadmodel('other_service');
+				$this->other_service->updateAll(array('status' => 1), array('master_roomno_id' => $pos_room_update, 'card_no'=>$edit_card_no));
+			    $roomstatus='Dirty';
+                $this->room_serviceing->saveAll(array('master_roomno_id' => @(int)$pos_room_update,'room_status' =>@$roomstatus,'service_date' =>@$date, 'flag' =>1));
+				$x++;
+			}
+			
+			
+			
+			/////////////////////////checkout///////////////////////////
 				$this->loadmodel('checkout');
 				$this->set('fetch_checkout', $this->checkout->find('all', array('conditions'=>array('flag' => "0"))));
-		        $cash=$this->request->data["rec_amount"];
 		        @$transfer_due_amount=$this->request->data["transfer_due_amount"];
 				$rec_amount=$this->request->data["rec_amount"];
+				$edit_totalnetamount=$this->request->data["edit_totalnetamount"];
 			    $fff=0;
-		        $tit_amount=$cash+$fff;
-		        $checkout_due=$tit_amount+$transfer_due_amount[0];
-				$checkout_due1=$rec_amount-$checkout_due;
+				$tit_amount=$rec_amount+$fff;
+		        $checkout_due=$rec_amount+$transfer_due_amount[0]+$fff;
+				$checkout_due1=$edit_totalnetamount-$checkout_due;
 		        $this->checkout->saveAll(array( 
 				'master_roomno_id' => $room_no_id,
 				'date' => @$edit_checkout_date,
@@ -5360,6 +5372,7 @@ public function debtor_receipt()
 				$kot_m_ledger_checkout=$this->ledger_master->find('all', array('conditions'=>array('ledger_category_id' =>'1','user_id' =>$edit_company_id)));
 				$l_id=$kot_m_ledger_checkout[0]['ledger_master']['id'];
 				/////////////////////////////////////////////////////////////////////////////
+			
 			$x=0;
 			$i=0;
 			foreach($id_chekin_ary as $id_chekin)
@@ -5372,13 +5385,52 @@ public function debtor_receipt()
 				//$totaly_charge=$this->request->data["totaly_charge".$i];
                 $edit_net_amount=$this->request->data["edit_net_amount".$i];
 				@$edit_totaltax=$this->request->data["edit_totaltax".$i];
+				@$edit_totaly_charge=$this->request->data["edit_totaly_charge".$i];
 				@$discount_type=$this->request->data["discount_type"];
-				@$edit_room_discount=$this->request->data["edit_room_discount"];
+				@$edit_room_discount=$this->request->data["edit_room_discount".$i];
+				@$edit_room_discount=$this->request->data["edit_room_discount".$i];
+				@$edit_taxesed=$this->request->data["edit_taxesed".$i];
+				
 				$this->ledger_cr_dr->saveAll(array('ledger_id'=>$last_ledger_id,'ledger_master_id'=> $l_id,'dr' => $edit_net_amount));
-				if($edit_other_discount>0){
-				$this->ledger_cr_dr->saveAll(array('ledger_id'=>$last_ledger_id,'ledger_master_id'=> '10','dr' => $edit_other_discount));}
+				if($edit_room_discount>0){
+				$this->ledger_cr_dr->saveAll(array('ledger_id'=>$last_ledger_id,'ledger_master_id'=> '10','dr' => $edit_room_discount));}
+				$this->ledger_cr_dr->saveAll(array('ledger_id'=>$last_ledger_id,'ledger_master_id'=> $l_id,'cr' => $edit_totaly_charge));
+				////////// Rohit Joshi tax code //////
+	            $this->loadModel('room_checkin_checkout');
+					
+
+                      @$edit_taxesed=$this->request->data["edit_taxesed".$i];
+					  $master_tax_id_modify= explode(' - ',$edit_taxesed);
+					  $master_tax_id_modify1=array_filter($master_tax_id_modify);
+					  $vat_gross=0;
+						foreach($master_tax_id_modify1 as $data_tax){
+							
+							$this->loadModel('master_tax');
+							$result_master_tax=$this->master_tax->find('all', array('conditions'=>array('id' =>$data_tax)));
+							$tax_applicable=$result_master_tax[0]['master_tax']['tax_applicable'];
+							$name=$result_master_tax[0]['master_tax']['name'];
+							if($name=='Service Tax'){
+								
+								$total_gro=$edit_totaly_charge*$tax_applicable/100;
+								$this->loadModel('ledger_cr_dr');
+								$this->ledger_cr_dr->saveAll(array('ledger_id'=>$last_ledger_id,'ledger_master_id'=> '29','cr' => $total_gro));
+								 $vat_gross=$edit_totaly_charge+$total_gro;
+							}
+							if($name=='VAT'){
+								if(!empty($vat_gross)){
+									$vat_actual=$vat_gross;
+								}else{
+									$vat_actual=$edit_totaly_charge;
+								}
+								$total_vat=$vat_actual*$tax_applicable/100;
+								 $this->loadModel('ledger_cr_dr');
+								 $this->ledger_cr_dr->saveAll(array('ledger_id'=>$last_ledger_id,'ledger_master_id'=> '39','cr' => $total_vat));
+							}
+			}
+/////////end code//////////		
 			$x++;
 			}
+			
 				////////////////////////////////////////////////////////end/////////////////////////////////////////////////////
 		///////////////////////////////////////////////////////////////Ledger2/////////////////////
 		    	$fetch_transaction_id_bill2=$this->ledger->find('count',array('conditions'=>array('transaction_type'=>'Receipt')));
@@ -5391,9 +5443,13 @@ public function debtor_receipt()
 				$last_ledger_id=$this->ledger->getLastInsertID();
 				$kot_m_ledger_checkout=$this->ledger_master->find('all', array('conditions'=>array('ledger_category_id' =>'1','user_id' =>$edit_company_id)));
 				$l_id=$kot_m_ledger_checkout[0]['ledger_master']['id'];
-				
-				$this->ledger_cr_dr->saveAll(array('ledger_id'=>$last_ledger_id,'ledger_master_id'=>$l_id,'cr' => $rec_amount));
-				  
+				if($edit_other_discount>0)
+				  {
+				@$edit_other_discount=$this->request->data["edit_other_discount"];
+				@$edit_totalnetamount=$this->request->data["edit_totalnetamount"];
+				@$rec_amount=$this->request->data["rec_amount"];
+				$tottji=$rec_amount+$edit_other_discount;
+				$this->ledger_cr_dr->saveAll(array('ledger_id'=>$last_ledger_id,'ledger_master_id'=> $l_id,'cr' => $tottji));
 				if($payment_mode=='Cash')
 				{
 				$this->ledger_cr_dr->saveAll(array('ledger_id'=>$last_ledger_id,'ledger_master_id'=> '35','dr' => $rec_amount));
@@ -5401,21 +5457,25 @@ public function debtor_receipt()
 				{
 				  $this->ledger_cr_dr->saveAll(array('ledger_id'=>$last_ledger_id,'ledger_master_id'=> '37','dr' => $rec_amount));
 			    }
+				$this->ledger_cr_dr->saveAll(array('ledger_id'=>$last_ledger_id,'ledger_master_id'=> '10','dr' => $edit_other_discount));
+				  }
+				  
+				else
+				  {
+				$this->ledger_cr_dr->saveAll(array('ledger_id'=>$last_ledger_id,'ledger_master_id'=>$l_id,'cr' => $rec_amount));
+				if($payment_mode=='Cash')
+				{
+				$this->ledger_cr_dr->saveAll(array('ledger_id'=>$last_ledger_id,'ledger_master_id'=> '35','dr' => $rec_amount));
+				}else
+				{
+				  $this->ledger_cr_dr->saveAll(array('ledger_id'=>$last_ledger_id,'ledger_master_id'=> '37','dr' => $rec_amount));
+			    }
+				  }
+				  
+				  
 			  }
 				///////////////////////////////////////////////////////////////////////////////////////////////////
-				$this->loadmodel('master_room');
-				$this->pos_kot->updateAll(array('flag1' => 1), array('master_roomnos_id' => @$pos_room_update, 'card_no'=>$edit_card_no));
-				$this->loadmodel('house_keeping');
-				$this->house_keeping->updateAll(array('status' => 1), array('master_roomno_id' => $pos_room_update, 'card_no'=>$edit_card_no));
-				$this->loadmodel('other_service');
-				$this->other_service->updateAll(array('status' => 1), array('master_roomno_id' => $pos_room_update, 'card_no'=>$edit_card_no));
-			    $roomstatus='Dirty';
-                $this->room_serviceing->saveAll(array('master_roomno_id' => @(int)$pos_room_update,'room_status' =>@$roomstatus,'service_date' =>@$date, 'flag' =>1));
-				
-				$x++;
-				//////////////////////////////
-			}
-			////// DUE AMOUNT CALC
+				// DUE AMOUNT CALC
 			    $cash=$this->request->data["rec_amount"];
 				@$given_amount=$cash;
 				$recpt_type=$this->request->data["payment_mode"];
@@ -7685,10 +7745,6 @@ public function outstanding()
 										else
 										{ $tax_applicable=0; }
 									}
-									
-									
-									
-									
 							}
 							$gross_a=round($total_duration*$edit_room_charge);
 							$room_dis=round(($gross_a*$edit_room_discount)/100);
@@ -7720,6 +7776,7 @@ public function outstanding()
 					<input type="hidden" name="edit_totaly_charge'.$i.'" value="'.$totaly_charge.'">
 					<td align="center"><span style="font-size:12px;">'.$totaly_charge.'</span></td>
 					<input type="hidden" name="edit_totaltax'.$i.'" value="'.$total_tax_amt.'">
+					<input type="hidden" name="edit_taxesed'.$i.'" value="'.$edit_taxes.'">
 					<td align="center"><span style="font-size:12px;">'.round($total_tax_amt).'</span></td>
 					<input type="hidden" name="edit_tg'.$i.'" value="'.$main_gross.'">
 					<td align="center"><span style="font-size:12px;">'.round($main_gross).'</span></td>
