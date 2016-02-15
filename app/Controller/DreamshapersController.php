@@ -7832,11 +7832,16 @@ public function outstanding()
 							
 						$gross_amount=round(($total_duration*$edit_room_charge)-$room_dis);
 						 $total_tax_amt=0;
+						 //$gross_amount=$gross_amount+$total_tax_amt;
 						 foreach($tax_applicable as $tax)
 						 {
 							$total_tax_amt+=($gross_amount*$tax)/100;
-						   // $gross_amount=$gross_amount+$total_tax_amt;
+						    $gross_amount=+$total_tax_amt;
+							//pr($gross_amount);
+							//pr($total_tax_amt);
                          }
+						 $gross_amountttt=round(($total_duration*$edit_room_charge)-$room_dis);
+						// exit;
 						 //$room_dis=round(($gross_amount*$edit_room_discount)/100); //////////////// ROom DISCOUNT
 						 
 						 //$after_room_dis_amount=$gross_amount-$room_dis;    
