@@ -1,11 +1,8 @@
 <?php
-
 if(empty($active))
 { $active="";
 }
 ?>
-
-
 <div role="alert" aria-live="polite" class="toast-top-right" id="toast-container" style="display:none; padding-top:40px"><div style="" class="toast " id="hide"><button role="button"class="toast-close-button">×</button><div class="toast-title">Payment</div><div class="toast-message"> </div></div></div>
 
 
@@ -20,15 +17,11 @@ if(empty($active))
         <div class="tabbable tabbable-custom tabbable-border">
             <ul class="nav nav-tabs">
                 <li <?php if(empty($active) || $active==1){?> class="active"<?php } else {?>class=""<?php }?>  >
-                    <a aria-expanded="true" href="#tab_1_1" data-toggle="tab">Add
-
-                    </a>
+                    <a aria-expanded="true" href="#tab_1_1" data-toggle="tab">Add</a>
                 </li>
-               <!-- <li <?php if($active=='2'){?> class="active"<?php } else {?>class=""<?php }?>>
-                    <a aria-expanded="false" href="#tab_1_2" data-toggle="tab">View
-
-                    </a>
-                </li>-->
+               <li <?php if($active=='2'){?> class="active"<?php } else {?>class=""<?php }?>>
+                    <a aria-expanded="false" href="#tab_1_2" data-toggle="tab">Advance</a>
+                </li>
             </ul>
             <div class="tab-content">
                 <div <?php if(empty($active) || $active=='1'){?> class="tab-pane fade active in"<?php } else {?>class="tab-pane fade"<?php }?>  id="tab_1_1">
@@ -56,8 +49,8 @@ if(empty($active))
                                     ?>
                             </select></div>
                             </td>
-                <td><div class="form-group"><label>Name</label></div></td>
-                <td><div class="form-group"><select class="form-control input-medium" name="user_id" id="user_id" required>
+                            <td><div class="form-group"><label>Name</label></div></td>
+                            <td><div class="form-group"><select class="form-control input-medium" name="user_id" id="user_id" required>
                                     <option value=""></option>
                                 </select>
                                 </div>
@@ -145,62 +138,77 @@ if(empty($active))
                 
                 
                 
-              <!--  <div <?php if($active=='2'){?> class="tab-pane fade active in"<?php } else {?>class="tab-pane fade"<?php } ?> id="tab_1_2">
-                <?php if(empty($fetch_receipt))
-                {?>
-                <div class="alert alert-danger" style="width:50%; margin-left:15%">
-								<strong>Sorry.!</strong> You have No records.
-							</div>
-                            <?php
-                }else
-                { ?>
-                     	 <div class="table-responsive">
-
-  <table class="table table-bordered table-hover" id="sample_1">
-	<thead>
-    <tr>
-        <th>S. No</th>
-         <th>Category</th>
-        <th>Name</th>
-        <th>Amount</th>
-        <th>Date</th>
-       <th>Discount</th>
-       <th>TDS</th>
-        <th>Narration</th>
-     </tr>
-     </thead>
-     <tbody>
-     <?php
-		$i=0;
-		 foreach($fetch_receipt as $data){ 
-		 $i++;
-		 $id=$data['receipt'] ['id'];
-		 $ledger_category_id=$data['receipt'] ['ledger_category_id'];
-		 $name_id=$data['receipt'] ['name_id'];
-		 $amount=$data['receipt'] ['amount'];
-		 $date=$data['receipt'] ['transaction_date'];
-		 $discount=$data['receipt'] ['discount'];
-		 $tds=$data['receipt'] ['tds'];
-		 $narration=$data['receipt'] ['narration'];
-		 ?>
-        <tr>
-        <td><?php echo $i;?></td>
-        <td><?php echo $data['receipt'] ['ledger_category_id']; ?></td>
-       <td><?php echo $data['receipt'] ['name_id']; ?></td>
-       <td><?php echo $data['receipt'] ['amount']; ?></td>
-       <td><?php echo $data['receipt'] ['transaction_date']; ?></td>
-       <td><?php echo $data['receipt'] ['discount']; ?></td>
-       <td><?php echo $data['receipt'] ['tds']; ?></td>
-       <td><?php echo $data['receipt'] ['narration']; ?></td>
-									</tr>
-<?php } ?>
-        </tbody>
-        </table> 
-</div>
-      </div>
-                     
-                     <?php }?>  
-                     </div>   -->
+               <div <?php if($active=='2'){?> class="tab-pane fade active in"<?php } else {?>class="tab-pane fade"<?php } ?> id="tab_1_2">
+              		 <form method="post" name="add">
+                   	 <div class="table-responsive">
+                    	<table class="table self-table" style=" width:100% !important;" border="0">
+                        
+                    	<tr>
+                            <td>Invoice No.</td>
+                            <td>
+                            <select tabindex="-1"  class="form-control" name="invoice_id[]" multiple="multiple">
+                            
+                            </select>
+                            </td>
+                            <td><label>Amount</label></td>
+                        <td><div class="form-group"><input type="text" class="form-control input-medium" placeholder="Amount" name="amount" readonly="readonly" required></div></td>
+                        <td><label>Discount</label></td>
+                        <td><div class="form-group"><input type="text" class="form-control input-medium tds_discount"  placeholder="Discount" name="discount"></div></td>
+                            
+                        </tr>
+                          
+                        <tr>
+                        <td><label>TDS</label></td>
+                        <td><div class="form-group"><input type="text" class="form-control input-medium tds_discount" placeholder="TDS" name="tds"></div></td>
+                       <td><label>Gross Amount</label></td>
+                        <td><div class="form-group"><input type="text" class="form-control input-medium" placeholder="Gross Amount" name="gross_amount" readonly="readonly" required></div></td>
+                        
+                        <td><label>Transaction Date</label></td>
+                        <td><div class="form-group"><input type="text" class="form-control  input-medium date-picker" data-date-format="dd-mm-yyyy" placeholder="DD-MM-YYYY" value="<?php echo date("d-m-Y"); ?>" name="transaction_date"></div></td>
+                        </tr>
+                        <tr>
+                        <td><label>Received Amount</label></td>
+                        <td><div class="form-group"><input type="text" class="form-control input-medium" placeholder="Received Amount" name="received_amount"></div></td>
+                        <td><label>Receipt Mode</label></td><td><div class="form-group">
+										
+                                <div class="radio-list">
+                                    <label class="radio-inline" style="padding-left:0px !important;"><input name="receipt_mode"  value="Cash" type="radio" checked="checked"> Cash </label>
+                                    <label class="radio-inline" style="padding-left:0px !important;"><input name="receipt_mode" class="cheque" value="Cheque" type="radio"> Cheque </label>
+                                    <label class="radio-inline" style="padding-left:0px !important;"><input name="receipt_mode" class="credit_card" value="Credit Card" type="radio"> Credit Card </label>
+                                    <label class="radio-inline" style="padding-left:0px !important;"><input name="receipt_mode" class="neft" value="NEFT" type="radio"> NEFT </label>
+                                </div>
+                            </div>
+                        	</td>                    
+                        <td><label>Narration</label></td>
+                        <td colspan="3"><div class="form-group"><input type="text" class="form-control input-medium" placeholder="Narrations" name="narration"></div></td>
+                        
+                        </tr>
+                        <tr id="cheque" class="receipt_mode" style="display:none;">
+                        <td><label>Cheque No.</label></td>
+                        <td><div class="form-group"><input type="text" class="form-control input-medium" placeholder="Cheque No." name="cheque_no"></div></td>
+                        <td><label>Bank Name</label></td>
+                        <td><div class="form-group"><input type="text" class="form-control input-medium" placeholder="Bank Name" name="bank_name"></div></td>
+                        <td><label>Cheque Date</label></td>
+                        <td><div class="form-group"><input type="text" class="form-control  input-medium date-picker" data-date-format="dd-mm-yyyy" placeholder="DD-MM-YYYY" name="cheque_date"></div></td>
+                        </tr>
+                        <tr id="credit_card" class="receipt_mode" style="display:none;">
+                        <td><label>Credit Card Name</label></td>
+                        <td><div class="form-group"><input type="text" class="form-control input-medium" placeholder="Credit Card Name" name="credit_card_name"></div></td>
+                        <td><label>Credit Card No.</label></td>
+                        <td><div class="form-group"><input type="text" class="form-control input-medium" placeholder="Credit Card No." name="credit_card_no"></div></td>
+                        </tr>
+                        <tr id="neft" class="receipt_mode" style="display:none;">
+                        <td><label>NEFT No.</label></td>
+                        <td><div class="form-group"><input type="text" class="form-control input-medium" placeholder="NEFT No." name="neft_no"></div></td>
+                        </tr>
+                        <tr>
+                        <td colspan="4"><center><button name="add_receipt_payment"  type="submit" class="btn green"><i class="fa fa-plus"></i> Add</button></center></td>
+                        </tr>
+                        </table>
+                     </div>
+                    </form>
+                
+               </div> 
                      
 			</div> 
     	</div>
