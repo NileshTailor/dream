@@ -131,7 +131,7 @@ if(empty($active))
                         </tr>
                         <tr id="neft" class="receipt_mode" style="display:none;">
                         <td><label>NEFT No.</label></td>
-                        <td><div class="form-group"><input type="text" class="form-control input-medium" placeholder="NEFT No." name="credit_card_no"></div></td>
+                        <td><div class="form-group"><input type="text" class="form-control input-medium" placeholder="NEFT No." name="neft_no"></div></td>
                         </tr>
                         <tr>
                         <td colspan="4"><center><button name="add_receipt_payment"  type="submit" class="btn green"><i class="fa fa-plus"></i> Add</button></center></td>

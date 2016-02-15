@@ -6445,6 +6445,33 @@ public function outstanding()
 		$this->layout='ajax_layout';
 		
 		///////////////////////////////////////Ashishji/////////////////////////////////////////
+		if(@$this->request->query['bill_posting_ac']==1)
+        {
+            $ledger_id=$this->request->query['ledger_id'];
+			$receipt_mode=$this->request->query['receipt_mode'];
+			$cheque_no=$this->request->query['cheque_no'];
+			$bank_name=$this->request->query['bank_name'];
+			$cheque_date=$this->request->query['cheque_date'];
+			$credit_card_name=$this->request->query['credit_card_name'];
+			$credit_card_no=$this->request->query['credit_card_no'];
+			$neft_no=$this->request->query['neft_no'];
+			if(!empty($this->request->query["cheque_date"]))
+			{
+				$cheque_date=date('Y-m-d', strtotime($this->request->query["cheque_date"]));
+			}
+            $this->loadmodel('ledger');
+			$this->loadmodel('ledger_cr_dr');
+            $this->ledger->updateAll(array('receipt_mode' => "'$receipt_mode'", 'cheque_no' => "'$cheque_no'", 'bank_name' => "'$bank_name'", 'cheque_date' => "'$cheque_date'", 'credit_card_name' => "'$credit_card_name'", 'credit_card_no' => "'$credit_card_no'", 'neft_no' => "'$neft_no'" ),array('id' => $ledger_id));
+			if($this->request->query['receipt_mode']=='Cash')
+			{
+				$this->ledger_cr_dr->updateAll(array('ledger_master_id'=>35),array('ledger_id'=>$ledger_id,'OR'=>array(array('ledger_master_id'=>35),array('ledger_master_id'=>37))));
+			}
+			else
+			{
+				$this->ledger_cr_dr->updateAll(array('ledger_master_id'=>37),array('ledger_id'=>$ledger_id,'OR'=>array(array('ledger_master_id'=>35),array('ledger_master_id'=>37))));
+			}
+            exit;
+        }
 		if(@$this->request->query['bill_posting_approved']==1)
         {
             $ledger_id=$this->request->query['ledger_id'];
@@ -6457,13 +6484,13 @@ public function outstanding()
             $this->loadmodel('ledger_master');
             $this->loadmodel('ledger');
             $this->loadmodel('ledger_cr_dr');
-            $fetch_ledger=$this->ledger->find('all',array('fields'=>array('id','user_id','invoice_id'),'conditions'=>array('status'=>0,'transaction_type'=>'Receipt','receipt_type'=>$this->request->query['receipt_type'])));
+            $fetch_ledger=$this->ledger->find('all',array('conditions'=>array('status'=>0,'transaction_type'=>'Receipt','receipt_type'=>$this->request->query['receipt_type'])));
             ?>
              
                   <table class="table self-table" style=" width:100% !important;" border="0" id="bill_post">
                         <thead>
                             <tr>
-                                <th>S. No.</th><th>Company Name</th><th>Bill No.</th><th>Amount</th><th>View</th><th>Approved</th>
+                                <th>S. No.</th><th>Company Name</th><th>Bill No.</th><th>Amount</th><th>View</th><th>Edit</th><th>Approved</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -6503,14 +6530,67 @@ public function outstanding()
                             <td><?php echo $data_ledger['ledger']['invoice_id']; ?></td>
                             <td><?php echo $fetch_ledger_cr_dr[0]['ledger_cr_dr']['cr']; ?></td>
                             <td><button type="button" class="btn blue btn-xs popovers" data-trigger="hover" data-container="body" data-placement="right" data-content="<?php echo $contain; ?>" data-original-title="Ledger View" data-title="Ledger View">View</button></td>
+                            <td><a class="btn default" data-toggle="modal" href="#large<?php echo $sr_no; ?>">Edit </a><!-- /.modal -->
+                            <form>
+							<div class="modal fade bs-modal-lg" id="large<?php echo $sr_no; ?>" tabindex="-1" role="dialog" aria-hidden="true">
+								<div class="modal-dialog modal-lg">
+									<div class="modal-content">
+										<div class="modal-header">
+											<button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+											<h4 class="modal-title">Modal Title</h4>
+										</div>
+										<div class="modal-body">
+											<div class="form-group">
+                                                <label><input name="receipt_mode"  value="Cash" type="radio" <?php if($data_ledger['ledger']['receipt_mode']=='Cash'){ ?> checked="checked" <?php } ?>> Cash </label>
+                                                <label><input name="receipt_mode" class="cheque" value="Cheque" type="radio" <?php if($data_ledger['ledger']['receipt_mode']=='Cheque'){ ?> checked="checked" <?php } ?>> Cheque</label>
+                                                <label><input name="receipt_mode" class="credit_card" value="Credit Card" type="radio" <?php if($data_ledger['ledger']['receipt_mode']=='Credit Card'){ ?> checked="checked" <?php } ?>> Credit Card </label>
+                                               <label> <input name="receipt_mode" class="neft" value="NEFT" type="radio" <?php if($data_ledger['ledger']['receipt_mode']=='NEFT'){ ?> checked="checked" <?php } ?>> NEFT </label>
+                                            </div>
+                                            <div id="cheque" class="receipt_mode" <?php if($data_ledger['ledger']['receipt_mode']!='Cheque'){ ?> style="display:none;" <?php } ?> >
+                                            <p><label>Cheque No.</label>
+                                            <div class="form-group"><input type="text" class="form-control input-medium" placeholder="Cheque No." name="cheque_no" value="<?php echo $data_ledger['ledger']['cheque_no']; ?>"></div>
+                                            <label>Bank Name</label>
+                                            <div class="form-group"><input type="text" class="form-control input-medium" placeholder="Bank Name" name="bank_name" value="<?php echo $data_ledger['ledger']['bank_name']; ?>"></div>
+                                            <label>Cheque Date</label>
+                                            <div class="form-group"><input type="text" class="form-control  input-medium date-picker" data-date-format="dd-mm-yyyy" placeholder="DD-MM-YYYY" name="cheque_date" value="<?php  if(!empty($data_ledger['ledger']['cheque_date'])){ echo date('d-m-Y',strtotime($data_ledger['ledger']['cheque_date'])); } ?>"></div>
+                                            </p>
+                                            </div>
+                                            <div id="credit_card" class="receipt_mode" <?php if($data_ledger['ledger']['receipt_mode']!='Credit Card'){ ?> style="display:none;" <?php } ?> >
+                                            <p><label>Credit Card Name</label>
+                                            <div class="form-group"><input type="text" class="form-control input-medium" placeholder="Credit Card Name" name="credit_card_name" value="<?php echo $data_ledger['ledger']['credit_card_name']; ?>"></div>
+                                            <label>Credit Card No.</label>
+                                            <div class="form-group"><input type="text" class="form-control input-medium" placeholder="Credit Card No." name="credit_card_no" value="<?php echo $data_ledger['ledger']['credit_card_no']; ?>"></div>
+                                            </p>
+                                            </div>
+                                            <div id="neft" class="receipt_mode" <?php if($data_ledger['ledger']['receipt_mode']!='NEFT'){ ?> style="display:none;" <?php } ?>>
+                                            <p><label>NEFT No.</label>
+                                            <div class="form-group"><input type="text" class="form-control input-medium" placeholder="NEFT No." name="neft_no" value="<?php echo $data_ledger['ledger']['neft_no']; ?>"></div>
+                                            </p>
+                                            </div>
+										</div>
+										<div class="modal-footer">
+                                        	<input type="hidden" value="<?php echo $data_ledger['ledger']['id']; ?>" name="ledger_id" />
+											<button type="button" class="btn default" data-dismiss="modal">Close</button>
+											<button type="button" name="submit" data-dismiss="modal" class="btn blue">Save changes</button>
+										</div>
+									</div>
+									<!-- /.modal-content -->
+								</div>
+								<!-- /.modal-dialog -->
+							</div>
+                            </form>
+							<!-- /.modal --></td>
                             <td><button type="button" name="approved" class="btn green btn-xs" ledger_id=<?php echo $data_ledger['ledger']['id']; ?>>Approved</button></td>
                             </tr>
+                            
                         <?php
                         }
                         ?>
                         </tbody>
                     </table>
+                   			
             <?php
+			exit;
         }
         if(@$this->request->query['receipt_type_data']==1)
         {
@@ -16054,6 +16134,10 @@ public function receipt_payment()              ////////  Ashish
         {
             $this->layout='index_layout';
         }
+		if($this->request->is('post'))
+        {
+			exit;
+		}
     }
     public function expense_tracker_add()              ////////  Ashish
     {

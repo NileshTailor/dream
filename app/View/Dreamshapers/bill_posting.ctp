@@ -22,7 +22,7 @@
             <div class="tab-content">
                 <div <?php if(empty($active) || $active=='1'){?> class="tab-pane fade active in"<?php } else {?>class="tab-pane fade"<?php }?>  id="tab_1_1">
                 
-                    <form method="post" name="add">
+                    
                     <table class="table self-table" style=" width:100% !important;" border="0">
                      <thead>
                      <tr>
@@ -43,7 +43,7 @@
                     
                     	
                      </div>
-                    </form>
+                    
                 </div>
                      
 			</div> 
@@ -55,15 +55,42 @@
 <script>
 $(document).ready(function()
 {
+	$('button[name=submit]').live('click',function(e){
+		 e.preventDefault();
+		 
+		 var ledger_id=$(this).closest('td').find('input[name=ledger_id]').val();
+		 var receipt_mode=$(this).closest('td').find('input[name=receipt_mode]:checked').val();
+		 var cheque_no=$(this).closest('td').find('input[name=cheque_no]').val();
+		 var bank_name=$(this).closest('td').find('input[name=bank_name]').val();
+		 var cheque_date=$(this).closest('td').find('input[name=cheque_date]').val();
+		 var credit_card_name=$(this).closest('td').find('input[name=credit_card_name]').val();
+		 var credit_card_no=$(this).closest('td').find('input[name=credit_card_no]').val();
+		 var neft_no=$(this).closest('td').find('input[name=neft_no]').val();
+			$.ajax({ 
+			url: "ajax_php_file?bill_posting_ac=1&ledger_id="+ledger_id+"&receipt_mode="+receipt_mode+"&cheque_no="+cheque_no+"&bank_name="+bank_name+"&cheque_date="+cheque_date+"&credit_card_name="+credit_card_name+"&credit_card_no="+credit_card_no+"&neft_no="+neft_no,
+			success: function(response)
+			{ 
+			
+			}
+			});
+	});	
+	$('input[name=receipt_mode]').live('change',function(){
+		var cls=$(this).attr('class');
+		$(this).closest('td').find('.receipt_mode').css('display','none');
+		$(this).closest('td').find('#'+cls).removeAttr('style');
+		
+	});
 	$('input[name=receipt_type]').live('change',function(){
 		var receipt_type=$(this).val();
-		
+		//.closest('span').attr('class','checked');
 		$.ajax({ 
 			url: "ajax_php_file?bill_posting=1&receipt_type="+receipt_type,
 			success: function(response)
 			{ 
 				$('.table-responsive').html(response);
 				$('.popovers').popover();
+				$('.date-picker').datepicker();
+				
 			}
 			});
 	});
