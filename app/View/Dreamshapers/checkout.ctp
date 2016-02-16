@@ -178,9 +178,8 @@ if(empty($active))
                         </tr>
                         
                         
-                        <tr><td><input name="transfer_check" type="checkbox" value="1" id="paid_check" /></td></tr>
                         
-                      <tr id="hide_check" display><td colspan="8">
+                      <tr><td colspan="8">
                     <fieldset>
                         <legend>
                         <span style="color:#4DB3A2 !important" class="caption-subject font-green-sharp bold"><h5><strong>Paid by Other</strong></h5></span>
@@ -221,7 +220,7 @@ if(empty($active))
                         <div class="radio-list">
                         <div id="brm_id">
                            <label class="radio-inline">
-                            <input type="radio" name="payment_mode"  value="Cash" id="cre"> Cash </label>
+                            <input type="radio" name="payment_mode"  value="Cash" id="cre" checked="checked"> Cash </label>
                             <label class="radio-inline">
                             <input type="radio" name="payment_mode" value="Credit Card" id="cre1"> Credit Card </label>
                             <label class="radio-inline">
@@ -310,8 +309,7 @@ if(empty($active))
                         
                         
                         
-                <tr><td colspan="8">
-                
+               <!-- <tr><td colspan="8">
                 <fieldset>
                         <legend>
                         <span style="color:#4DB3A2 !important" class="caption-subject font-green-sharp bold"><h5><strong>Paid Out</strong></h5></span>
@@ -323,7 +321,7 @@ if(empty($active))
                         <td colspan="7" align="left">
                         <input type="text" class="form-control input-inline input-small" placeholder="Amount" name="amount"/>
                         </td>
-                        </tr></table></fieldset></td></tr>
+                        </tr></table></fieldset></td></tr>-->
                         
                         
                         

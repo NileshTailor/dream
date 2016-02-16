@@ -5280,7 +5280,7 @@ public function debtor_receipt()
 				@$given_amount=$cash;
 				$recpt_type=$this->request->data["payment_mode"];
 				@$room_due=$this->request->data["edit_due_amount".$i];
-				$amount=$this->request->data["amount"];
+				//@$amount=$this->request->data["amount"];
 				if($room_due=='0')
 				{
 				$due_amount1=' ';	
@@ -5388,14 +5388,23 @@ public function debtor_receipt()
 				@$edit_totaly_charge=$this->request->data["edit_totaly_charge".$i];
 				@$discount_type=$this->request->data["discount_type"];
 				@$edit_room_discount=$this->request->data["edit_room_discount".$i];
-				@$edit_room_discount=$this->request->data["edit_room_discount".$i];
+				@$edit_room_discountt=$this->request->data["edit_room_discountt".$i];
 				@$edit_taxesed=$this->request->data["edit_taxesed".$i];
 				
 				$this->ledger_cr_dr->saveAll(array('ledger_id'=>$last_ledger_id,'ledger_master_id'=> $l_id,'dr' => $edit_net_amount));
 				if($edit_room_discount>0){
-				$this->ledger_cr_dr->saveAll(array('ledger_id'=>$last_ledger_id,'ledger_master_id'=> '10','dr' => $edit_room_discount));}
+				$this->ledger_cr_dr->saveAll(array('ledger_id'=>$last_ledger_id,'ledger_master_id'=> '10','dr' => $edit_room_discountt));}
 				$this->ledger_cr_dr->saveAll(array('ledger_id'=>$last_ledger_id,'ledger_master_id'=> $l_id,'cr' => $edit_totaly_charge));
 				////////// Rohit Joshi tax code //////
+				
+				if($edit_room_discountt==0 || $edit_room_discountt==''){
+					$totcharge=$edit_totaly_charge;
+				}else{
+					$totcharge=$edit_totaly_charge-$edit_room_discountt;
+				}
+				
+				
+				
 	            $this->loadModel('room_checkin_checkout');
 					
 
@@ -5411,16 +5420,16 @@ public function debtor_receipt()
 							$name=$result_master_tax[0]['master_tax']['name'];
 							if($name=='Service Tax'){
 								
-								$total_gro=$edit_totaly_charge*$tax_applicable/100;
+								$total_gro=$totcharge*$tax_applicable/100;
 								$this->loadModel('ledger_cr_dr');
 								$this->ledger_cr_dr->saveAll(array('ledger_id'=>$last_ledger_id,'ledger_master_id'=> '29','cr' => $total_gro));
-								 $vat_gross=$edit_totaly_charge+$total_gro;
+								@$vat_gross=$totcharge+$total_gro;
 							}
 							if($name=='VAT'){
 								if(!empty($vat_gross)){
 									$vat_actual=$vat_gross;
 								}else{
-									$vat_actual=$edit_totaly_charge;
+									@$vat_actual=$totcharge;
 								}
 								$total_vat=$vat_actual*$tax_applicable/100;
 								 $this->loadModel('ledger_cr_dr');
@@ -5480,7 +5489,7 @@ public function debtor_receipt()
 				@$given_amount=$cash;
 				$recpt_type=$this->request->data["payment_mode"];
 				$room_due=$this->request->data["edit_due_amount".$i];
-				$amount=$this->request->data["amount"];
+				//$amount=$this->request->data["amount"];
 				if($room_due=='0')
 				{
 				$due_amount1=' ';	
@@ -7829,29 +7838,20 @@ public function outstanding()
 							$gross_a=round($total_duration*$edit_room_charge);
 							$room_dis=round(($gross_a*$edit_room_discount)/100);
 							
-							
-						$gross_amount=round(($total_duration*$edit_room_charge)-$room_dis);
+						 $gross_amount=round(($total_duration*$edit_room_charge)-$room_dis);
 						 $total_tax_amt=0;
 						 //$gross_amount=$gross_amount+$total_tax_amt;
 						 foreach($tax_applicable as $tax)
 						 {
 							$total_tax_amt+=($gross_amount*$tax)/100;
-						    $gross_amount=+$total_tax_amt;
-							//pr($gross_amount);
-							//pr($total_tax_amt);
+						   $gross_amount+=$total_tax_amt;
                          }
-						 $gross_amountttt=round(($total_duration*$edit_room_charge)-$room_dis);
-						// exit;
-						 //$room_dis=round(($gross_amount*$edit_room_discount)/100); //////////////// ROom DISCOUNT
-						 
-						 //$after_room_dis_amount=$gross_amount-$room_dis;    
-						  
-					 $total_gross=$gross_amount+$total_tax_amt; //////////////// TOTAL GROSS
-                     $main_gross=$gross_a+$total_tax_amt;
-					 
-					 $total_room_amount=round($total_gross); //////////// TOTAL ROOM AMOUNT
-						$total_amount+=$total_room_amount; 
-						
+							$gross_amountttt=round(($total_duration*$edit_room_charge)-$room_dis);
+							$total_gross=$gross_amountttt+$total_tax_amt; //////////////// TOTAL GROSS
+							$main_gross=$gross_a+$total_tax_amt;
+							$total_room_amount=round($total_gross); //////////// TOTAL ROOM AMOUNT
+							$total_amount+=$total_room_amount; 
+							
 					$view_table.='<tr>
 					<input type="hidden" name="edit_rnoo'.$i.'" value="'.$room_no.'">
 					<input type="hidden" name="edit_duration'.$i.'" value="'.$total_duration.'">
@@ -7865,7 +7865,7 @@ public function outstanding()
 					<td align="center"><span style="font-size:12px;">'.round($total_tax_amt).'</span></td>
 					<input type="hidden" name="edit_tg'.$i.'" value="'.$main_gross.'">
 					<td align="center"><span style="font-size:12px;">'.round($main_gross).'</span></td>
-                    <input type="hidden" name="edit_room_discount'.$i.'" value="'.$room_dis.'">					
+                    <input type="hidden" name="edit_room_discountt'.$i.'" value="'.$room_dis.'">					
 					<input type="hidden" name="edit_room_discount'.$i.'" value="'.$edit_room_discount.'">
 					<td align="center"><span style="font-size:12px;">'.$edit_room_discount.'</span></td>
 					<input type="hidden" name="edit_net_amount'.$i.'" value="'.$total_room_amount.'">
