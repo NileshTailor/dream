@@ -5182,9 +5182,7 @@ public function debtor_receipt()
        
         if(isset($this->request->data["add_room_checkin_checkout"]))
             {
-				
 				$checkout_no=$this->request->data["checkout_no"];
-				
 				$this->loadmodel('room_checkin_checkout');
 			  $room_checkin_checkout_flagg = $this->room_checkin_checkout->find('all', array( 
               'fields' => array('MAX(multi_flag)')));
@@ -5320,10 +5318,7 @@ public function debtor_receipt()
                 $this->room_serviceing->saveAll(array('master_roomno_id' => @(int)$pos_room_update,'room_status' =>@$roomstatus,'service_date' =>@$date, 'flag' =>1));
 				$x++;
 			}
-			
-			
-			
-			/////////////////////////checkout///////////////////////////
+			    /////////////////////checkout///////////////////////////
 				$this->loadmodel('checkout');
 				$this->set('fetch_checkout', $this->checkout->find('all', array('conditions'=>array('flag' => "0"))));
 		        @$transfer_due_amount=$this->request->data["transfer_due_amount"];
@@ -5336,6 +5331,7 @@ public function debtor_receipt()
 		        $this->checkout->saveAll(array( 
 				'master_roomno_id' => $room_no_id,
 				'date' => @$edit_checkout_date,
+				'check_id' => @$id_chekin,
 				'checkout_no' => @$checkout_no,
                 'user_id' => $this->request->data["edit_company_id"],
 				'card_no' => $this->request->data["edit_card_no"],
@@ -7889,7 +7885,7 @@ public function outstanding()
 				<legend>
 				<span style="color:#4DB3A2 !important" class="caption-subject font-green-sharp bold"><h5><strong>POS View</strong></h5></span>
 				</legend>
-				<table class="table table-bordered table-hover" >
+				<table class="table table-bordered table-hover" height="50px" >
 				<thead>                            
 				<tr>
 				<th style="text-align:center">Item</td>
@@ -8088,27 +8084,30 @@ public function outstanding()
 		 $total_amount+=$total_amount_room;
 		//////////////////////////
 			 
+			$view_table.='</br>';
+			$view_table.='<div style="width:100%; float:right" align="right"><table class="table-bordered table-hover" align="right" height="50px" width="100%" >
+			<tr  style="background-color:#9FF"><td align="center">Extra Services</td>
+			<td align="center">House Keeping</td>
+			<td align="center">FNB Service</td>
+			<td align="center"><label>Food Discount(%)</label></td>
+			<td align="center"><label>Due Amount &nbsp;</label></td></tr>
 			
-			$view_table.='<div style="width:35%; float:right" align="right"><table class="table-bordered table-hover" align="right" height="200px" width="100%" >
-			<tr><td align="center">Extra Services</td>
+			<tr>
 			<td align="center">
 			<input type="text" readonly="readonly" class="form-control input-inline input-small" value="'.$grandamt10.'" name="edit_extra_bed'.$i.'" id="grandamt10"></td>
-			</tr>
-			<tr><td align="center">House Keeping</td>
+			
+			
 			<td align="center">
 			<input type="text" readonly="readonly" class="form-control input-inline input-small" value="'.$grandamt.'" name="edit_house_amount'.$i.'" id="grandamt1"></td>
-			</tr>
-			<tr ><td align="center">FNB Service</td>
+			
+			
 			<td align="center">
 			<input type="text" readonly="readonly" class="form-control input-inline input-small" placeholder="POS" value="'.$tot_kot_due_amt.'" name="edit_posnet_amount'.$i.'" id="kot_net_amount'.$i.'"></td>
-			</tr>
-			<tr>
-			<td align="center"><label>Food Discount(%)</label></td>
+			
 			<td align="center">
 			<input type="text" class="discount form-control input-inline input-small" atttter="'.$i.'" placeholder="Disc." name="edit_foo_discount'.$i.'" id="edit_foo_discount'.$i.'">
-			</td></tr>
-			<tr>
-            <td align="center"><label>Due Amount &nbsp;</label></td>
+			</td>
+            
             <td  align="center">
 			<input type="text" class="form-control input-inline input-small" placeholder="Net" value="'.$total_amount_room.'" name="edit_due_amount'.$i.'" id="due_grandamt1" readonly="readonly">
 			</td></tr></table></div></div>';
@@ -13554,6 +13553,15 @@ public function roomno()
 				//pr($rtype_id2);
 				//exit;
 				
+				$company_id = @(int)$this->request->data["company_id"];
+					if($company_id==0 || $company_id=='')
+					{
+						$pos_company_id='1';
+					}else{
+					$pos_company_id=$company_id;
+					}
+					
+				
 				@$arrival_date=date('Y-m-d', strtotime($this->request->data["arrival_date"]));
 				@$departure_date=date('Y-m-d', strtotime($this->request->data["departure_date"]));
 				@$room_discount=$this->request->data["room_discount"];
@@ -13576,7 +13584,7 @@ public function roomno()
 					'reservation_gr_no' => @$this->request->data["reservation_gr_no"],
 					'booking_type' => @$this->request->data["booking_type"],
 					'b_date' => @date('Y-m-d', strtotime($this->request->data["b_date"])),
-					'company_id' => @(int)$this->request->data["company_id"],
+					'company_id' => @(int)$pos_company_id,
 					'outlet_venue_id' => @(int)$this->request->data["outlet_venue_id"],
 					'name_person' => @$this->request->data["name_person"],
 					'permanent_address' => @$this->request->data["permanent_address"],

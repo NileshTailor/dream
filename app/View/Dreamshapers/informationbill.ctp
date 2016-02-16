@@ -40,21 +40,37 @@
 <div style="border:solid 1px; overflow:auto; border-top:none; border-bottom:none;padding:5px;">
 <div>
 <table border="0" style="width:60%; float:left;">
-
 <?php 
-       
         $i=0;
 		 foreach($fetch_room_checkin_checkout as $data){ 
 		 $i++;
 		 $id=$data['room_checkin_checkout'] ['id'];
          $child=$data['room_checkin_checkout']['child'];
 		 ?>
+
+<?php 
+ $master_roomno_id=$data['room_checkin_checkout']['master_roomno_id'];
+ $card_no=$data['room_checkin_checkout']['card_no'];
+  $fetch_data_for_receiptt=$this->requestAction(array('controller' => 'Dreamshapers', 'action' => 'fetch_data_for_receiptt',$card_no,$id), array());
+  
+?>
+<?php 
+        $i=0;
+		 foreach($fetch_data_for_receiptt as $data1){ 
+		 $i++;
+		 $id=$data1['checkout'] ['id'];
+         $check_id=$data1['checkout']['check_id'];
+		 ?>
+         
 <tr>
 <td style="text-align:left; width:28%;font-weight: bold;">
 Bill No. :
 </td>
-<td><?php echo $data['room_checkin_checkout'] ['id']; ?></td>
+<td><?php echo $id; ?></td>
 </tr>
+<?php  } ?>
+
+
 <tr>
 <td style="text-align:left;font-weight;">Guest Name:</td>
 <td style="text-align:left;font-weight:bold"><?php echo $data['room_checkin_checkout'] ['guest_name']; ?></td>
