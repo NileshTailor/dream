@@ -139,36 +139,34 @@ if(empty($active))
                 
                 
                <div <?php if($active=='2'){?> class="tab-pane fade active in"<?php } else {?>class="tab-pane fade"<?php } ?> id="tab_1_2">
-              		 <form method="post" name="add">
+              		 <form method="post" name="advance">
                    	 <div class="table-responsive">
                     	<table class="table self-table" style=" width:100% !important;" border="0">
                         
                     	<tr>
-                            <td>Invoice No.</td>
-                            <td>
-                            <select tabindex="-1"  class="form-control" name="invoice_id[]" multiple="multiple">
-                            
+                            <td>Reservation No.</td>
+                            <td><select class="form-control input-medium select2" name="invoice_id" required>
+                                    <option value="">-- Select Reservation No. --</option>
+                                    <?php
+                                    foreach($fetch_room_reservation as $data)
+                                    {
+                                        ?>
+                                        <option value="<?php echo $data['room_reservation']['id'];?>" user_id="<?php echo $data['room_reservation']['company_id'];?>" advance="<?php echo $data['room_reservation']['advance'];?>"><?php echo $data['room_reservation']['id'].'('.$data['room_reservation']['name_person'].')';?></option>
+                                        <?php
+                                    }
+                                    ?>
                             </select>
                             </td>
                             <td><label>Amount</label></td>
-                        <td><div class="form-group"><input type="text" class="form-control input-medium" placeholder="Amount" name="amount" readonly="readonly" required></div></td>
-                        <td><label>Discount</label></td>
-                        <td><div class="form-group"><input type="text" class="form-control input-medium tds_discount"  placeholder="Discount" name="discount"></div></td>
+                        <td><div class="form-group"><input type="text" class="form-control input-medium" placeholder="Amount" name="amount" readonly="readonly" required><input type="hidden" class="form-control input-medium" name="user_id"  required></div></td>
+                       
                             
-                        </tr>
-                          
-                        <tr>
-                        <td><label>TDS</label></td>
-                        <td><div class="form-group"><input type="text" class="form-control input-medium tds_discount" placeholder="TDS" name="tds"></div></td>
-                       <td><label>Gross Amount</label></td>
-                        <td><div class="form-group"><input type="text" class="form-control input-medium" placeholder="Gross Amount" name="gross_amount" readonly="readonly" required></div></td>
-                        
+                       
                         <td><label>Transaction Date</label></td>
                         <td><div class="form-group"><input type="text" class="form-control  input-medium date-picker" data-date-format="dd-mm-yyyy" placeholder="DD-MM-YYYY" value="<?php echo date("d-m-Y"); ?>" name="transaction_date"></div></td>
                         </tr>
                         <tr>
-                        <td><label>Received Amount</label></td>
-                        <td><div class="form-group"><input type="text" class="form-control input-medium" placeholder="Received Amount" name="received_amount"></div></td>
+                       
                         <td><label>Receipt Mode</label></td><td><div class="form-group">
 										
                                 <div class="radio-list">
@@ -202,7 +200,7 @@ if(empty($active))
                         <td><div class="form-group"><input type="text" class="form-control input-medium" placeholder="NEFT No." name="neft_no"></div></td>
                         </tr>
                         <tr>
-                        <td colspan="4"><center><button name="add_receipt_payment"  type="submit" class="btn green"><i class="fa fa-plus"></i> Add</button></center></td>
+                        <td colspan="4"><center><button name="advance"  type="submit" class="btn green"><i class="fa fa-plus"></i> Add</button></center></td>
                         </tr>
                         </table>
                      </div>
@@ -223,7 +221,13 @@ $(document).ready(function()
 	function myTimerr() 
 	{
 		$("#success").hide();
-	} 
+	}
+	$('select[name=invoice_id]').live('change',function(){
+		var amount=$('option:selected',this).attr('advance');
+		var user_id=$('option:selected',this).attr('user_id');
+		$(this).closest('form').find('input[name="amount"]').val(amount);
+		$(this).closest('form').find('input[name="user_id"]').val(user_id);
+	});
 	$('select[name=ledger_category_id]').live('change',function(){
 		var ledger_category_id=$(this).val();
 		$('select[name="invoice_id[]"]').empty();
@@ -266,9 +270,10 @@ $(document).ready(function()
 	});	
 	
 	$('input[name=receipt_mode]').live('change',function(){
+		
 		var cls=$(this).attr('class');
-		$('.receipt_mode').css('display','none');
-		$('#'+cls).removeAttr('style');
+		$(this).closest('form').find('.receipt_mode').css('display','none');
+		$(this).closest('form').find('#'+cls).removeAttr('style');
 		
 	});
 	$('select[name="invoice_id[]"]').live('change',function(){
