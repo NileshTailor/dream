@@ -42,8 +42,7 @@
 <table border="0" style="width:60%; float:left;">
 
 <?php 
-       
-        $i=0;
+         $i=0;
 		 foreach($fetch_room_checkin_checkoutt as $data){ 
 		 $i++;
 		 $id=$data['room_checkin_checkout'] ['id'];
@@ -238,65 +237,83 @@ if($foo_discount>0){?>
 		 $id=$data['room_checkin_checkout'] ['id'];
          $advance_taken=$data['room_checkin_checkout']['advance_taken'];
 		 $totalnetamount=$data['room_checkin_checkout']['totalnetamount'];
+		 $master_tax_id=$data['room_checkin_checkout']['taxes'];
+          $master_tax_idd=explode(' - ', $master_tax_id);
        ?>
 <td valign="top"><table border="0" style="width:100%;">
-
 <tr>
 <td style="text-align:right; padding-right:8%;"><b><?php echo number_format($totalnetamount,2) ?></b></td>
 </tr>
-<?php 
- $fetch_data_for_receiptt=$this->requestAction(array('controller' => 'Dreamshapers', 'action' => 'fetch_data_for_receippptt',$id), array());
-  
-?>
 
-<?php
-       $cool=0;
-	   $xyz=0;
-	   	foreach($fetch_data_for_receiptt as $data1){ 
-		 $id_receipt=$data1['receipt_checkout'] ['id'];
-         $card_no=$data1['receipt_checkout']['card_no'];
-          $cash=$data1['receipt_checkout']['cash'];
-          $cheque_amt=$data1['receipt_checkout']['cheque_amt'];
-         $neft_amt=$data1['receipt_checkout']['neft_amt'];
-         $credit_card_amt=$data1['receipt_checkout']['credit_card_amt'];
-          $checkout_id=$data1['receipt_checkout']['checkout_id'];
-
-if($id==$checkout_id)
-{
-$xyz+=$cash+$cheque_amt+$neft_amt+$credit_card_amt;
-}
-else
-  echo $fetch_dataa_for_receiptt=$this->requestAction(array('controller' => 'Dreamshapers', 'action' => 'fetch_data_for_receippptt',$id), array());
-
-$cool=$totalnetamount-$xyz;
-?>   
-
-    
 <?php }?>
 
 
+<?php 
+ $master_roomno_id=$data['room_checkin_checkout']['master_roomno_id'];
+ $card_no=$data['room_checkin_checkout']['card_no'];
+ $fetch_data_for_receippptt=$this->requestAction(array('controller' => 'Dreamshapers', 'action' => 'fetch_data_for_receippptt',$card_no,$id), array());
+  
+?>
+<?php 
+         $i=0;
+		 $cool=0;
+		 $crsubtotal=0;
+		 $crtotal=0;
+		 foreach($fetch_data_for_receippptt as $data1){ 
+		 $i++;
+		 $id=$data1['checkout'] ['id'];
+         $total_amount=$data1['checkout']['total_amount'];
+		 $receive_amount=$data1['checkout']['receive_amount'];
+		 $due_amount=$data1['checkout']['due_amount'];
+		 $check_id=$data1['checkout']['check_id'];
+?> 
+
+<?php 
+$crtotal=$receive_amount;
+$crsubtotal=$totalnetamount-$receive_amount;  
+
+}?>
 
 <tr>
-<td style="text-align:right; padding-right:8%; border-bottom:solid;"><?php echo number_format ($xyz, 2) ?></td>
+<td style="text-align:right; padding-right:8%; border-bottom:solid;"><?php echo number_format ($crtotal, 2) ?></td>
 </tr>
 <tr>
-<td style="text-align:right; padding-right:8%; border-bottom:solid;"><?php echo number_format ($cool, 2) ?></td>
+<td style="text-align:right; padding-right:8%; border-bottom:solid;"><?php echo number_format ($crsubtotal, 2) ?></td>
 </tr>
+
+
 </table>
 </td>
-<?php } ?>
 </tr>
+
+
 <tr>
 <td colspan="9" align="right"><table width="100%"><tr>
 <td>
 <div align="right" style="border-bottom: medium 2px; color:#333; font-size: 9px; padding-right:5px;"><span>
-Service Tax:14%, VAT:5%</span></div></td>
+<?php
+            foreach($master_tax_idd as $taxes)
+            {
+				
+           @$master_tax_fetch_id=$this->requestAction(array('controller' => 'Dreamshapers', 'action' => 'master_tax_fetch_bill',$taxes), array());
+		   
+		   foreach($master_tax_fetch_id as $billtax)
+		   {
+			   
+			   echo $bill_name=$billtax['master_tax']['name'].', ';
+			  echo $bill_tax=$billtax['master_tax']['tax_applicable'].', ';
+		   }
+		   
+            }
+            ?></span></div></td>
 </tr></table></td></tr>
 
 
 
 
-<tr>
+
+<!--
+<tr>							
 <tr>
 <td colspan="9" style="padding-top:10px; padding-bottom:10px">
 <table border="1" style="width:60%; padding-top:10px;" align="center">
@@ -345,7 +362,7 @@ Service Tax:14%, VAT:5%</span></div></td>
 
 <?php }?></table></td></tr>
 </tr>
-
+-->
 </table>
 </td></tr>
 </table>

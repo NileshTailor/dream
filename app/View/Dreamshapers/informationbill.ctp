@@ -186,8 +186,24 @@ if($child>0){?>
          $discount_type=$data['room_checkin_checkout']['discount_type'];
          $other_discount=$data['room_checkin_checkout']['other_discount'];
 		 $room_discount=$data['room_checkin_checkout']['room_discount'];
+		 $tg=$data['room_checkin_checkout']['tg'];
+		 $totaltax=$data['room_checkin_checkout']['totaltax'];
 		 $extra_bed=$data['room_checkin_checkout']['extra_bed'];
-          if($foo_discount==$p)
+		 
+		 $afterdis=$tg-$totaltax;
+         if($room_discount>0)
+		 {
+			$rdisc=($afterdis * $room_discount)/ 100; 
+		 }else
+		 {
+			$rdisc=0; 
+		 }
+		 
+		 $netdisc=$tg-$rdisc;
+		 
+		 
+		 
+		 if($foo_discount==$p)
          {
          $pos=$posnet_amount;
          }
@@ -195,7 +211,7 @@ if($child>0){?>
          $disc=($posnet_amount * $foo_discount)/ 100;
          $pos=$posnet_amount-$disc;
          }
-          if($discount_type==1)
+         if($discount_type==1)
          {
         $o_dis=$other_discount;
          }
@@ -216,7 +232,7 @@ if($room_discount>0){?>
          </td>
 <td style="text-align:right;padding-right: 5px; width:15%;"><?php echo $data['room_checkin_checkout']['room_charge'];?></td>
 <td style="text-align:right;padding-right: 5px; width:15%;"><?php echo @$data['room_checkin_checkout']['totaltax'];?></td>
-<td style="text-align:right;padding-right: 10px; width:15%;"><?php echo $data['room_checkin_checkout']['tg'];?></td>
+<td style="text-align:right;padding-right: 10px; width:15%;"><?php echo $netdisc;?></td>
 </tr>
 
 
@@ -260,7 +276,7 @@ if($extra_bed>0){ $i++; ?>
 
 <?php  
 $grandamt=$grandamt+$pos;
-$grandamount=$grandamount+$data['room_checkin_checkout']['tg'];
+$grandamount=$grandamount+$netdisc;
 $houseamount=$houseamount+$data['room_checkin_checkout']['house_amount'];
 $extrabed=$extrabed+$data['room_checkin_checkout']['extra_bed'];
  $grandtotal=$grandamount+$grandamt+$houseamount+$extrabed;
@@ -408,7 +424,7 @@ if($other_discount>0){?>
 <?php 
  $master_roomno_id=$data['room_checkin_checkout']['master_roomno_id'];
  $card_no=$data['room_checkin_checkout']['card_no'];
-  $fetch_data_for_receiptt=$this->requestAction(array('controller' => 'Dreamshapers', 'action' => 'fetch_data_for_receiptt',$card_no,$master_roomno_id,$id), array());
+  $fetch_data_for_receiptt=$this->requestAction(array('controller' => 'Dreamshapers', 'action' => 'fetch_data_for_receiptt',$card_no,$id), array());
   
 ?>
 <?php
@@ -420,38 +436,17 @@ $due2=0;
        $xyz=0;
        
 		 foreach($fetch_data_for_receiptt as $data1){ 
-		 $id_receipt=$data1['receipt_checkout'] ['id'];
-         $card_no=$data1['receipt_checkout']['card_no'];
-          $cash=$data1['receipt_checkout']['cash'];
-          $cheque_amt=$data1['receipt_checkout']['cheque_amt'];
-         $neft_amt=$data1['receipt_checkout']['neft_amt'];
-         $credit_card_amt=$data1['receipt_checkout']['credit_card_amt'];
-          $checkout_id=$data1['receipt_checkout']['checkout_id'];
+		 $id_receipt=$data1['checkout'] ['id'];
+         $card_no=$data1['checkout']['card_no'];
+          $total_amount=$data1['checkout']['total_amount'];
+          $receive_amount=$data1['checkout']['receive_amount'];
+         $due_amount=$data1['checkout']['due_amount'];
+          $check_id=$data1['checkout']['check_id'];
+?>
 
-if($id==$checkout_id && $master_roomno_id==$master_roomno_id && $card_no==$card_no)
-{
-$xyz=$cash+$cheque_amt+$neft_amt+$credit_card_amt;
-}
-else
-
- $master_roomno_id=$data['room_checkin_checkout']['master_roomno_id'];
- $card_no=$data['room_checkin_checkout']['card_no'];
-  $fetch_dataa_for_receiptt=$this->requestAction(array('controller' => 'Dreamshapers', 'action' => 'fetch_dataa_for_receiptt',$card_no,$master_roomno_id), array());
-?><?php
-		
-       $returnpaid=0;
-       $returnpaid1=0;
-		 foreach($fetch_dataa_for_receiptt as $data2){ 
-		 $id_paid=$data2['paid_receipt'] ['id'] ;       
-         $amount=$data2['paid_receipt']['amount'];
-         
-		 ?>
-   <?php 
-$returnpaid=$returnpaid+$data2['paid_receipt']['amount'];
-} ?>
          <?php 
-$crtotal=$crtotal+$xyz+$recamount-@$data2['paid_receipt']['amount'];
-$crsubtotal=$grandsub-$crtotal-$dueamount;
+$crtotal=$receive_amount;
+$crsubtotal=$grandsub-$receive_amount;
 }?>
 
 

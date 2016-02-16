@@ -267,8 +267,6 @@ $this->set('fetch_invoiceadd', $this->invoiceadd->find('all'));
 
 }
 /////////////////////
-
-
 function informationbill()
 {
 $id=$this->request->query("id");
@@ -283,7 +281,7 @@ $this->layout='index_layout';
 $this->loadmodel('room_checkin_checkout');
 $this->loadmodel('pos_kot');
 $this->loadmodel('master_item');
-$this->loadmodel('receipt_checkout');
+$this->loadmodel('checkout');
 $this->loadmodel('address');
 $this->loadmodel('master_tax');
 
@@ -292,7 +290,7 @@ $this->set('fetch_room_checkin_checkout', $this->room_checkin_checkout->find('al
 $this->set('fatch_plan_kot_data', $this->pos_kot->find('all'));
 $this->set('fetch_pos_kot', $this->pos_kot->find('all'));
 $this->set('fatch_billing_kot_data', $this->pos_kot->find('all', array('conditions' => $conditions)));
-$this->set('fetch_receipt_checkout', $this->receipt_checkout->find('all', array('conditions' => $conditions)));
+$this->set('fetch_checkout', $this->checkout->find('all', array('conditions' => $conditions)));
 $this->set('fatch_master_items', $this->master_item->find('all'));
 $this->set('fetch_master_tax', $this->master_tax->find('all'));
 $this->set('fetch_address', $this->address->find('all',array('conditions' => array('flag' => "0"), 'order'=>'id DESC','limit'=>1)) );
@@ -312,7 +310,8 @@ $this->layout='index_layout';
 $this->loadmodel('room_checkin_checkout');
 $this->loadmodel('pos_kot');
 $this->loadmodel('master_item');
-$this->loadmodel('receipt_checkout');
+$this->loadmodel('master_tax');
+$this->loadmodel('checkout');
 $this->loadmodel('address');
 
 $this->loadmodel('room_checkin_checkout');
@@ -332,9 +331,11 @@ $this->set('fetch_room_checkin_checkoutt', $this->room_checkin_checkout->find('a
 $this->set('fatch_plan_kot_data', $this->pos_kot->find('all'));
 $this->set('fetch_pos_kot', $this->pos_kot->find('all'));
 $this->set('fatch_billing_kot_data', $this->pos_kot->find('all', array('conditions' => $conditions)));
-$this->set('fetch_receipt_checkout', $this->receipt_checkout->find('all', array('conditions' => $conditions)));
+$this->set('fetch_checkout', $this->checkout->find('all', array('conditions' => $conditions)));
 $this->set('fatch_master_items', $this->master_item->find('all'));
 $this->set('fetch_address', $this->address->find('all',array('conditions' => array('flag' => "0"), 'order'=>'id DESC','limit'=>1)) );
+$this->set('fetch_master_tax', $this->master_tax->find('all'));
+
 }
 //////////////////////////
 
@@ -17300,19 +17301,19 @@ $mail->addAddress($to);
 		$conditions=array('card_no' => $card , 'room_no' => $room);
 		return $fetch_data_for_receipt=$this->receipt_checkout->find('all',array('conditions'=>$conditions));
 	}
-	public function fetch_data_for_receiptt($card,$room, $id)
+	public function fetch_data_for_receiptt($card, $id)
 	{
 	
-		$this->loadmodel('receipt_checkout');
-		$conditions=array('card_no' => $card , 'master_roomno_id' => $room, 'checkout_id' => $id);
-		return $fetch_data_for_receiptt=$this->receipt_checkout->find('all',array('conditions'=>$conditions));
+		$this->loadmodel('checkout');
+		$conditions=array('card_no' => $card, 'check_id' => $id);
+		return $fetch_data_for_receiptt=$this->checkout->find('all',array('conditions'=>$conditions));
 	}
-	public function fetch_data_for_receippptt($id)
+	public function fetch_data_for_receippptt($card_no,$id)
 	{
 	
-		$this->loadmodel('receipt_checkout');
-		$conditions=array('checkout_id' => $id);
-		return $fetch_data_for_receippptt=$this->receipt_checkout->find('all',array('conditions'=>$conditions));
+		$this->loadmodel('checkout');
+		$conditions=array('check_id' => $id,'card_no' => $card_no);
+		return $fetch_data_for_receippptt=$this->checkout->find('all',array('conditions'=>$conditions));
 	}
 	
 	public function fetch_fun_data_for_receipt($idd,$f_no)

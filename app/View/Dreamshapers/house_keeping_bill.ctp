@@ -216,12 +216,12 @@ $ironn=$iron1*$iron2;
 <td style="text-align:right; padding-right: 10px;"><?php echo number_format ("$total_amount", 2)?></td>
 </tr>
 <tr style="border-bottom:solid 1px;">
-<td style="text-align:right; padding-right: 10px;"><?php echo number_format ("$total_amount", 2)?></td>
+<td style="text-align:right; padding-right: 10px;"><?php echo number_format ("$given_amount", 2)?></td>
 </tr>
 <tr>
 <td style="text-align:right;padding-right: 10px;"><?php echo number_format ("$subtotal", 2) ?></td></tr>
 <tr>
-<td style="text-align:right; padding-right: 10px;"><?php echo number_format ("$subtotal", 2) ?></td></tr>
+<td style="text-align:right; padding-right: 10px;"0><b><?php echo number_format ("$subtotal", 2) ?></b></td></tr>
 
 <?php
 
