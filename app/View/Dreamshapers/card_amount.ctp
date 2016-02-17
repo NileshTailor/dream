@@ -40,7 +40,7 @@ if(empty($active))
                     	<table class="table self-table"  style="width:65% !important;" border="0">
                         <tr>
                                     <td><label> Registration NO.</label></td>
-                <td><select class="form-control select2 select2_sample2 input-small" placeholder="Select..." name="registration_id" id="registration_id"  required>
+                <td><select class="form-control select2 select2_sample2 input-small" placeholder="Select..."  name="registration_id" id="registration_id" required>
                 <option value="">--Select--</option>
                 <?php
                 foreach($fetch_registration as $data)
@@ -57,12 +57,12 @@ if(empty($active))
                </tr>
                 <tr>
                 <td><label>Balance</label></td>
-                <td><input type="text" name="balance_amount" class="form-control input-inline input-small" disabled placeholder="Balance"/></td>
+                <td><input type="text" name="balance_amount" class="form-control input-inline input-small" id="balance_amount" disabled placeholder="Balance"/></td>
                 <td><label>Recharge Amount</label></td>
                 <td><input type="text" name="recharge_amount" class="form-control input-inline input-small"  placeholder="Amount"/></td> 
                 </tr>  
-        <td colspan="2"><center><button type="submit" name="add_category_name" class="btn green" value="add_category_name"><i class="fa fa-plus"></i> Add</button>
-        &nbsp;<button type="reset" name="add_category_name" class="btn green" value="add_category_name"><i class="fa fa-plus"></i> Add</button></center></td>
+        <td colspan="2"><center><button type="submit" name="add_card_amount" class="btn green" value="add_card_amount"><i class="fa fa-plus"></i> Add</button>
+        &nbsp;<button type="reset" name="add_card_amount" class="btn red" value="add_card_amount">Reset</button></center></td>
                         </tr>
                         </table>
                      </div>
@@ -80,36 +80,31 @@ if(empty($active))
                             <?php
                 }else
                 { ?>
-<table class="table table-bordered table-hover" id="sample_1">
-<thead>
-<tr>
-<th width="10%">S. No</th>
-<th>Registration NO</th>
-<th>Recharge</th>
-<th>Balance</th>
-</tr>
-</thead>
-      
-	 <tbody>
-     	<?php
-		$i=0;
-		 foreach($fetch_card_amount as $data){ 
-		 $i++;
-		 $id=$data['card_amount']['id'];
-         $registration_id=$data['card_amount']['registration_id'];
-		 ?>
-        <tr>
-            <td><?php echo $i; ?></td>
-            <td><?php echo $data['card_amount']['registration_id'];?></td>
-            <td><?php echo $data['card_amount']['recharge_amount'];?></td>
-            <td><?php echo $data['card_amount']['balance_amount'];?></td>
-            
-        </tr>
-        
-        <?php } ?>
-     </tbody>
-</table> 
-                  </div>
+                
+                <table width="100%">
+                <tr align="center"> <td width="15%"><label>Select Card No./Name</label></td>
+                        <td width="85%" align="left"><select class="form-control input-medium select2me" style="width:90px;" name="av_balance" onChange="av_balance();" id="av_balance" placeholder="select...">
+                        
+                        <option value=""></option>
+                        <?php
+                                foreach($fetch_registration as $data)
+                                {
+                                ?>
+                        <option value="<?php echo $data['registration']['id'];?>"> <?php echo $data['registration']['name'];?> (<?php echo $data['registration']['card_id_no'];?>) 
+                                </option>
+                                <?php
+                                }
+                                ?>
+                                </optgroup>
+                                </select>
+                                </td>
+                                <?php 
+                           ?>   
+    </td></tr>
+                </table><br><br><span style="margin-top:20px" id="view_balance"></span>
+                
+                
+             </div>
 
                 </div>
                 <?php } ?>
@@ -129,6 +124,21 @@ if(empty($active))
 		
 	});
 	
+	function av_balance()
+		{
+			var id=$("select[id=av_balance]").val();
+			//alert(id);
+              $.ajax({ 
+                url: "ajax_php_file?view_card_balance_amount_tot=1&q="+id,
+                type: "POST", 
+				 success: function(data)
+					{ 
+						//alert(data); 
+						$("#view_balance").html(data); 
+					}
+                });	
+			
+					}
 	
 	$(document).ready(function()
         {
@@ -136,6 +146,23 @@ if(empty($active))
 			{
 				
 			$("#name").val($('option:selected', this).attr("name"));
+			
+			
+			var id=$("select[id=registration_id]").val();
+			//alert(id);
+              $.ajax({ 
+                url: "ajax_php_file?view_card_balance_amount=1&q="+id,
+                type: "POST", 
+				 success: function(data)
+					{ 
+						//alert(data); 
+						$("#balance_amount").val(data); 
+					}
+                });	
+			
+			
+			
+			
 			});
 	});
 	

@@ -12789,6 +12789,66 @@ exit;
 				exit;
         }
 		///////////////////////////////
+		////////////////////////////////card_amount/////////////////////
+		if($this->request->query('view_card_balance_amount')==1)
+        {
+           $id=$this->request->query("q");
+			
+			$this->loadmodel('card_amount');
+	$fetch_card_balance=$this->card_amount->find('all',array('conditions'=>array('registration_id' => $id,'flag' => "0"), 'order'=>'id DESC','limit'=>1,'fields'=>array('balance_amount')));
+				
+				$ftc_balance=$fetch_card_balance[0]['card_amount']['balance_amount'];
+				if(!empty($fetch_card_balance))
+				{
+					echo $ftc_balance=$fetch_card_balance[0]['card_amount']['balance_amount'];
+					
+				}
+					
+				exit;
+        }
+		///////////////////////////////
+		if($this->request->query('view_card_balance_amount_tot')==1)
+        {
+           $id=$this->request->query("q");
+			
+			$this->loadmodel('card_amount');
+	$fetch_card_balance=$this->card_amount->find('all',array('conditions'=>array('registration_id' => $id,'flag' => "0")));
+?>
+
+<table class="table table-bordered table-hover" id="sample_1">
+<thead>
+<tr>
+<th width="10%">S. No</th>
+<th>Registration No.</th>
+<th>Recharge</th>
+<th>Member Name</th>
+<th>Member Card No.</th>
+<th>Balance</th>
+</tr>
+</thead>
+	 <tbody>
+     	<?php
+		$i=0;
+		 foreach($fetch_card_balance as $data){ 
+		 $i++;
+		 $id=$data['card_amount']['id'];
+         $registration_id=$data['card_amount']['registration_id'];
+		 ?>
+        <tr>
+            <td><?php echo $i; ?></td>
+            <td><?php echo $data['card_amount']['registration_id'];?></td>
+            <td><?php  echo $reg_name=$this->requestAction(array('controller' => 'Dreamshapers', 'action' => 'master_card_type_no_fetch',$data['card_amount']['registration_id']), array());?></td>
+            <td><?php  echo $reg_no=$this->requestAction(array('controller' => 'Dreamshapers', 'action' => 'master_card_type_no_fetch1',$data['card_amount']['registration_id']), array());?></td>
+            </td>
+            <td><?php echo $data['card_amount']['recharge_amount'];?></td>
+            <td><?php echo $data['card_amount']['balance_amount'];?></td>
+            </tr>
+        
+        <?php } ?>
+     </tbody>
+</table>          <?php
+        }
+		/////////////////////////////////////////
 		
 		if($this->request->query('view_category_item_type_name')==1)
         {
@@ -15616,24 +15676,30 @@ public function card_amount()
 		{
 			if(isset($this->request->data["add_card_amount"]))
 			{
-				$name=$this->request->data["name"];
-				$name=$this->request->data["name"];
-				$name=$this->request->data["name"];
+				$registration_id=$this->request->data["registration_id"];
+				$recharge_amount=$this->request->data["recharge_amount"];
+				@$balance_amount=@(string)$this->request->data["balance_amount"];
 				$date=date("Y-m-d");
 				$time=date("h:i:s A");
-				$this->company_category->saveAll(array('registration_id' => $registration_id,'recharge_amount' => $recharge_amount,
-				'balance_amount' => $balance_amount,'date' => $date,'time' => $time));
+				
+				$conditions=array(array('registration_id' => $registration_id, 'flag' => 0), 'order'=>'id DESC','limit'=>1);
+				$fetch_card_balance=$this->card_amount->find('all',array('conditions'=>array('registration_id' => $registration_id,'flag' => "0"), 'order'=>'id DESC','limit'=>1,'fields'=>array('balance_amount')));
+				if(!empty($fetch_card_balance)){
+				$ftc_balance=$fetch_card_balance[0]['card_amount']['balance_amount'];
+				@$main_balance=$ftc_balance+$recharge_amount;
+				}
+				else
+				{
+					$main_balance=$recharge_amount;
+				}
+				$this->card_amount->saveAll(array('registration_id' => $registration_id,'recharge_amount' => $recharge_amount,
+				'balance_amount' => $main_balance,'date' => $date,'time' => $time));
                 $this->redirect(array('action' => 'card_amount'));
 			}
 		}
 			$this->set('fetch_registration', $this->registration->find('all', array('conditions' => array('flag' => "0"))) );
 			$this->set('fetch_card_amount', $this->card_amount->find('all', array('conditions' => array('flag' => "0"))) );
-	
 	}
-
-
-
-
 ///////////////////////////////////////////////////////////Accounting Module Rohit Ji///////////////////////////.....................fsf//////////////////////////////
 ////////////// Rohit ////////////
 function group_category(){
@@ -16953,6 +17019,20 @@ public function receipt_payment()              ////////  Ashish
 		$conditions=array('id' => $master_steward_id);
 		$master_steward_fetch_id=$this->master_steward->find('all',array('conditions'=>$conditions,'fields'=>array('steward_name')));
 		return @$master_steward_fetch_id[0]['master_steward']['steward_name'];
+	}
+	public function master_card_type_no_fetch($registration_id)
+	{
+		$this->loadmodel('registration');
+		$conditions=array('id' => $registration_id);
+		$master_card_type_no_fetch_id=$this->registration->find('all',array('conditions'=>$conditions,'fields'=>array('name','card_id_no')));
+		return @$master_card_type_no_fetch_id[0]['registration']['name'];
+	}
+	public function master_card_type_no_fetch1($registration_id)
+	{
+		$this->loadmodel('registration');
+		$conditions=array('id' => $registration_id);
+		$master_card_type_no_fetch_id=$this->registration->find('all',array('conditions'=>$conditions,'fields'=>array('name','card_id_no')));
+		return @$master_card_type_no_fetch_id[0]['registration']['card_id_no'];
 	}
 	
 	//////////////////////////Ashish///////////////
