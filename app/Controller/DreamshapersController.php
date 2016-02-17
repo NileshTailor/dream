@@ -7918,7 +7918,6 @@ public function outstanding()
 			<tr  style="background-color:#9FF"><td align="center">Extra Services</td>
 			<td align="center">House Keeping</td>
 			<td align="center">FNB Service</td>
-			<td align="center"><label>Food Discount(%)</label></td>
 			<td align="center"><label>Due Amount &nbsp;</label></td></tr>
 			
 			<tr>
@@ -7933,10 +7932,7 @@ public function outstanding()
 			<td align="center">
 			<input type="text" readonly="readonly" class="form-control input-inline input-small" placeholder="POS" value="'.$tot_kot_due_amt.'" name="edit_posnet_amount'.$i.'" id="kot_net_amount'.$i.'"></td>
 			
-			<td align="center">
-			<input type="text" class="discount form-control input-inline input-small" atttter="'.$i.'" placeholder="Disc." name="edit_foo_discount'.$i.'" id="edit_foo_discount'.$i.'">
-			</td>
-            
+			            
             <td  align="center">
 			<input type="text" class="form-control input-inline input-small" placeholder="Net" value="'.$total_amount_room.'" name="edit_due_amount'.$i.'" id="due_grandamt1" readonly="readonly">
 			</td></tr></table></div></div>';
