@@ -37,6 +37,11 @@ if(empty($active))
 
                     </a>
                 </li>
+                <li <?php if($active=='3'){?> class="active"<?php } else {?>class=""<?php }?>>
+                    <a aria-expanded="false" href="#tab_1_3" data-toggle="tab">Bill
+
+                    </a>
+                </li>
 
             </ul>
             <div class="tab-content">               
@@ -389,10 +394,41 @@ if(empty($active))
                                
                                 </div>
                             </div>
-                        </div>
-  	</div>
-    </div>
-</div>
+                            </div></div>
+                            
+                            
+                            
+                            
+                            <div <?php if($active=='3'){?> class="tab-pane fade active in"<?php } else {?>class="tab-pane fade"<?php } ?> id="tab_1_3">
+                            <div class="table-responsive">
+         <form method="post" enctype="multipart/form-data">
+<table width="50%" border="0" align="">
+    <tr> <td width="12%"><label>Select Bill No.</label></td>
+                        <td width="15%" align="left"><select class="form-control input-small select2me" style="width:90px;" name="blid" id="blid" placeholder="select...">
+                        
+                        <option value=""></option>
+                        <?php
+                                foreach($fetch_bill as $data)
+                                {
+                                ?>
+                        <option value="<?php echo $data['checkout']['check_id'];?>"><?php echo $data['checkout']['id'];?> (<?php echo $data['checkout']['guest_name'];?>) 
+                                </option>
+                                <?php
+                                }
+                                ?>
+                                </optgroup>
+                                </select>
+                                </td>
+                                <?php 
+                           ?>   
+    </td></tr>
+    <tr><td colspan="2" align="center" style="padding-top:10px"><button  type="submit" name="submit" class="btn green"><i class="fa fa-print"></i> Bill</button></td></tr>  
+    </table>
+</form>
+</div></div></div></div>
+
+
+
 <script src="<?php echo $this->webroot; ?>assets/global/plugins/jquery.min.js" type="text/javascript"></script>
 <script type="text/javascript">
 $(document).ready(function(){

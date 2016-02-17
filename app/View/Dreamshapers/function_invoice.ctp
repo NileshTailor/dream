@@ -123,14 +123,15 @@ Bill No.:
 <tr>
 <td style="text-align:left; padding-left:5px; width:5%;"><?php echo $i;?></td>
 <td style="text-align:left; padding-left:5px; width:50%;">Outlet:&nbsp;<?php
-echo @$master_outlet_fetch_id=$this->requestAction(array('controller' => 'Dreamshapers', 'action' => 'master_outlet_fetch',$data['function_booking']['outlet_venue_id']), array()); ?>&nbsp;/&nbsp;PAX:&nbsp;
-<?php echo $data['function_booking']['pax'];?>&nbsp;/&nbsp;<?php echo $data['function_booking']['rate'];?></td>
+echo @$master_outlet_fetch_id=$this->requestAction(array('controller' => 'Dreamshapers', 'action' => 'master_outlet_fetch',$data['function_booking']['outlet_venue_id']), array()); ?>&nbsp;Rate&nbsp;:&nbsp;<B><?php echo $data['function_booking']['rate'];?></B></td>
 <td style="text-align:right;padding-right: 5px; width:15%;"><?php echo $data['function_booking']['gross'];?></td>
 <td style="text-align:right;padding-right: 5px; width:15%;"><?php echo @$data['function_booking']['totaltax'];?></td>
 <td style="text-align:right;padding-right: 10px; width:15%;"><?php echo $data['function_booking']['tot_amt'];?></td>
 </tr>
 <?php 
 $sub1=$sub1+$data['function_booking']['tot_amt'];
+$adv=$adv+$data['function_booking']['advance'];
+$adv=$adv+$data['function_booking']['due_amount'];
 $adv=$adv+$data['function_booking']['advance'];
 $sub2=$sub1-$adv;
  }?>
@@ -178,6 +179,13 @@ $sub2=$sub1-$adv;
 <td style="text-align:right; padding-right:8%;"><?php echo number_format("$sub2", 2) ?></td>
 </tr>
 
+<tr>
+<td style="text-align:right; padding-right:8%;"><?php echo number_format("$sub2", 2) ?></td>
+</tr>
+
+<tr>
+<td style="text-align:right; padding-right:8%;"><?php echo number_format("$sub2", 2) ?></td>
+</tr>
 <?php
 $f_no=$data['function_booking']['function_no'];
 $fetch_fun_data_for_receipt=$this->requestAction(array('controller' => 'Dreamshapers', 'action' => 'fetch_fun_data_for_receipt', $data['function_booking']['id'], $data['function_booking']['function_no']), array());

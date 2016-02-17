@@ -3873,7 +3873,22 @@ $conditions =array('or' => array(
                 $this->function_booking->updateAll(array('flag' => 1 ),array('id' => $this->request->data["delete_booking_id"]));
 				$this->set('active',2);
 				$this->set('active_delete',1);					
-            }           
+            } 
+			
+				  else if(isset($this->request->data["submit"]))
+			{
+				$id=$this->request->data["blid"];
+	            //$ftc_bill_room=$this->bill->find('all', array('conditions'=>array('bill_no_id'=> $id)));
+					 ?>
+             <script>
+			 window.open("function_invoice?id=<?php echo $id; ?>",'_new');
+			  //window.open("receipt",'_blank');
+			 </script>
+             <?php
+				
+		}
+		$this->loadmodel('function_booking');
+			  $this->set('fetch_function_booking', $this->function_booking->find('all', array('conditions'=>array('flag' => "0"))));
 			$this->loadmodel('master_item_categorie');
 			$this->set('fetch_master_item_category', $this->master_item_categorie->find('all', array('conditions' => array('flag' => "0"))) );		
 			$this->set('fetch_function_booking', $this->function_booking->find('all', array('conditions' => array('flag' => "0"))) );
@@ -4754,121 +4769,6 @@ public function invoiceaddress()
 			  $this->set('fetch_function_booking', $this->function_booking->find('all', array('conditions'=>array('flag' => "0"))));
 	}
 //////////////////////////receipt//////////////////////////////////////////
-	public function bill()
-	{
-		$date=date("Y-m-d"); 
-		$cutrrent_time=date("h:i:s A");
-	  if($this->RequestHandler->isAjax())
-		{
-			$this->layout='ajax_layout';
-		}
-		else
-		{
-			$this->layout='index_layout';
-		}
-		$this->loadmodel('receipt_checkout');
-		$this->loadmodel('room_checkin_checkout');
-		$this->loadmodel('master_room_type');
-		$this->loadmodel('master_room_plan');
-		$this->loadmodel('master_roomno');
-		$this->loadmodel('bill');
-	    if(isset($this->request->data["add_receipt_checkout"]))
-			{
-				
-				$coool=0;
-				$coooll=0;
-				$bill_duee = @(string)$this->request->data["bill_duee"];
-				$guest_name = @(string)$this->request->data["guest_name"];
-				$master_roomno_id = @(string)$this->request->data["master_roomno_id"];
-				$card_no = @(string)$this->request->data["card_no"];
-				$cash = @(string)$this->request->data["cash"];
-				$cheque_amt = @(string)$this->request->data["cheque_amt"];
-				$bill_no_id = @(string)$this->request->data["bill_no_id"];
-				$cheque_no = @(string)$this->request->data["cheque_no"];
-				$neft_amt = @(string)$this->request->data["neft_amt"];
-				$neft_no = @(string)$this->request->data["neft_no"];
-				$credit_card_amt = @(string)$this->request->data["credit_card_amt"];
-				$credit_card_name = @(string)$this->request->data["credit_card_name"];
-				$credit_card_no = @(string)$this->request->data["credit_card_no"];
-				$bill_no_id = @(string)$this->request->data["bill_no_id"];
-				$paid = @(string)$this->request->data["paid"];
-				$bill_no_id = @(string)$this->request->data["bill_no_id"];
-				$paid = @(string)$this->request->data["paid"];
-				$coool=$cash+$neft_amt+$credit_card_amt+$cheque_amt;
-				$coooll=$coool+$paid;
-				
-				 if($coool>$bill_duee || $coool==0 || $coool=='')
-				 {
-					 $this->set('error','Data Already Exist');
-				 }
-				else
-				{
-				
-				$this->receipt_checkout->saveAll(array( 
-				'date_to' => $date,
-				'guest_name' =>@(string)$this->request->data["guest_name"],
-				'master_roomno_id' => @(string)$this->request->data["master_roomno_id"],
-				'card_no' => @$this->request->data["card_no"],
-				'recpt_type' => @$this->request->data["recpt_type"],
-				'cash' => @$this->request->data["cash"],
-				'cheque_amt' => @$this->request->data["cheque_amt"],
-				'bill_no_id' => @(int)$this->request->data["bill_no_id"],
-				'cheque_no' => @$this->request->data["cheque_no"],
-				'neft_amt' => @$this->request->data["neft_amt"],
-				'neft_no' => @$this->request->data["neft_no"],
-				'credit_card_amt' => @$this->request->data["credit_card_amt"],
-				'credit_card_name' => @$this->request->data["credit_card_name"],
-				'credit_card_no' => @$this->request->data["credit_card_no"],
-				'checkout_id' => @$this->request->data["bill_no_id"]));
-				
-				
-				$this->bill->updateAll(array('date' => "'$date'",
-				'cash' => "'$coooll'"), array('bill_no_id' => $this->request->data["bill_no_id"]));
-				$this->set('active',1);
-				}
-			}	
-			
-			///////////////////////////////////////
-		else if(isset($this->request->data["submit"]))
-			{
-				$id=$this->request->data["blid"];
-	            $ftc_bill_room=$this->bill->find('all', array('conditions'=>array('bill_no_id'=> $id)));
-				$mmide=$ftc_bill_room[0]['bill']['master_roomno_id'];
-				$hh=explode(',',$mmide);
-if(sizeof($hh)>1)
-				{
-					 ?>
-             <script>
-			 window.open("informationbill_multi?id=<?php echo $id; ?>",'_new');
-			  //window.open("receipt",'_blank');
-			 </script>
-             <?php
-				}
-				else
-				{
-				 ?>
-             <script>
-			 window.open("informationbill?id=<?php echo $id; ?>",'_new');
-			 // window.open("receipt",'_blank');
-			 </script>
-             <?php
-				}
-		}
-				  
-		
-				
-			  $this->set('fetch_receipt_checkout', $this->receipt_checkout->find('all', array('conditions' => array('flag' => "0"))) );
-			  $this->set('ftchh_receipt_checkout', $this->receipt_checkout->find('all', array('conditions' => array('flag' => "0", 'flag1' =>"0"))));
-			  $this->set('fatch_receipt_checkout', $this->receipt_checkout->find('all', array('conditions' => array('flag' => "0", 'checkout_id' =>0))) );
-			  $this->set('fetch_master_room_plan', $this->master_room_plan->find('all'));
-			  $this->set('fetch_master_room_type', $this->master_room_type->find('all'));
-			  $this->set('fetch_room_checkin_checkout', $this->room_checkin_checkout->find('all'));
-			  $this->set('fetch_master_roomno', $this->master_roomno->find('all', array('conditions'=>array('flag' => "0"))));
-			  $this->loadmodel('bill');
-			  $this->set('fetch_bill', $this->bill->find('all', array('conditions'=>array('flag' => "0" ))));
-	}
-
-//////////////////////////////////	receipt  ///////////////////////////////
 	public function calendar()
 	{
 		$date=date("Y-m-d"); 
@@ -4893,107 +4793,6 @@ if(sizeof($hh)>1)
 			  $this->set('fetch_room_reservation_no', $this->room_reservation_no->find('all'));
 		$this->set('fetch_room_reservation', $this->room_reservation->find('all', array('conditions'=>array('flag' => "0" , 'booking_type' => 0, 'checkin_id' => "0", 'reservation_status !='=> 'Cancelled', 'status'=> 0))));
 		$this->set('fetch_room_reservationn', $this->room_reservation->find('all', array('conditions'=>array('flag' => "0" , 'booking_type' => 1, 'checkin_id' => "0", 'reservation_status !='=> 'Cancelled', 'status'=> 0))));
-	}
-
-//////////////////////////////////	receipt  ///////////////////////////////
-
-//////////////////////////receipt//////////////////////////////////////////
-	public function fun_bill()
-	{
-		$date=date("Y-m-d"); 
-		$cutrrent_time=date("h:i:s A");
-	  if($this->RequestHandler->isAjax())
-		{
-			$this->layout='ajax_layout';
-		}
-		else
-		{
-			$this->layout='index_layout';
-		}
-		$this->loadmodel('receipt_checkout');
-		$this->loadmodel('room_checkin_checkout');
-		$this->loadmodel('master_room_type');
-		$this->loadmodel('master_room_plan');
-		$this->loadmodel('master_roomno');
-		$this->loadmodel('bill');
-		$this->loadmodel('fun_bill');
-		$this->loadmodel('function_booking');
-	    if(isset($this->request->data["add_receipt_checkout"]))
-			{
-				
-				$coool=0;
-				$coooll=0;
-				$cok=0;
-				$bill_duee = @(string)$this->request->data["bill_duee"];
-				$guest_name = @(string)$this->request->data["guest_name"];
-				$card_no = @(string)$this->request->data["card_no"];
-				$cash = @(string)$this->request->data["cash"];
-				$cheque_amt = @(string)$this->request->data["cheque_amt"];
-				$bill_no_id = @(string)$this->request->data["bill_no_id"];
-				$cheque_no = @(string)$this->request->data["cheque_no"];
-				$neft_amt = @(string)$this->request->data["neft_amt"];
-				$neft_no = @(string)$this->request->data["neft_no"];
-				$credit_card_amt = @(string)$this->request->data["credit_card_amt"];
-				$credit_card_name = @(string)$this->request->data["credit_card_name"];
-				$credit_card_no = @(string)$this->request->data["credit_card_no"];
-				$bill_no_id = @(string)$this->request->data["bill_no_id"];
-				$paid = @(string)$this->request->data["paid"];
-				$coool=$cash+$neft_amt+$credit_card_amt+$cheque_amt;
-				$coooll=$coool+$paid;
-				
-				$cok=$bill_duee-$coooll;
-				 if($coool>$bill_duee || $coool==0 || $coool=='')
-				 {
-					 $this->set('error','Data Already Exist');
-				 }
-				else
-				{
-				
-				$this->receipt_checkout->saveAll(array( 
-				'date_to' => @(string)$this->request->data["date"],
-				'guest_name' =>@(string)$this->request->data["guest_name"],
-				'function_no' => @$this->request->data["card_no"],
-				'recpt_type' => @$this->request->data["recpt_type"],
-				'cash' => @$this->request->data["cash"],
-				'cheque_amt' => @$this->request->data["cheque_amt"],
-				'fun_bill_no_id' => @(int)$this->request->data["bill_no_id"],
-				'cheque_no' => @$this->request->data["cheque_no"],
-				'neft_amt' => @$this->request->data["neft_amt"],
-				'neft_no' => @$this->request->data["neft_no"],
-				'credit_card_amt' => @$this->request->data["credit_card_amt"],
-				'credit_card_name' => @$this->request->data["credit_card_name"],
-				'credit_card_no' => @$this->request->data["credit_card_no"],
-				'res_no_id' => @$this->request->data["res_no_id"], 'flag1' => 2));
-				
-				$this->function_booking->updateAll(array('paid' => "'$cok'", 'status' => 1), array('id' => $this->request->data["bill_no_id"]));
-				$this->set('active',1);
-				}
-			}	
-			
-			///////////////////////////////////////
-		
-		else if(isset($this->request->data["submit"]))
-			{
-				$id=$this->request->data["blid"];
-	            //$ftc_bill_room=$this->bill->find('all', array('conditions'=>array('bill_no_id'=> $id)));
-					 ?>
-             <script>
-			 window.open("function_invoice?id=<?php echo $id; ?>",'_new');
-			  //window.open("receipt",'_blank');
-			 </script>
-             <?php
-				
-		}
-			  $this->set('fetch_receipt_checkout', $this->receipt_checkout->find('all', array('conditions' => array('flag' => "0"))));
-			  $this->set('ftch_receipt_checkout', $this->receipt_checkout->find('all', array('conditions' => array('flag' => "0", 'flag1' =>"2"))));
-			  $this->set('fatch_receipt_checkout', $this->receipt_checkout->find('all', array('conditions' => array('flag' => "0", 'checkout_id' =>0))) );
-			  $this->set('fetch_master_room_plan', $this->master_room_plan->find('all'));
-			  $this->set('fetch_master_room_type', $this->master_room_type->find('all'));
-			  $this->set('fetch_room_checkin_checkout', $this->room_checkin_checkout->find('all'));
-			  $this->set('fetch_master_roomno', $this->master_roomno->find('all', array('conditions'=>array('flag' => "0"))));
-			  $this->loadmodel('fun_bill');
-			  $this->set('fetch_fun_bill', $this->bill->find('all', array('conditions'=>array('flag' => "0" ))));
-			  $this->set('fetch_function_booking', $this->function_booking->find('all', array('conditions'=>array('flag' => "0"))));
 	}
 
 //////////////////////////////////	receipt  ///////////////////////////////
@@ -5521,6 +5320,33 @@ public function debtor_receipt()
 			  echo '<META HTTP-EQUIV="Refresh" Content="0; URL=checkout?active=1">';
             
 			}
+			else if(isset($this->request->data["submit"]))
+			{
+				$this->loadmodel('checkout');
+				$id=$this->request->data["blid"];
+	            $ftc_bill_room=$this->checkout->find('all', array('conditions'=>array('check_id'=> $id)));
+				$mmide=$ftc_bill_room[0]['checkout']['master_roomno_id'];
+				$hh=explode(',',$mmide);
+if(sizeof($hh)>1)
+				{
+					 ?>
+             <script>
+			 window.open("informationbill_multi?id=<?php echo $id; ?>",'_new');
+			  //window.open("receipt",'_blank');
+			 </script>
+             <?php
+				}
+				else
+				{
+				 ?>
+             <script>
+			 window.open("informationbill?id=<?php echo $id; ?>",'_new');
+			 // window.open("receipt",'_blank');
+			 </script>
+             <?php
+				}
+		}
+		
                 $this->set('fetch_master_roomno', $this->master_roomno->find('all', array('conditions' => array('flag' => "0"))));
                 $this->set('fetch_master_room_plan', $this->master_room_plan->find('all', array('conditions' => array('flag' => "0"))));
                 $this->set('fetch_master_room_type', $this->master_room_type->find('all', array('conditions' => array('flag' => "0"))));
@@ -5534,6 +5360,9 @@ public function debtor_receipt()
 				$this->set('fetch_room_serviceing', $this->room_serviceing->find('all', array('conditions'=>array('flag' => "0"))));
 				$this->set('fatch_plan_kot_data', $this->pos_kot->find('all', array('conditions'=>array('flag' => "0"))));
 				$this->set('fetch_gr_no', $this->gr_no->find('all'));
+				$this->loadmodel('checkout');
+				$this->set('fetch_bill', $this->checkout->find('all', array('conditions'=>array('flag' => "0"))));
+				
     
 	}
 	

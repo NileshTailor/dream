@@ -195,12 +195,6 @@ if(empty($active))
                            </form>
                     
                 </div>
-                
-                
-                
-                
-                
-                
            
 
  <div <?php if($active=='2'){?> class="tab-pane fade active in"<?php } else {?>class="tab-pane fade"<?php } ?> id="tab_1_2">
@@ -215,7 +209,7 @@ if(empty($active))
                                 foreach($fetch_bill as $data)
                                 {
                                 ?>
-                        <option value="<?php echo $data['bill']['bill_no_id'];?>"><?php echo $data['bill']['bill_no_id'];?> (<?php echo $data['bill']['guest_name'];?>) 
+                        <option value="<?php echo $data['checkout']['check_id'];?>"><?php echo $data['checkout']['id'];?> (<?php echo $data['checkout']['guest_name'];?>) 
                                 </option>
                                 <?php
                                 }
@@ -248,21 +242,19 @@ if(empty($active))
         <th>Card No.</th>
         <th>Guest/Group Name</th>
         <th>Room No.</th>
-         <th>Receipt Type</th>
-        <th>Cash</th>
-        <th>Cheque</th>
-        <th>NEFT</th>
-        <th>Credit</th>
+        <th>Toatl</th>
+        <th>Receive</th>
+        <th>Due</th>
         <th>Remarks</th>
      </tr>
      </thead>
      <tbody>
      	<?php
 		$i=0;
-		 foreach($ftchh_receipt_checkout as $data){ 
+		 foreach($ftchh_checkout as $data){ 
 		 $i++;
-		 $id_fetch_receipt_checkout=$data['receipt_checkout']['id'];
-        $date_to=$data['receipt_checkout']['date_to'];
+		 $id_fetch_receipt_checkout=$data['checkout']['id'];
+        $date_to=$data['checkout']['date_to'];
 		$guest_name=$data['receipt_checkout']['guest_name'];
         $master_roomno_id=$data['receipt_checkout']['master_roomno_id'];
         $room_type_id=$data['receipt_checkout']['room_type_id'];
