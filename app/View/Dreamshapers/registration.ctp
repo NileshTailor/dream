@@ -30,6 +30,41 @@ if(empty($active))
     <form method="post" enctype="multipart/form-data" name="add" id="add_registration">
            <table style="margin-top:1%; width:100% !important" border="0">
                
+               <tr>
+               <?php
+                            $i=1;
+                            foreach($fetch_gr_no as $data){ 
+                            $i++;
+                            $id=$data['gr_no']['id'];
+                            $card_number=$data['gr_no']['card_number'];
+                            ?>
+                            <?php $data['gr_no']['card_number']; ?>
+                            <?php }?>
+                            <td><label> Card No.</label></td>
+                            <td>
+                            <div class="form-group"><input type="text" class="form-control input-inline input-small" placeholder="Card No." name="card_id_no" value="<?php echo $card_number; ?>" readonly/></div>
+                            </td>
+               
+               
+                <td><label> Card Type</label></td>
+                <td><select class="form-control select2 select2_sample2 input-small" placeholder="Select..." name="card_type_id" id="card_type_id"  required>
+                <option value="">--Select--</option>
+                <?php
+                foreach($fetch_card_type as $data)
+                {  
+                ?>
+                <option value="<?php echo $data['card_type']['id']; ?>">
+                <?php echo $data['card_type']['card_name']; ?></option>
+                <?php
+                }
+                ?>
+                </select></td>
+                
+                <td></td><td></td>
+               </tr>
+               
+               
+               
                 <tr height="40px"><td width="15%"><label>Name <span style="color:#E02222">* </span></label>
                  </td> <td width="20%">
                     <div class="form-group ">
@@ -126,12 +161,7 @@ if(empty($active))
 										</div>
 						</div>
                     </td>
-                    <td><label> Card Id No.</label></td>
-                    <td> <div class="form-group">
-               				<input name="card_id_no" class="form-control input-small" placeholder="Card Id No." type="text">
-                		 </div>
-                 </td>
-                
+                    <td></td><td></td>
                 </tr>
                
                  

@@ -3,6 +3,7 @@ foreach($registrations as $view_data)
 { 
 	$id=$view_data['registration']['id'];
 	$name=$view_data['registration']['name'];
+	$card_type_id=$view_data['registration']['card_type_id'];
 	$swd_of=$view_data['registration']['swd_of'];
 	$p_address=$view_data['registration']['p_address'];
 	$p_phone=$view_data['registration']['p_phone']; 
@@ -58,6 +59,41 @@ foreach($registrations as $view_data)
                             </td></tr></table>	
            <table style="margin-top:1%; width:100% !important" border="0">
                <!-- Mr./Mrs./Ms. :-->
+               
+               
+               
+               <tr>
+                            <td><label> Card No.</label></td>
+                            <td>
+                            <div class="form-group"><input type="text" class="form-control input-inline input-small" placeholder="Card No." name="card_id_no" value="<?php echo $card_id_no; ?>" readonly/></div>
+                            </td>
+               
+               
+                <td><label> Card Type</label></td>
+                <td><select class="form-control select2 select2_sample2 input-small" placeholder="Select..." name="card_type_id" id="card_type_id"  required>
+                <option value="">--Select--</option>
+                <?php
+                foreach($fetch_card_type as $data)
+                {
+					$id=$data['card_type']['id'];
+					  
+                ?>
+                <option value="<?php echo $data['card_type']['id']; ?>" <?php if($card_type_id==$id){ echo 'selected'; }?>>
+                <?php echo $data['card_type']['card_name']; ?></option>
+                <?php
+                }
+                ?>
+                </select></td>
+                
+                <td></td><td></td>
+               </tr>
+               
+               
+               
+               
+               
+               
+               
                 <tr><td width="15%"><label>Name</label>
                  </td> <td width="20%">
                     <div class="form-group ">

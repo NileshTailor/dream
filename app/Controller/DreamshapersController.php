@@ -15593,6 +15593,47 @@ public function categoryname()
 			$this->set('fetch_company_category', $this->company_category->find('all', array('conditions' => array('flag' => "0"))) );
 	
 	}
+///////////////////////////////////////////////////////////////////..../////////////////////////////////////
+
+public function card_amount()
+	{
+	    if($this->RequestHandler->isAjax())
+		{
+			$this->layout='ajax_layout';
+		}
+		else
+		{
+			$this->layout='index_layout';
+		}
+		if($this->request->query('active')==1)
+		{
+			$this->set('active',1);
+		}
+		$this->loadmodel('card_amount');
+		$this->loadmodel('registration');
+		
+		if($this->request->is('post'))
+		{
+			if(isset($this->request->data["add_card_amount"]))
+			{
+				$name=$this->request->data["name"];
+				$name=$this->request->data["name"];
+				$name=$this->request->data["name"];
+				$date=date("Y-m-d");
+				$time=date("h:i:s A");
+				$this->company_category->saveAll(array('registration_id' => $registration_id,'recharge_amount' => $recharge_amount,
+				'balance_amount' => $balance_amount,'date' => $date,'time' => $time));
+                $this->redirect(array('action' => 'card_amount'));
+			}
+		}
+			$this->set('fetch_registration', $this->registration->find('all', array('conditions' => array('flag' => "0"))) );
+			$this->set('fetch_card_amount', $this->card_amount->find('all', array('conditions' => array('flag' => "0"))) );
+	
+	}
+
+
+
+
 ///////////////////////////////////////////////////////////Accounting Module Rohit Ji///////////////////////////.....................fsf//////////////////////////////
 ////////////// Rohit ////////////
 function group_category(){
@@ -16102,6 +16143,7 @@ public function receipt_payment()              ////////  Ashish
 			$marital_status=$this->request->data["marital_status"];
 			$residential_status=$this->request->data["residential_status"];
 			$nationality=$this->request->data["nationality"];
+			$card_type_id=$this->request->data["card_type_id"];
 			
 			$tax_ac_no=$this->request->data["tax_ac_no"];
 			$guest_type=$this->request->data["guest_type"];
@@ -16153,7 +16195,10 @@ public function receipt_payment()              ////////  Ashish
 				
 
 			
-			$this->registration->saveAll(array("name"=>$name,"swd_of"=>$swd_of,"p_address"=>$p_address,"p_phone"=>$p_phone,"fax"=>$fax,"c_address"=>$c_address,"phone_home"=>$c_phone,"office"=>$office,"mobile_no"=>$mobile_no,"email"=>$email,"marital_status"=>$marital_status,"residential_status"=>$residential_status,"nationality"=>$nationality,"occupation"=>$occupation,"tax_ac_no"=>$tax_ac_no,"wing_name"=>$wing_name,"flat_no"=>$flat_no,"floor"=>$floor,"card_id_no"=>$card_id_no,"dob"=>$dob,"reg_type"=>$reg_type,"reg_date"=>$reg_date,"reg_time"=>$reg_time,"cardholder"=>$cardholder,'guest_type'=> $guest_type,'date_of_anniversary'=> $date_of_anniversary));
+			$this->registration->saveAll(array("name"=>$name,"swd_of"=>$swd_of,"p_address"=>$p_address,"p_phone"=>$p_phone,"fax"=>$fax,"c_address"=>$c_address,"phone_home"=>$c_phone,"office"=>$office,"mobile_no"=>$mobile_no,"email"=>$email,"marital_status"=>$marital_status,"residential_status"=>$residential_status,"nationality"=>$nationality,"card_type_id"=>$card_type_id,"occupation"=>$occupation,"tax_ac_no"=>$tax_ac_no,"wing_name"=>$wing_name,"flat_no"=>$flat_no,"floor"=>$floor,"card_id_no"=>$card_id_no,"dob"=>$dob,"reg_type"=>$reg_type,"reg_date"=>$reg_date,"reg_time"=>$reg_time,"cardholder"=>$cardholder,'guest_type'=> $guest_type,'date_of_anniversary'=> $date_of_anniversary));
+			
+			$this->gr_no->updateAll(array('card_number' =>$this->request->data["card_number"]+1), array('id' => 1));
+			
 			$this->set('active' ,1);
 			}
 			
@@ -16167,6 +16212,12 @@ public function receipt_payment()              ////////  Ashish
 			
 		   }
 		}
+		$this->loadmodel('card_type');
+		$this->loadmodel('gr_no');
+		$this->set('fetch_card_type', $this->card_type->find('all', array('conditions' => array('flag' => "0"))) );
+		$this->set('fetch_gr_no', $this->gr_no->find('all'));
+
+        
 		 
 		
 	}
@@ -16219,6 +16270,8 @@ public function receipt_payment()              ////////  Ashish
 			$occupation=$this->request->data["occupation_edit"];
 			$tax_ac_no=$this->request->data["tax_ac_no_edit"];
 			$guest_type=$this->request->data["guest_type_edit"];
+			$card_type_id=$this->request->data["card_type_id"];
+			$card_id_no=$this->request->data["card_id_no"];
 			
 				$wing_name=$this->request->data["wing_name"];
 				$flat_no=$this->request->data["flat_no"];
@@ -16264,15 +16317,17 @@ public function receipt_payment()              ////////  Ashish
 			  if($reg_type=='dependant')
   			  {
 			
-			$this->registration->updateAll(array("name"=>"'$name'","swd_of"=>"'$swd_of'","p_address"=>"'$p_address'","p_phone"=>"'$p_phone'","fax"=>"'$fax'","c_address"=>"'$c_address'","phone_home"=>"'$c_phone'","office"=>"'$office'","mobile_no"=>"'$mobile_no'","email"=>"'$email'","marital_status"=>"'$marital_status'","residential_status"=>"'$residential_status'","nationality"=>"'$nationality'","occupation"=>"'$occupation'","tax_ac_no"=>"'$tax_ac_no'","wing_name"=>"'$wing_name'","flat_no"=>"'$flat_no'","floor"=>"'$floor'","card_id_no"=>"'$card_id_no'","dob"=>"'$dob'","guest_type"=>"'$guest_type'","cardholder"=>"'$cardholder'","date_of_anniversary"=>"'$date_of_anniversary'","reg_type"=>"'$reg_type'"), array('id' => $id));
+			$this->registration->updateAll(array("name"=>"'$name'","swd_of"=>"'$swd_of'","p_address"=>"'$p_address'","p_phone"=>"'$p_phone'","fax"=>"'$fax'","c_address"=>"'$c_address'","phone_home"=>"'$c_phone'","office"=>"'$office'","mobile_no"=>"'$mobile_no'","email"=>"'$email'","marital_status"=>"'$marital_status'","residential_status"=>"'$residential_status'","nationality"=>"'$nationality'","occupation"=>"'$occupation'","tax_ac_no"=>"'$tax_ac_no'","wing_name"=>"'$wing_name'","flat_no"=>"'$flat_no'","floor"=>"'$floor'","card_id_no"=>"'$card_id_no'","card_type_id"=>"'$card_type_id'","dob"=>"'$dob'","guest_type"=>"'$guest_type'","cardholder"=>"'$cardholder'","date_of_anniversary"=>"'$date_of_anniversary'","reg_type"=>"'$reg_type'"), array('id' => $id));
 			  }
 			  else
 			  {
-				  $this->registration->updateAll(array("name"=>"'$name'","swd_of"=>"'$swd_of'","p_address"=>"'$p_address'","p_phone"=>"'$p_phone'","fax"=>"'$fax'","c_address"=>"'$c_address'","phone_home"=>"'$c_phone'","office"=>"'$office'","mobile_no"=>"'$mobile_no'","email"=>"'$email'","marital_status"=>"'$marital_status'","residential_status"=>"'$residential_status'","nationality"=>"'$nationality'","occupation"=>"'$occupation'","tax_ac_no"=>"'$tax_ac_no'","wing_name"=>"'$wing_name'","flat_no"=>"'$flat_no'","floor"=>"'$floor'","card_id_no"=>"'$card_id_no'","dob"=>"'$dob'","guest_type"=>"'$guest_type'","date_of_anniversary"=>"'$date_of_anniversary'","reg_type"=>"'$reg_type'"), array('id' => $id));
+				  $this->registration->updateAll(array("name"=>"'$name'","swd_of"=>"'$swd_of'","p_address"=>"'$p_address'","p_phone"=>"'$p_phone'","fax"=>"'$fax'","c_address"=>"'$c_address'","phone_home"=>"'$c_phone'","office"=>"'$office'","mobile_no"=>"'$mobile_no'","email"=>"'$email'","marital_status"=>"'$marital_status'","residential_status"=>"'$residential_status'","nationality"=>"'$nationality'","occupation"=>"'$occupation'","tax_ac_no"=>"'$tax_ac_no'","wing_name"=>"'$wing_name'","flat_no"=>"'$flat_no'","floor"=>"'$floor'","card_id_no"=>"'$card_id_no'","card_type_id"=>"'$card_type_id'","dob"=>"'$dob'","guest_type"=>"'$guest_type'","date_of_anniversary"=>"'$date_of_anniversary'","reg_type"=>"'$reg_type'"), array('id' => $id));
 			  }
 			return $this->redirect(array('action' => 'registration'));
 			
 	}
+	$this->loadmodel('card_type');
+		$this->set('fetch_card_type', $this->card_type->find('all', array('conditions' => array('flag' => "0"))) );
 	}
     /////
 	
