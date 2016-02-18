@@ -4,10 +4,20 @@
 
 <div class="row">
 <div class="col-md-12">
-<div style="float:left; width:15%; margin-left:-15px; background-color:#CFF"> <table style="margin-top:1px" id="sample_1">
-    <tr><td>
-    <thead>
-    <tr>
+
+<div style="float:right;">
+        <li><a data-toggle="modal" class="tooltips" data-placement="bottom" data-original-title="POS Info" href="#deletedis1"><i class="fa fa-joomla" style="color:#F00"></i></a> </li>
+ <div class="modal fade" id="deletedis1" tabindex="-1" role="delete" aria-hidden="true" style="padding-top:35px;">
+                            <div class="modal-dialog modal-md" >
+                                <div class="modal-content" >
+                                    <div class="modal-header" >
+                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                                    <div>
+                                    <table>
+                                    	<tbody>
+                                        <div style="float:center; width:15%; background-color:#CFF"> <table style="margin-top:1px" id="sample_1">
+<tr><td>
+<thead><tr>
         <th style="border-bottom:groove 5px #009; font-family:Georgia, 'Times New Roman', Times, serif; color:#0C9">Running Table No.</th>
      </tr>
      </thead>
@@ -59,6 +69,14 @@ if(!empty($pos_net_amount)){
 <?php }?>
 </tbody></td></tr>
 </table></div>
+                                 </tbody>
+                                            </table>
+                                      </div>  
+                                     </div>
+                           	 	</div>
+                            <!-- /.modal-content -->
+                           	 </div>
+                            <!-- /.modal-dialog --></div>
 
 
 <?php
@@ -68,7 +86,7 @@ if(!empty($pos_net_amount)){
      
  } 
 ?>
-  <div style="float:right; width:85%">
+  <div style="float:left; width:100%">
         <div class="tabbable tabbable-custom tabbable-border">
             <ul class="nav nav-tabs">
                 <li class="active">
@@ -407,7 +425,7 @@ if(!empty($pos_net_amount)){
     <td><?php echo $i; ?></td>
  <td><?php  echo $Compny_name=$this->requestAction(array('controller' => 'Dreamshapers', 'action' => 'fetch_master_outlet',$data['pos_kot']['master_outlets_id']), array());?></td>
     <td><?php  echo $master_session_no_fetch_id=$this->requestAction(array('controller' => 'Dreamshapers', 'action' => 'master_session_no_fetch',$data['pos_kot']['session']), array());?></td>
-    <td><?php echo $data['pos_kot'] ['current_date'] ?></td>
+    <td><?php echo $data['pos_kot'] ['date'] ?></td>
     <td><?php  echo $table_no=$this->requestAction(array('controller' => 'Dreamshapers', 'action' => 'master_table_no_fetch',$data['pos_kot']['master_tables_id']), array());?></td>
    <!--  <td><?php  echo $room_type=$this->requestAction(array('controller' => 'Dreamshapers', 'action' => 'master_room_type_fetch',$data['pos_kot']['master_room_types_id']), array());?></td>--->
     <td><?php echo $data['pos_kot'] ['master_roomnos_id'] ?></td>

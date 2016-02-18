@@ -2710,9 +2710,6 @@ $conditions =array('or' => array(
 			}else{
 			$pos_user_id=$user_id;
 			}
-			
-			
-			
 				$fetch_for_last_id=$this->pos_kot->find('all', array('conditions' => array('kot_type' => 1),'order'=>'id DESC','limit'=>1));
 				if(sizeof($fetch_for_last_id)>0)
 				{
@@ -2734,7 +2731,7 @@ $conditions =array('or' => array(
 			}
 			else
 			{
-			$this->pos_kot->saveAll(array("master_outlets_id"=>$outlet_name,"user_id"=>$pos_user_id,"session"=>$session,"club_member_id"=>$club_member_id,"current_date"=>$date,"master_tables_id"=>@$table_no,"guest_name"=>$guest_name,"covers"=>$covers, "master_roomnos_id"=>$roomno_id, "card_no"=>$card_no,"master_stewards_id"=>@$steward,"remarks"=>$remarks,"kot_type"=>1,"billing_kot_id"=>$fetch_billing_kot_id,'time'=>$cutrrent_time, "room_service"=>$room_service, "master_itemcategory_id"=>$master_itemcategory_id));		
+			$this->pos_kot->saveAll(array("master_outlets_id"=>$outlet_name,"user_id"=>$pos_user_id,"session"=>$session,"club_member_id"=>$club_member_id,"date"=>$date,"master_tables_id"=>@$table_no,"guest_name"=>$guest_name,"covers"=>$covers, "master_roomnos_id"=>$roomno_id, "card_no"=>$card_no,"master_stewards_id"=>@$steward,"remarks"=>$remarks,"kot_type"=>1,"billing_kot_id"=>$fetch_billing_kot_id,'time'=>$cutrrent_time, "room_service"=>$room_service, "master_itemcategory_id"=>$master_itemcategory_id));		
 			$last_record_id=$this->pos_kot->getLastInsertID();     
 			}
 			$this->loadmodel('pos_kot_item_temp');
@@ -2775,8 +2772,6 @@ $conditions =array('or' => array(
 			$master_itemcategory_id=@(int)$this->data["master_itemcategory_id"];
 			$club_member_id=@(int)$this->data["club_member_id"];
 			$table_no_id=@$this->data["table_no_id"];
-			
-			
 			$user_id=@(int)$this->data["user_id"];
 			if($user_id==0 || $user_id=='')
 			{
@@ -2784,11 +2779,6 @@ $conditions =array('or' => array(
 			}else{
 			$pos_user_id=$user_id;
 			}
-			
-			
-			
-			
-			
 				$fetch_for_last_id=$this->pos_kot->find('all', array('conditions' => array('kot_type' => 1),'order'=>'id DESC','limit'=>1));
 				if(sizeof($fetch_for_last_id)>0)
 				{
@@ -3215,7 +3205,7 @@ $conditions =array('or' => array(
 					$fetch_billing_kot_id=1;
 				}
 				
-			$this->pos_kot->saveAll(array("master_outlets_id"=>$outlet_name,"user_id"=>$pos_user_id,"session"=>$session,"current_date"=>$date,"master_tables_id"=>$table_no,"master_roomnos_id"=>$roomno_id,"card_no"=>$card_no,"guest_name"=>$guest_name,"covers"=>$covers,"master_stewards_id"=>$steward,"remarks"=>$remarks,"kot_type"=>3,"plan_kot_id"=>$fetch_billing_kot_id,'time'=>$cutrrent_time, "club_member_id"=>$club_member_id, "master_room_plans_id"=>$master_room_plans_id, "plan_item"=>@$plan_item, "room_service"=>$room_service, "plan_rate"=>$plan_rate));
+			$this->pos_kot->saveAll(array("master_outlets_id"=>$outlet_name,"user_id"=>$pos_user_id,"session"=>$session,"date"=>$date,"master_tables_id"=>$table_no,"master_roomnos_id"=>$roomno_id,"card_no"=>$card_no,"guest_name"=>$guest_name,"covers"=>$covers,"master_stewards_id"=>$steward,"remarks"=>$remarks,"kot_type"=>3,"plan_kot_id"=>$fetch_billing_kot_id,'time'=>$cutrrent_time, "club_member_id"=>$club_member_id, "master_room_plans_id"=>$master_room_plans_id, "plan_item"=>@$plan_item, "room_service"=>$room_service, "plan_rate"=>$plan_rate));
 			
 			 $last_record_id=$this->pos_kot->getLastInsertID();
 			
@@ -3305,11 +3295,6 @@ $conditions =array('or' => array(
 			$room_type_id=@(int)$this->data["room_type_id"];
 			$card_no=@$this->data["card_no"];
 			$master_itemcategory_id=@(int)$this->data["master_itemcategory_id"];
-				
-				
-			
-				
-				
 				$user_id=@(int)$this->data["user_id"];
 			if($user_id==0 || $user_id=='')
 			{
@@ -3317,11 +3302,6 @@ $conditions =array('or' => array(
 			}else{
 			$pos_user_id=$user_id;
 			}
-			
-			
-				
-				
-				
 				
 				$fetch_for_last_id=$this->pos_kot->find('all', array('conditions' => array('kot_type' => 2),'order'=>'id DESC','limit'=>1));
 				if(sizeof($fetch_for_last_id)>0)
@@ -3344,7 +3324,7 @@ $conditions =array('or' => array(
 			}
 			else
 			{
-			$this->pos_kot->saveAll(array("master_outlets_id"=>$outlet_name,"user_id"=>$pos_user_id,"session"=>$session,"club_member_id"=>$club_member_id,"current_date"=>$date,"master_tables_id"=>$table_no,"master_roomnos_id"=>$room_no,"guest_name"=>$guest_name,"covers"=>$covers,"master_stewards_id"=>$steward,"master_room_plans_id"=>$plan_id,"remarks"=>$remarks,"master_room_types_id"=>$room_type_id,"kot_type"=>2,"nc_kot_it"=>$fetch_billing_kot_id,'time'=>$cutrrent_time, 'card_no'=> $card_no, 'master_itemcategory_id'=>$master_itemcategory_id));
+			$this->pos_kot->saveAll(array("master_outlets_id"=>$outlet_name,"user_id"=>$pos_user_id,"session"=>$session,"club_member_id"=>$club_member_id,"date"=>$date,"master_tables_id"=>$table_no,"master_roomnos_id"=>$room_no,"guest_name"=>$guest_name,"covers"=>$covers,"master_stewards_id"=>$steward,"master_room_plans_id"=>$plan_id,"remarks"=>$remarks,"master_room_types_id"=>$room_type_id,"kot_type"=>2,"nc_kot_it"=>$fetch_billing_kot_id,'time'=>$cutrrent_time, 'card_no'=> $card_no, 'master_itemcategory_id'=>$master_itemcategory_id));
 			
 			 $last_record_id=$this->pos_kot->getLastInsertID();
 			}
@@ -16788,7 +16768,25 @@ public function receipt_payment()              ////////  Ashish
 		$this->loadmodel('master_roomno');
 		return $master_pos_kot_item=$this->master_roomno->find('all',array('conditions' => array('flag' => "0")));
 		
+		$this->loadmodel('pos_kot');
+		$feetch_billing_kot_data=$this->pos_kot->find('all',array('conditions'=>array('flag' => 0, 'status'=>0)));
+		$feeetch_billing_kot_data=$this->pos_kot->find('all',array('conditions'=>array('flag' => 0, 'status'=>0, 'status1' => 1)));
 	}
+
+	public function function_index_layoutt()
+	{ 	
+		$this->loadmodel('pos_kot');
+		$feetch_billing_kot_data=$this->pos_kot->find('all',array('conditions'=>array('flag' => 0, 'status'=>0)));
+	}
+	public function function_index_layouttt()
+	{ 	
+		$this->loadmodel('pos_kot');
+		$feeetch_billing_kot_data=$this->pos_kot->find('all',array('conditions'=>array('flag' => 0, 'status'=>0, 'status1' => 1)));
+	}
+
+
+
+
 	public function index_layout_session()
 	{ 	
 			return $this->Session->read('user_name');

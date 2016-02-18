@@ -3,24 +3,34 @@
 </div>
 <div class="row">
 <div class="col-md-12">
-<div style="float:left; width:15%; margin-left:-15px; background-color:#CFF"> <table style="margin-top:1px" id="sample_1">
-   <tr><td>
-    <thead>
-    <tr>
-        <th style="border-bottom:groove 5px #009; font-family:Georgia, 'Times New Roman', Times, serif; color:#0C9">Running Table No.</th>
-     </tr>
-     </thead>
+<div style="float:right;">
+        <li><a data-toggle="modal" class="tooltips" data-placement="bottom" data-original-title="POS Info" href="#deletedis1"><i class="fa fa-joomla" style="color:#F00"></i></a> </li>
+ <div class="modal fade" id="deletedis1" tabindex="-1" role="delete" aria-hidden="true" style="padding-top:35px;">
+                            <div class="modal-dialog modal-md" >
+                                <div class="modal-content" >
+                                    <div class="modal-header" >
+                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                                    <div>
+                                    <table>
+                                    	<tbody>
+                                        <div style="float:center; width:15%; background-color:#CFF"> <table style="margin-top:1px" id="sample_1">
+<tr><td>
+<thead>
+<tr>
+    <th style="border-bottom:groove 5px #009; font-family:Georgia, 'Times New Roman', Times, serif; color:#0C9">Running Table No.</th>
+ </tr>
+ </thead>
 <tbody>
 <?php
 $i=0;
- foreach($feetch_billing_kot_data as $data){ 
- $i++;
- $id=$data['pos_kot'] ['id'];
- $master_outlets_id=$data['pos_kot'] ['master_outlets_id'];
- $session=$data['pos_kot'] ['session'];
- $master_stewards_id=$data['pos_kot'] ['master_stewards_id'];
-  $master_tables_id=$data['pos_kot'] ['master_tables_id'];
- ?>
+foreach($feetch_billing_kot_data as $data){ 
+$i++;
+$id=$data['pos_kot'] ['id'];
+$master_outlets_id=$data['pos_kot'] ['master_outlets_id'];
+$session=$data['pos_kot'] ['session'];
+$master_stewards_id=$data['pos_kot'] ['master_stewards_id'];
+$master_tables_id=$data['pos_kot'] ['master_tables_id'];
+?>
 <tr id="for_delete<?php echo $id; ?>">
 <td><?php  echo $table_no=$this->requestAction(array('controller' => 'Dreamshapers', 'action' => 'master_table_no_fetch',$data['pos_kot']['master_tables_id']), array());?></td>
 </tr>
@@ -32,39 +42,48 @@ $i=0;
 <td>
 <br /><br /><br /><br />
 <thead>
-    <tr>
-        <th style="border-bottom:groove 5px #009; font-family:Georgia, 'Times New Roman', Times, serif; color:#00C">Pending Settlement</th>
-     </tr>
-     </thead>
+<tr>
+    <th style="border-bottom:groove 5px #009; font-family:Georgia, 'Times New Roman', Times, serif; color:#00C">Pending Settlement</th>
+ </tr>
+ </thead>
 <tbody>
 <?php
+
 $i=0;
 $blng=0;
 $exact_duee=0;
- foreach($feeetch_billing_kot_data as $data){ 
- $i++;
- $id=$data['pos_kot'] ['id'];
- $master_outlets_id=$data['pos_kot'] ['master_outlets_id'];
- $session=$data['pos_kot'] ['session'];
- $master_stewards_id=$data['pos_kot'] ['master_stewards_id'];
-  $master_tables_id=$data['pos_kot'] ['master_tables_id'];
-  
-  $pos_net_amount=$data['pos_kot'] ['pos_net_amount'];
-  
- ?>
+foreach($feeetch_billing_kot_data as $data){ 
+$i++;
+$id=$data['pos_kot'] ['id'];
+$master_outlets_id=$data['pos_kot'] ['master_outlets_id'];
+$session=$data['pos_kot'] ['session'];
+$master_stewards_id=$data['pos_kot'] ['master_stewards_id'];
+$master_tables_id=$data['pos_kot'] ['master_tables_id'];
+
+$pos_net_amount=$data['pos_kot'] ['pos_net_amount'];
+
+?>
 <tr id="for_delete<?php echo $id; ?>">
 <td>
- <?php 
+<?php 
 if(!empty($pos_net_amount)){
-	 echo $table_no=$this->requestAction(array('controller' => 'Dreamshapers', 'action' => 'master_table_no_fetch',$data['pos_kot']['master_tables_id']), array()); echo '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'; echo $pos_net_amount; 
+ echo $table_no=$this->requestAction(array('controller' => 'Dreamshapers', 'action' => 'master_table_no_fetch',$data['pos_kot']['master_tables_id']), array()); echo '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'; echo $pos_net_amount; 
 }?>
 </td>  	
 </tr>
 <?php }?>
 </tbody></td></tr>
 </table></div>
-
-
+                                 </tbody>
+                                            </table>
+                                      </div>  
+                                     </div>
+                           	 	</div>
+                            <!-- /.modal-content -->
+                           	 </div>
+                            <!-- /.modal-dialog --></div>
+            <!-------------------------------------------------------------------------------------------->             
+                       
 
 
 
@@ -105,7 +124,7 @@ else
  	$outlet_array=explode(',', $outlet);
  } 
 ?>
-<div style="float:right; width:85%">
+<div style="float:left; width:100%">
 <div class="tabbable tabbable-custom tabbable-border">
             <ul class="nav nav-tabs">
                 <li class="active">
@@ -126,7 +145,19 @@ else
                     
                     <tbody>
                     <tr>
-                    <td><label>Outlet Name</label>
+                    <td><label>Club Member</label></td>
+                    <td colspan="2">
+                    <div class="radio-list">
+                            <label class="radio-inline">
+                            
+                                <input type="radio" name="club_member" value="1"  id="club_member_id" checked="checked">Yes</label>
+                                <label class="radio-inline">							
+                                <input type="radio" name="club_member" value="0"  id="club_member_id1">No</label>
+                                </div>
+                    </td><td></td><td></td><td></td><td></td><td></td>
+                    </tr>
+                      <tr>
+                      <td><label>Outlet Name</label>
                     </td> <td>
                      <div class="form-group">
                     <select class="form-control input-inline input-small select2me" name="outlet_name" onchange="outlet_name_Tname()"  id="outlet_name" placeholder="Select..">
@@ -143,29 +174,21 @@ else
                             }
                             ?>
                             </select></div></td>
-                            <td></td><td></td>
-                            <td></td><td></td>
-                            <td></td><td></td>
-                    </tr>
-                    
-                    
-                    
-                    
-                      <tr><td><label>Table No</label></td>
-                    <td><div class="form-group" >
+                      <td><label>Table No</label></td>
+                      <td><div class="form-group" >
                      <select class="form-control input-inline input-small select2me" required name="table_no" id="table_no" onchange="outlet_item_c();" placeholder="Select..">
                            <option value=""></option>
                             </select>
                             </div>
                           </td>
-                        <td><label>Room No</label></td>
-                        <td class="form-group"><select class=" form-control input-small" name="room_no" id="room_no_idd">
+                        <td id="lb_rn" style="display:none"><label>Room No</label></td>
+                        <td id="lb_rn1" style="display:none" class="form-group"><select class=" form-control input-small" name="room_no" id="room_no_idd">
                         <option value="">--- Select ---</option>
                         <?php
                         foreach($fetch_room_checkin_checkout as $data)
                         {
                         ?>
-                        <option value="<?php echo $data['room_checkin_checkout']['master_roomno_id']; ?>" card_no="<?php echo $data['room_checkin_checkout']['card_no'];?>"
+                  <option value="<?php echo $data['room_checkin_checkout']['master_roomno_id']; ?>" card_no="<?php echo $data['room_checkin_checkout']['card_no'];?>"
                         roomno_id="<?php echo $data['room_checkin_checkout']['master_roomno_id'];?>" company_id="<?php echo $data['room_checkin_checkout']['company_id'];?>" guest_name="<?php echo $data['room_checkin_checkout']['guest_name'];?>">
                         <?php echo $data['room_checkin_checkout']['master_roomno_id']; ?></option>
                         <?php 
@@ -173,8 +196,8 @@ else
                         ?>
                         </select>
                         </td>
-                        <td><label>Company Name</label></td>
-                        <td class="form-group"><select class=" form-control input-small" name="user_id" id="company_id">
+                        <td id="lb_rn2" style="display:none"><label>Company Name</label></td>
+                        <td id="lb_rn3" style="display:none" class="form-group"><select class=" form-control input-small" name="user_id" id="company_id">
                         <option value="">--- Select ---</option>
                         <?php
                         foreach($fetch_company_registration as $data)
@@ -188,72 +211,10 @@ else
                         ?>
                         </select>
                         </td>
-
-                        <input type="hidden" name="roomno_id" id="roomno_id">
-                        <td><label>Item Category <span style="color:#E02222">* </span></label></td>
-                        <td><div class="form-group">
-                         <select class="form-control input-small select2me" required="required" placeholder="Select..." 
-                         id="category" onchange="item_view();" name="master_itemcategory_id">
-                         <option value="">--- Select ---</option>
-                            </select></div></td>
-                            
-                            
-                            
-                        <td></td><td></td> </tr>
-                     <tr>
-                     <td><label>Session</label></td>
-                        <!--<td>
-                         <select class="form-control input-small"  id="session" name="session" placeholder="Select...">
-                                <option value=""></option>
-                                <?php
-                                foreach($fetch_plan_item_category as $data)
-                                {
-                                ?>
-                                <option value="<?php echo $data['plan_item_category']['id'];?>">
-                                <?php echo $data['plan_item_category']['item_category'];?></option>
-                                <?php
-                                }
-                                ?>
-                     </select></td>-->
-             
-             <td>
-             <input type="text" class="form-control input-inline input-small" name="session" readonly="readonly" value="<?php echo $break; ?>"/>
-           </td>  
-
-                     
-                  <!--<td><label>Room Type</label></td>
-                    <td>
-                    
-                    <select class="form-control input-inline input-small" name="room_type_id" id="room_type_id"  >
-                            <option value="">--- Select ---</option>
-                            <?php
-                            foreach($fatch_master_room_type as $data)
-                            {
-                                ?>
-                                <option value="<?php echo $data['master_room_type']['id'];?>"><?php echo $data['master_room_type']['room_type'];?></option>
-                                <?php
-                            }
-                            ?>
-                            </select>
-                    </div>
-                    </td>-->
-                    <td><label>Card No.</label></td>
-                        <td>
-                        <div class="form-group" >
-                        <input name="card_no" id="card_no"  placeholder="Card No"   class="form-control input-inline input-small" type="text">
-                        </div>
-                        </td>
-                    <td><label>Club Member</label></td>
-                    <td colspan="2">
-                    <div class="radio-list">
-                            <label class="radio-inline">
-                            
-                                <input type="radio" name="club_member_id" value="1"  id="club_member_id">Yes</label>
-                                <label class="radio-inline">							
-                                <input type="radio" name="club_member_id" value="0"  id="club_member_id1" checked="checked">No</label>
-                                </div>
-                    </td>
-                     <td><div id="cmid" style="display:none">
+                         <input type="hidden" name="roomno_id" id="roomno_id">
+                         
+                         <td id="lb_cn"><label>Member Card No.</label></td>
+                     <td><div id="lb_cn1">
                    <label> <select class="form-control input-small select2me" name="club_member_id" id="id_club_member" placeholder="Select...">
                     <option value=""></option>
                     
@@ -261,39 +222,28 @@ else
                     foreach($fetch_registration as $data)
                     {
                         ?>
-                        <option guest_name="<?php echo $data['registration']['name'];?>"  value=
+                        <option guest_name="<?php echo $data['registration']['name'];?>" club_card="<?php echo $data['registration']['card_id_no'];?>"  value=
                         "<?php echo $data['registration']['id'];?>">
-                        <?php echo $data['registration']['id'];?> (<?php echo $data['registration']['name'];?>)</option>
+                        <?php echo $data['registration']['card_id_no'];?> (<?php echo $data['registration']['name'];?>)</option>
                         <?php
                     }
                     ?>
                     </select></label></div> 
-                    </td>
-                    
-                   <!-- <td ><label>Room No </label></td>
-                    <td width="30%"> <div class="form-group" >
-                     <select class="form-control input-inline input-small"  name="room_no" id="room_no_idd">
-                            <option value="">--- Select ---</option>
-                            <?php
-                            foreach($fatch_master_roomno as $rooms)
-                            {
-                            	$total_room=$rooms['master_roomno']['room_no'];
-                                $romm_no=explode("," ,$total_room);
-                                    foreach($romm_no as $romm_view)
-                                    {
-                                    ?>
-                             			<option value="<?php echo $romm_view;?>"><?php echo $romm_view;?></option>
-                                    <?php
-                                    }
-                            }
-                            ?>
-                            </select></div>
-                    </td>--->
-                    
-                    
-                     </tr>
-                   
-                    <td><label>Guest Name </label></td>
+                    </td><td></td><td></td>
+                       </tr>
+                     
+                     <tr>
+                     <td><label>Session</label></td>
+                     <td>
+             <input type="text" class="form-control input-inline input-small" name="session" readonly="readonly" value="<?php echo $break; ?>"/>
+             </td>  
+             <td><label>Card No.</label></td>
+                        <td>
+                        <div class="form-group" >
+                        <input name="card_no" id="card_no"  placeholder="Card No"   class="form-control input-inline input-small" type="text">
+                        </div>
+                        </td>
+                        <td><label>Guest Name </label></td>
                     <td>
                      <div class="form-group" >
                     <input name="guest_name" id="guest_name"  placeholder="Guest Name"   class="form-control input-inline input-small" type="text">
@@ -305,9 +255,14 @@ else
                     <input name="covers" placeholder="Covers" id="cover"  class="form-control input-inline input-small" type="text">
                     </div>
                     </td>
-                    
-                    
-
+                     </tr>
+                     <tr>
+                    <td><label>Item Category <span style="color:#E02222">* </span></label></td>
+                        <td><div class="form-group">
+                         <select class="form-control input-small select2me" required="required" placeholder="Select..." 
+                         id="category" onchange="item_view();" name="master_itemcategory_id">
+                         <option value="">--- Select ---</option>
+                            </select></div></td>
                     <td><label>Steward</label></td>
                     <td>
                      <div class="form-group" >
@@ -324,6 +279,10 @@ else
                             </select>
                    </div>
                     </td>
+                    <td><label>Remarks</label></td>
+                     <td colspan="1">
+                        <input type="text" name="remarks" id="remark" class="form-control input-small" />
+                     </td>
                       <td colspan="2">
                  <div class="radio-list">
                             <label class="radio-inline">
@@ -334,10 +293,6 @@ else
                                 </div>
                     </td>
                     </tr>
-                    <tr><td><label>Remarks</label></td>
-                     <td colspan="1">
-                        <input type="text" name="remarks" id="remark" class="form-control input-small" />
-                     </td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
                     </tbody>
                     </table>
                    
@@ -445,7 +400,7 @@ $i=0;
 <td><?php echo $i; ?></td>
 <td><?php  echo $Compny_name=$this->requestAction(array('controller' => 'Dreamshapers', 'action' => 'fetch_master_outlet',$data['pos_kot']['master_outlets_id']), array());?></td>
 <td><?php echo $data['pos_kot'] ['session'] ?></td>
-<td><?php echo date("d-m-Y",strtotime($data['pos_kot']['current_date'])); ?></td>
+<td><?php echo date("d-m-Y",strtotime($data['pos_kot']['date'])); ?></td>
 <td><?php  echo $table_no=$this->requestAction(array('controller' => 'Dreamshapers', 'action' => 'master_table_no_fetch',$data['pos_kot']['master_tables_id']), array());?></td>
 <td><?php echo $data['pos_kot'] ['guest_name'] ?></td>
 <td><?php echo $data['pos_kot'] ['master_roomnos_id'] ?></td>
@@ -1030,6 +985,7 @@ $('#show_data').html('<div style="display: block; padding-right: 17px; padding-t
 		$('#id_club_member').live('change',function(e)
 			{
 			$("#guest_name").val($('option:selected', this).attr("guest_name"));
+			$("#card_no").val($('option:selected', this).attr("club_card"));
 			});
 	});
 	
@@ -1043,10 +999,20 @@ $('#show_data').html('<div style="display: block; padding-right: 17px; padding-t
 	
 	$(document).ready(function(){
 		$("#club_member_id").click(function(){
-		$('#cmid').show();
+		$('#lb_cn').show();
+		$('#lb_cn1').show();
+		$('#lb_rn').hide();
+		$('#lb_rn1').hide();
+		$('#lb_rn2').hide();
+		$('#lb_rn3').hide();
 		});
 		$("#club_member_id1").click(function(){
-		$('#cmid').hide();
+		$('#lb_cn').hide();
+		$('#lb_cn1').hide();
+		$('#lb_rn').show();
+		$('#lb_rn1').show();
+		$('#lb_rn2').show();
+		$('#lb_rn3').show();
 		});
 	});
 		</script>       

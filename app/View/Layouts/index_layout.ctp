@@ -113,7 +113,6 @@ background-color:#82A0D1;
         
 			<ul class="nav navbar-nav pull-right">
         
-        
             <li><a data-toggle="modal" class="tooltips" data-placement="bottom" data-original-title="Room Status" href="#deletedis"><i class="fa fa-sitemap"></i></a> </li>
 			<li class="dropdown dropdown-user">
 					<a href="#" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
@@ -316,7 +315,6 @@ background-color:#82A0D1;
             	
                 	<div class="portlet light" style="padding:0px !important;">
                     	<?php echo $this->fetch('content'); ?>
-                        
                          <div class="modal fade" id="deletedis" tabindex="-1" role="delete" aria-hidden="true" style="padding-top:35px">
                             <div class="modal-dialog modal-lg" >
                                 <div class="modal-content" >

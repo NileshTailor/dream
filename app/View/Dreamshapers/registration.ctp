@@ -1,3 +1,17 @@
+<style media="colorss">
+.print-hide
+{
+	display:none;
+}
+.print-show
+{
+	display:block !important;
+}
+</style>
+
+
+
+
 <?php
 if(empty($active))
 { $active="";
@@ -47,11 +61,12 @@ if(empty($active))
                
                
                 <td><label> Card Type</label></td>
-                <td><select class="form-control select2 select2_sample2 input-small" placeholder="Select..." name="card_type_id" id="card_type_id"  required>
+                <td><select class="form-control input-small" name="card_type_id" id="card_type_id"  required>
                 <option value="">--Select--</option>
                 <?php
                 foreach($fetch_card_type as $data)
                 {  
+				$id=$data['card_type']['card_name'];
                 ?>
                 <option value="<?php echo $data['card_type']['id']; ?>">
                 <?php echo $data['card_type']['card_name']; ?></option>

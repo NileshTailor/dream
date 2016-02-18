@@ -8,9 +8,6 @@
                             </div>
    </div></div>
 
-
-
-
 <?php
  if(!empty($outlet))
  {
@@ -18,9 +15,7 @@
      
  } 
 ?>
-
 <?php 
-
 foreach($fatch_billing_kot_query_string as $data){ 
 		
         $id_qry=$data['pos_kot']['id'];     
