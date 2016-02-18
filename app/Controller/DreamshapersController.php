@@ -2264,18 +2264,9 @@ $conditions =array('or' => array(
 					
 					
 				}
-				
-	
-				
 			}
-
-
-
-			
+	
 /////////end code//////////		
-			
-			
-			
 			 $fetch_transaction_id=$this->ledger->find('count',array('conditions'=>array('transaction_type'=>'Receipt')));
              $t_id=$fetch_transaction_id+1;
               if($amount>0)
@@ -2299,43 +2290,6 @@ $conditions =array('or' => array(
 			    }
 			  }
 					
-					
-					/*if($amount=='' || $amount==0){
-					$ldg_zero1=0;
-					$ledger_cr_amt=$amount-$taxes-$service_charge-$tips-$ldg_zero1;
-					$ledger_cr_dis=$amount-$discount-$ldg_zero1;
-						
-				
-				$this->ledger_cr_dr->saveAll(array('ledger_id'=>$last_ledger_id,'ledger_master_id'=> '29','cr' => $taxes));
-						
-				if($tax>0){
-				$this->ledger_cr_dr->saveAll(array('ledger_id'=>$last_ledger_id,'ledger_master_id'=> '29','cr' => $taxes));
-				}
-				if($tips>0){
-				$this->ledger_cr_dr->saveAll(array('ledger_id'=>$last_ledger_id,'ledger_master_id'=> '9','cr' => $tips));
-				}
-				if($service_charge>0){
-				$this->ledger_cr_dr->saveAll(array('ledger_id'=>$last_ledger_id,'ledger_master_id'=> '8','cr' => $service_charge));}
-				
-					}*/
-				
-				/*if($discount>0){
-				$this->ledger->saveAll(array('ledger_master_id'=>'10','credit'=> $discount,'invoice_id' => $bill_no, 'category' => 'DISCOUNT', 'date' => $date,'time'=>$cutrrent_time, 'gr_no'=>$cnm, 'name'=>$guest_name));
-				}
-				if($taxes>0){
-				$this->ledger->saveAll(array('ledger_master_id'=>'29','credit'=> $taxes,'invoice_id' => $bill_no, 'category' => 'TAX', 'date' => $date,'time'=>$cutrrent_time, 'gr_no'=>$cnm, 'name'=>$guest_name));
-				}
-				
-			foreach($kot_item_ledger as $lr_data)
-				{
-				$this->loadModel('sales_temp');
-					@$st1_bill_no=$lr_data['pos_kot_item']['pos_kots_id'];
-				    @$st1_amount=$lr_data['pos_kot_item']['amount'];
-					@$st1_cat=$lr_data['pos_kot_item']['item_category_id'];
-				$this->ledger->saveAll(array('ledger_master_id'=>$st1_cat,'credit'=> $st1_amount,'invoice_id' => $st1_bill_no, 'category' => 'POS', 'date' => $date,'time'=>$cutrrent_time, 'gr_no'=>$cnm, 'name'=>$guest_name));	
-				}	*/
-			
-			
 			?>
              <script>
 			 window.open("bill_settleing_print?kot_id=<?php echo $bill_no; ?>",'_blank');
@@ -2353,9 +2307,12 @@ $conditions =array('or' => array(
 		$this->set('fetch_room_checkin_checkout', $this->room_checkin_checkout->find('all', array('conditions'=>array('status' => 0, 'flag' => '0'))));
 		$this->loadmodel('receipt_checkout');
 		$this->set('fetch_receipt_checkout', $this->receipt_checkout->find('all', array('conditions'=>array('flag' => '0'))));
-		
 		$this->set('fetch_pos_saler_counter', $this->pos_saler_counter->find('all'));
-		
+				$this->loadmodel('card_amount');
+		$this->loadmodel('registration');
+					$this->set('fetch_registration', $this->registration->find('all', array('conditions' => array('flag' => "0"))) );
+			$this->set('fetch_card_amount', $this->card_amount->find('all', array('conditions' => array('flag' => "0"))) );
+
 		$this->loadmodel('master_roomno');
 		$this->set('fatch_master_roomno', $this->master_roomno->find('all'));
 		$this->loadmodel('master_table');
@@ -9000,7 +8957,6 @@ $fo_room_booking=$this->fo_room_booking->find('all',array('conditions' => array(
 			exit;
 			
 		}
-		
 		//////////////////////
 		if($this->request->query('Bill_settleing_kot_view')==1)
         {
@@ -9023,11 +8979,11 @@ $fo_room_booking=$this->fo_room_booking->find('all',array('conditions' => array(
 			{
 				foreach($dataa as $view)
 				{
-					//$master_tables_id=$view['fetch_kots']['master_tables_id'];
-					
-					
-					?>
-        <tr style="background-color:#CFF">
+				$club_member_id=$view['club_member_id'];
+													?>
+                   <?php if($club_member_id>0){?>
+
+        <tr style="background-color:#FF0">
         <th>
         <div class="form-group"><div class="radio-list">
         <label><input type="radio" name="bill" id="optionsRadios1" onclick="Item_name_replace(<?php echo $view['id'];?>)" value="<?php echo $view['id'];?>"></label>
@@ -9036,19 +8992,40 @@ $fo_room_booking=$this->fo_room_booking->find('all',array('conditions' => array(
         <td><?php echo $view['id'];?></td>
         <td><?php echo $view['guest_name'];?></td>
         <td>
-		
-		
 		<?php echo $view['master_roomnos_id'];?>
         <?php 
-
 if($bb>0){?>
          <?php echo ' / '; ?>
         <?php echo @$master_table_no_fetch=$this->requestAction(array('controller' => 'Dreamshapers', 'action' => 'master_table_no_fetch',$view['master_tables_id']), array()); ?>
       <?php } ?>
-        
         </td>
         <td><?php  echo $steward_name=$this->requestAction(array('controller' => 'Dreamshapers', 'action' => 'master_steward_name_fetch',$view['master_stewards_id']), array());?></td>
         </tr>
+        
+<?php } else {?>
+        
+        <tr style="background-color:#3FF">
+        <th>
+        <div class="form-group"><div class="radio-list">
+        <label><input type="radio" name="bill" id="optionsRadios1" onclick="Item_name_replace(<?php echo $view['id'];?>)" value="<?php echo $view['id'];?>"></label>
+        </div></div></th>
+        <td><?php  echo $Compny_name=$this->requestAction(array('controller' => 'Dreamshapers', 'action' => 'fetch_master_outlet',$view['master_outlets_id']), array());?></td>
+        <td><?php echo $view['id'];?></td>
+        <td><?php echo $view['guest_name'];?></td>
+        <td>
+		<?php echo $view['master_roomnos_id'];?>
+        <?php 
+if($bb>0){?>
+         <?php echo ' / '; ?>
+        <?php echo @$master_table_no_fetch=$this->requestAction(array('controller' => 'Dreamshapers', 'action' => 'master_table_no_fetch',$view['master_tables_id']), array()); ?>
+      <?php } ?>
+        </td>
+        <td><?php  echo $steward_name=$this->requestAction(array('controller' => 'Dreamshapers', 'action' => 'master_steward_name_fetch',$view['master_stewards_id']), array());?></td>
+        </tr>
+        <?php }?>
+        
+        
+        
          <?php
 			}
 			}
@@ -9076,11 +9053,12 @@ if($bb>0){?>
 			{
 				foreach($dataa as $view)
 				{
-					//$master_tables_id=$view['fetch_kots']['master_tables_id'];
-					
-					
-					?>
-        <tr style="background-color:#CFF">
+					                    
+                    $club_member_id=$view['club_member_id'];
+													?>
+                   <?php if($club_member_id>0){?>
+                    
+        <tr style="background-color:#FF0">
         <th>
         <div class="form-group"><div class="radio-list">
         <label><input type="radio" name="bill" id="optionsRadios1" onclick="Item_name_replace(<?php echo $view['id'];?>)" value="<?php echo $view['id'];?>"></label>
@@ -9095,11 +9073,36 @@ if($bb>0){?>
          <?php echo ' / '; ?>
         <?php echo @$master_table_no_fetch=$this->requestAction(array('controller' => 'Dreamshapers', 'action' => 'master_table_no_fetch',$view['master_tables_id']), array()); ?>
       <?php } ?>
-        
-        
         </td>
         <td><?php  echo $steward_name=$this->requestAction(array('controller' => 'Dreamshapers', 'action' => 'master_steward_name_fetch',$view['master_stewards_id']), array());?></td>
         </tr>
+        
+
+<?php } else {?>
+
+          
+        <tr style="background-color:#3FF">
+        <th>
+        <div class="form-group"><div class="radio-list">
+        <label><input type="radio" name="bill" id="optionsRadios1" onclick="Item_name_replace(<?php echo $view['id'];?>)" value="<?php echo $view['id'];?>"></label>
+        </div></div></th>
+        <td><?php  echo $Compny_name=$this->requestAction(array('controller' => 'Dreamshapers', 'action' => 'fetch_master_outlet',$view['master_outlets_id']), array());?></td>
+        <td><?php echo $view['id'];?></td>
+        <td><?php echo $view['guest_name'];?></td>
+        <td><?php echo $view['master_roomnos_id'];?>
+        <?php 
+
+if($bb>0){?>
+         <?php echo ' / '; ?>
+        <?php echo @$master_table_no_fetch=$this->requestAction(array('controller' => 'Dreamshapers', 'action' => 'master_table_no_fetch',$view['master_tables_id']), array()); ?>
+      <?php } ?>
+        </td>
+        <td><?php  echo $steward_name=$this->requestAction(array('controller' => 'Dreamshapers', 'action' => 'master_steward_name_fetch',$view['master_stewards_id']), array());?></td>
+        </tr>
+
+
+
+ <?php }?>
          <?php
 			}
 			}
@@ -9113,7 +9116,9 @@ if($bb>0){?>
 			$this->loadmodel('pos_kot');
 			$conditions=array('master_outlets_id' => $outlet_name,'status'=>0);
 			$fetch_kotss=$this->pos_kot->find('all',array('conditions'=>$conditions));
-			@$bbb=$fetch_kotss[0]['pos_kot']['master_outlets_id']; 
+			@$bbb=$fetch_kotss[0]['pos_kot']['master_outlets_id'];
+			//$club_member_id=$fetch_kotss[0]['pos_kot']['club_member_id']; 
+			
 			?>
             <table width="100%">
                <thead>
@@ -9128,11 +9133,10 @@ if($bb>0){?>
 			{
 				foreach($dataaa as $vieww)
 				{
-					//$master_tables_id=$view['fetch_kots']['master_tables_id'];
-					
-					
-					?>
-        <tr style="background-color:#CFF">
+					$club_member_id=$vieww['club_member_id'];
+													?>
+                   <?php if($club_member_id>0){?>
+                    <tr style="background-color:#FF0">
         <th>
         <div class="form-group"><div class="radio-list">
         <label><input type="radio" name="bill" id="optionsRadios1" onclick="Item_name_replace(<?php echo $vieww['id'];?>)" value="<?php echo $vieww['id'];?>"></label>
@@ -9147,11 +9151,31 @@ if($bbb>0){?>
          <?php echo ' / '; ?>
         <?php echo @$master_table_no_fetch=$this->requestAction(array('controller' => 'Dreamshapers', 'action' => 'master_table_no_fetch',$vieww['master_tables_id']), array()); ?>
       <?php } ?>
-        
-        
         </td>
         <td><?php  echo $steward_name=$this->requestAction(array('controller' => 'Dreamshapers', 'action' => 'master_steward_name_fetch',$vieww['master_stewards_id']), array());?></td>
         </tr>
+                    <?php } else {?>
+        <tr style="background-color:#3FF">
+        <th>
+        <div class="form-group"><div class="radio-list">
+        <label><input type="radio" name="bill" id="optionsRadios1" onclick="Item_name_replace(<?php echo $vieww['id'];?>)" value="<?php echo $vieww['id'];?>"></label>
+        </div></div></th>
+        <td><?php  echo @$Compny_name=$this->requestAction(array('controller' => 'Dreamshapers', 'action' => 'fetch_master_outlet',$vieww['master_outlets_id']), array());?></td>
+        <td><?php echo $vieww['id'];?></td>
+        <td><?php echo $vieww['guest_name'];?></td>
+        <td><?php echo $vieww['master_roomnos_id'];?>
+        <?php 
+
+if($bbb>0){?>
+         <?php echo ' / '; ?>
+        <?php echo @$master_table_no_fetch=$this->requestAction(array('controller' => 'Dreamshapers', 'action' => 'master_table_no_fetch',$vieww['master_tables_id']), array()); ?>
+      <?php } ?>
+        </td>
+        <td><?php  echo $steward_name=$this->requestAction(array('controller' => 'Dreamshapers', 'action' => 'master_steward_name_fetch',$vieww['master_stewards_id']), array());?></td>
+        </tr>
+        
+        <?php }?>
+        
          <?php
 			}
 			}
@@ -15651,6 +15675,7 @@ public function card_amount()
 		}
 		$this->loadmodel('card_amount');
 		$this->loadmodel('registration');
+		
 		
 		if($this->request->is('post'))
 		{

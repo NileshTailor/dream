@@ -1,13 +1,17 @@
 
-<div class="table-responsive">
+<div class="table-responsive" style=" float:left; width:90%">
                         <div class="portlet box " style="border:#FFF !important; background-color:#E26A6A; color:#FFF">
                             <div class="portlet-title box white">
                                 <div class="caption">
                                     <i class="fa fa-book" style="color:#FFF"></i><strong>Bill Settleing</strong>
                                 </div>
-                            </div>
-   </div></div>
-
+                                </div></div></div>
+                                <div style="float:right; background:#FFF"><table>
+                                    	<tbody>
+                                            <tr><td class="legendColorBox">
+                                            <div style="width:4px;height:0;border:5px solid #FF0;overflow:hidden"></div></td>
+                                            <td class="legendLabel">&nbsp; Club Member</td></tr>
+                                    </tbody></table></div>
 <?php
  if(!empty($outlet))
  {
@@ -279,48 +283,29 @@ foreach($fatch_billing_kot_query_string as $data){
                      <table width="100%"><tr style="background-color:#FFC"><td align="center"><button type="submit" name="print_submit" class="btn green" value="print_submit"><i class="fa fa-plus"></i> Print Bill</button></td></tr></table><br/>
                      
                      
-                     <table width="100%"><tr style="background-color:#fff"><td>&nbsp;</td></tr></table>
-            <!--<td>
-                <label> Room </label> </td><td class="form-group"><select class=" form-control input-small" name="room_no" id="room_no_idd">
-                        <option value="">Select No.</option>
-                        <?php
-                        foreach($fetch_room_checkin_checkout as $data)
-                        {
-                        ?>
-                        <option value="<?php echo $data['room_checkin_checkout']['id']; ?>" card_no="<?php echo $data['room_checkin_checkout']['card_no'];?>"
-                        roomno_id="<?php echo $data['room_checkin_checkout']['master_roomno_id'];?>" guest_name="<?php echo $data['room_checkin_checkout']['guest_name'];?>">
-                        <?php echo $data['room_checkin_checkout']['master_roomno_id']; ?></option>
-                        <?php 
-                        }
-                        ?>
-                        </select>
-                        </td>
-                </tr>
-                </thead>
-                </table>
-                   
-                </fieldset>-->
-                
-               <!-- <table width="100%">
-                <tr>
-                <td style="width:100%;" align="center">
-                                     <div class="form-group" >
-                        <div class="radio-list">
-                           <label class="radio-inline">
-                            <input type="radio" name="payment_type"  value="1" id="fp" checked="checked"> Full Payment </label>
-                            <label class="radio-inline">
-                            <input type="radio" name="payment_type" value="2" id="brm"> By Room </label>
-                        </div>
-                    </div>
-                     </td>
-                </tr>
-                </table>-->
-                
-                
-                
-                
+                     
                 <fieldset>
                 <legend>Payment Mode</legend>
+                
+                <table width="100%" border="0">
+                     <tr><td width="25%"><label> Select Club Member Card No.</label></td>
+                <td><select class="form-control select2 select2_sample2 input-small" placeholder="Select..."  name="registration_id" id="registration_id" onchange="balance_amt();" required>
+                <option value="">--Select--</option>
+                <?php
+                foreach($fetch_registration as $data)
+                {  
+                ?>
+                <option value="<?php echo $data['registration']['id']; ?>">
+                <?php echo $data['registration']['card_id_no']; ?></option>
+                <?php
+                }
+                ?>
+                </select></td>
+                <td><label>Balance</label></td>
+                <td><input type="text" name="balance_amount" class="form-control input-inline input-small" id="balance_amount" disabled placeholder="Balance"/></td>
+                </tr></table><br />
+                
+                
                 <table class="table" style=" width:100% !important;">
              <thead>
                 <tr>
@@ -523,7 +508,22 @@ foreach($fatch_billing_kot_query_string as $data){
 			});
 	}
 	////////////////////////
-	
+	function balance_amt()
+	{
+	var id=$("select[id=registration_id]").val();
+			//alert(id);
+              $.ajax({ 
+                url: "ajax_php_file?view_card_balance_amount=1&q="+id,
+                type: "POST", 
+				 success: function(data)
+					{ 
+						//alert(data); 
+						$("#balance_amount").val(data); 
+					}
+                });
+		
+	}
+	//////////////////////////////////
 	function add_discount()
 	{
 		var amount_id=eval($("#amount_id").val());
@@ -608,5 +608,9 @@ foreach($fatch_billing_kot_query_string as $data){
 		
     });
 	});
+	
+	
+	
+	
 	
 	</script>

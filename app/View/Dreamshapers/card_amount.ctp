@@ -47,7 +47,7 @@ if(empty($active))
                 {  
                 ?>
                 <option value="<?php echo $data['registration']['id']; ?>" name="<?php echo $data['registration']['name'];?> ">
-                <?php echo $data['registration']['card_id_no']; ?></option>
+                <?php echo $data['registration']['card_id_no']; ?> (<?php echo $data['registration']['name']; ?>)</option>
                 <?php
                 }
                 ?>
