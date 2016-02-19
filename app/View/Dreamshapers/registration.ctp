@@ -50,7 +50,7 @@ if(empty($active))
                             foreach($fetch_gr_no as $data){ 
                             $i++;
                             $id=$data['gr_no']['id'];
-                            $card_number=$data['gr_no']['card_number'];
+                            @$card_number=$data['gr_no']['card_number'];
                             ?>
                             <?php $data['gr_no']['card_number']; ?>
                             <?php }?>

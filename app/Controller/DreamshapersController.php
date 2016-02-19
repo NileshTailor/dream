@@ -4917,11 +4917,12 @@ public function debtor_receipt()
 		
        
         if(isset($this->request->data["add_room_checkin_checkout"]))
-            {
+        {
 				$checkout_no=$this->request->data["checkout_no"];
+				$mobile_no=$this->request->data["mobile_no"];
+				$email_id=$this->request->data["email_id"];
 				$this->loadmodel('room_checkin_checkout');
-			  $room_checkin_checkout_flagg = $this->room_checkin_checkout->find('all', array( 
-              'fields' => array('MAX(multi_flag)')));
+			  $room_checkin_checkout_flagg = $this->room_checkin_checkout->find('all', array('fields' => array('MAX(multi_flag)')));
 	          $room_checkin_checkout_flag=$room_checkin_checkout_flagg[0][0]['MAX(multi_flag)']+1;
 	
 			  $id_chekin_ary=$this->request->data["master_roomno_id"];
@@ -5231,8 +5232,11 @@ public function debtor_receipt()
 				$due_amount1=$room_due;
 				$this->gr_no->updateAll(array('checkout_no' =>$this->request->data["checkout_no"]+1), array('id' => 1));
 				
-		
 				$edit_card_no=$this->request->data["edit_card_no"];
+				
+				$sms=str_replace(' ', '+', 'Thank you for choosing us for your stay.');
+				$this->requestAction(array('controller' => 'Dreamshapers', 'action' => 'send_sms',$sms,$mobile_no), array());
+				$success=$this->smtpmailer($this->request->data["email_id"],'Dreamshapers','Enquiry', "hello" ,$this->request->data["email_id"]);
 				///////////////////////////////////////////////////////////
 				//////////// RooM STATUS 
 				if(sizeof($id_chekin_ary)>1)
@@ -13544,6 +13548,8 @@ public function roomno()
 			  }
 
                 $this->gr_no->updateAll(array('reservation_gr_no' =>$this->request->data["reservation_gr_no"]+1), array('id' => 1));
+				$sms=str_replace(' ', '+', 'Thank you for choosing us for your stay.');
+				$this->requestAction(array('controller' => 'Dreamshapers', 'action' => 'send_sms',$sms,$this->request->data["telephone"]), array());
 				echo '<META HTTP-EQUIV="Refresh" Content="0; URL=room_reservation?active=1">';
 			}
 			
@@ -15417,10 +15423,9 @@ public function companydiscount()
 				'p_address' => $this->request->data["p_address"],'date' => $date,'time' => $cutrrent_time));
 				$success=$this->smtpmailer($this->request->data["authorized_email_id"],'Dreamshapers','Enquiry', "hello" ,$this->request->data["authorized_email_id"]);
 				
-					$working_key='A1d987e6da856f0d2de06aa0456dcb04b';
-					$sms_sender='PHPHTL';
-					$sms1=str_replace(' ', '+', 'Thank you for choosing us for your stay.');
-					file_get_contents('http://alerts.sinfini.com/api/web2sms.php?workingkey='.$working_key.'&sender='.$sms_sender.'&to=8058483636&message='.$sms1.'');
+				$sms=str_replace(' ', '+', 'Thank you for choosing us for your stay.');
+				
+				$this->requestAction(array('controller' => 'Dreamshapers', 'action' => 'send_sms',$sms,$this->request->data["mobile_no"]), array());
 				
 				$last_record_id=$this->company_registration->getLastInsertID();
 				$this->ledger_master->saveAll(array('ledger_category_id' => '1','name' => $company_name, 'name_id'=>$last_record_id));
@@ -16201,76 +16206,81 @@ public function receipt_payment()              ////////  Ashish
 			if(isset($this->request->data["add_registration"]))
 			{
 				$name=$this->request->data["name"];
-			$swd_of=$this->request->data["swd_of"];
-			$occupation=$this->request->data["occupation"];
-			$p_address=$this->request->data["p_address"];
-			$p_phone=$this->request->data["p_phone"];
-			$fax=$this->request->data["fax"];
-			$office=$this->request->data["office"];
-			$c_address=$this->request->data["c_address"];
-			$c_phone=$this->request->data["c_phone"];
-			$mobile_no=$this->request->data["mobile_no"];
-			$email=$this->request->data["email"];
-			$marital_status=$this->request->data["marital_status"];
-			$residential_status=$this->request->data["residential_status"];
-			$nationality=$this->request->data["nationality"];
-			$card_type_id=$this->request->data["card_type_id"];
-			
-			$tax_ac_no=$this->request->data["tax_ac_no"];
-			$guest_type=$this->request->data["guest_type"];
-			if(!empty($guest_type))
-			{
-				$wing_name=$this->request->data["wing_name"];
-				$flat_no=$this->request->data["flat_no"];
-				$floor=$this->request->data["floor"];
-			}else { 
-				$wing_name='';
-				$flat_no='';
-				$floor='';
-			}
-			
-			$card_id_no=$this->request->data["card_id_no"];
-			$dd=$this->request->data["dd"];
-			$mm=$this->request->data["mm"];
-			$yy=$this->request->data["yy"];
-			$dob=$yy."-".$mm."-".$dd;
-			
-			$doa=$this->request->data["date_of_anniversary"];
-			if(empty($doa))
-			{
-				$date_of_anniversary="0000-00-00";				
-			}
-			else
-			{
-				$date_of_anniversary=date("Y-m-d",strtotime($this->request->data["date_of_anniversary"]));
-			} 
-			$reg_type=$this->request->data["reg_type"];
-			
-				$exct_row=$this->request->data["exct_row"];
-				$all_rows=explode(",",$exct_row);
-				foreach($all_rows as $data){
-					$cardholder[]=@$this->request->data["cardholder".$data];
-					$applicant[]=@$this->request->data["applicant".$data];
-				}
-				$v=0;
-				foreach($cardholder as $card)
-				{
-				$new_ar[]=$card.','.$applicant[$v];
-				$v++;
-				}
-				$cardholder=implode("-",$new_ar);
-			
-			
-			$reg_date=date('Y-m-d');
-			$reg_time=date('H:i:s');
+				$swd_of=$this->request->data["swd_of"];
+				$occupation=$this->request->data["occupation"];
+				$p_address=$this->request->data["p_address"];
+				$p_phone=$this->request->data["p_phone"];
+				$fax=$this->request->data["fax"];
+				$office=$this->request->data["office"];
+				$c_address=$this->request->data["c_address"];
+				$c_phone=$this->request->data["c_phone"];
+				$mobile_no=$this->request->data["mobile_no"];
+				$email=$this->request->data["email"];
+				$marital_status=$this->request->data["marital_status"];
+				$residential_status=$this->request->data["residential_status"];
+				$nationality=$this->request->data["nationality"];
+				$card_type_id=$this->request->data["card_type_id"];
 				
-
-			
-			$this->registration->saveAll(array("name"=>$name,"swd_of"=>$swd_of,"p_address"=>$p_address,"p_phone"=>$p_phone,"fax"=>$fax,"c_address"=>$c_address,"phone_home"=>$c_phone,"office"=>$office,"mobile_no"=>$mobile_no,"email"=>$email,"marital_status"=>$marital_status,"residential_status"=>$residential_status,"nationality"=>$nationality,"card_type_id"=>$card_type_id,"occupation"=>$occupation,"tax_ac_no"=>$tax_ac_no,"wing_name"=>$wing_name,"flat_no"=>$flat_no,"floor"=>$floor,"card_id_no"=>$card_id_no,"dob"=>$dob,"reg_type"=>$reg_type,"reg_date"=>$reg_date,"reg_time"=>$reg_time,"cardholder"=>$cardholder,'guest_type'=> $guest_type,'date_of_anniversary'=> $date_of_anniversary));
-			
-			$this->gr_no->updateAll(array('card_number' =>$this->request->data["card_number"]+1), array('id' => 1));
-			
-			$this->set('active' ,1);
+				$tax_ac_no=$this->request->data["tax_ac_no"];
+				$guest_type=$this->request->data["guest_type"];
+				if(!empty($guest_type))
+				{
+					$wing_name=$this->request->data["wing_name"];
+					$flat_no=$this->request->data["flat_no"];
+					$floor=$this->request->data["floor"];
+				}else { 
+					$wing_name='';
+					$flat_no='';
+					$floor='';
+				}
+				
+				$card_id_no=$this->request->data["card_id_no"];
+				$dd=$this->request->data["dd"];
+				$mm=$this->request->data["mm"];
+				$yy=$this->request->data["yy"];
+				$dob=$yy."-".$mm."-".$dd;
+				
+				$doa=$this->request->data["date_of_anniversary"];
+				if(empty($doa))
+				{
+					$date_of_anniversary="0000-00-00";				
+				}
+				else
+				{
+					$date_of_anniversary=date("Y-m-d",strtotime($this->request->data["date_of_anniversary"]));
+				} 
+				$reg_type=$this->request->data["reg_type"];
+				
+					$exct_row=$this->request->data["exct_row"];
+					$all_rows=explode(",",$exct_row);
+					foreach($all_rows as $data){
+						$cardholder[]=@$this->request->data["cardholder".$data];
+						$applicant[]=@$this->request->data["applicant".$data];
+					}
+					$v=0;
+					foreach($cardholder as $card)
+					{
+					$new_ar[]=$card.','.$applicant[$v];
+					$v++;
+					}
+					$cardholder=implode("-",$new_ar);
+				
+				
+				$reg_date=date('Y-m-d');
+				$reg_time=date('H:i:s');
+					
+	
+				
+				$this->registration->saveAll(array("name"=>$name,"swd_of"=>$swd_of,"p_address"=>$p_address,"p_phone"=>$p_phone,"fax"=>$fax,"c_address"=>$c_address,"phone_home"=>$c_phone,"office"=>$office,"mobile_no"=>$mobile_no,"email"=>$email,"marital_status"=>$marital_status,"residential_status"=>$residential_status,"nationality"=>$nationality,"card_type_id"=>$card_type_id,"occupation"=>$occupation,"tax_ac_no"=>$tax_ac_no,"wing_name"=>$wing_name,"flat_no"=>$flat_no,"floor"=>$floor,"card_id_no"=>$card_id_no,"dob"=>$dob,"reg_type"=>$reg_type,"reg_date"=>$reg_date,"reg_time"=>$reg_time,"cardholder"=>$cardholder,'guest_type'=> $guest_type,'date_of_anniversary'=> $date_of_anniversary));
+				
+				$this->gr_no->updateAll(array('card_number' =>$this->request->data["card_number"]+1), array('id' => 1));
+				
+				$sms=str_replace(' ', '+', 'Thank you for choosing us for your stay.');
+				$this->requestAction(array('controller' => 'Dreamshapers', 'action' => 'send_sms',$sms,$mobile_no), array());
+				
+				$success=$this->smtpmailer($email,'Dreamshapers','Enquiry', "hello" ,$email);
+				
+				$this->set('active' ,1);
 			}
 			
 			if(isset($this->request->data["delete_registration"]))
@@ -16788,6 +16798,7 @@ public function receipt_payment()              ////////  Ashish
 	}
 	
 	
+	
 	public function function_index_layout()
 	{ 	
 		$this->loadmodel('master_roomno');
@@ -17177,53 +17188,59 @@ public function receipt_payment()              ////////  Ashish
 	}
 	
 	function smtpmailer($to, $from_name, $subject, $message_web,$reply, $is_gmail=true)
-{
-App::import('Vendor', 'PhpMailer', array('file' => 'phpmailer' . DS . 'class.phpmailer.php')); 
-
-	global $error;
-	$mail = new PHPMailer();
-	$mail->IsSMTP();
-	$mail->SMTPAuth = true;
-	if ($is_gmail) {
-
-		$mail->SMTPSecure = 'ssl'; 
-		$mail->Host = 'smtp.gmail.com';
-		$mail->Port = 465;  
-		$mail->Username = 'ankit.sisodiya@spsu.ac.in';  
-		$mail->Password = 'sanjay.gupta#123';
-		$mail->SMTPDebug = 1; 
-	} else {
-		$mail->SMTPSecure = 'ssl'; 
-		$mail->Host = 'smtp.gmail.com';
-		$mail->Port = 465;  
-		$mail->Username = 'ankit.sisodiya@spsu.ac.in';  
-		$mail->Password = 'sanjay.gupta#123';    
-	}        
-	$HTML = true;	 
-	$mail->WordWrap = 50; // set word wrap
-	$mail->IsHTML($HTML);
-
+	{
+		App::import('Vendor', 'PhpMailer', array('file' => 'phpmailer' . DS . 'class.phpmailer.php')); 
 	
-	$mail->FromName= $from_name;
-
-$mail->Subject = $subject;
-$mail->Body = $message_web;
-if(!empty($reply))
-{
-	$mail->AddReplyTo($reply ,"Nonmoving Inventory");
+		global $error;
+		$mail = new PHPMailer();
+		$mail->IsSMTP();
+		$mail->SMTPAuth = true;
+		if ($is_gmail) {
 	
-}
-$mail->addAddress($to);
-
-	if(!$mail->Send()) {
-		$error = 'Mail error: '.$mail->ErrorInfo;
-		return false;
-	} else {
-		$error = 'Message sent!';
-		return true;
+			$mail->SMTPSecure = 'ssl'; 
+			$mail->Host = 'smtp.gmail.com';
+			$mail->Port = 465;  
+			$mail->Username = 'ankit.sisodiya@spsu.ac.in';  
+			$mail->Password = 'sanjay.gupta#123';
+			$mail->SMTPDebug = 1; 
+		} else {
+			$mail->SMTPSecure = 'ssl'; 
+			$mail->Host = 'smtp.gmail.com';
+			$mail->Port = 465;  
+			$mail->Username = 'ankit.sisodiya@spsu.ac.in';  
+			$mail->Password = 'sanjay.gupta#123';    
+		}        
+		$HTML = true;	 
+		$mail->WordWrap = 50; // set word wrap
+		$mail->IsHTML($HTML);
+	
+		
+		$mail->FromName= $from_name;
+	
+	$mail->Subject = $subject;
+	$mail->Body = $message_web;
+	if(!empty($reply))
+	{
+		$mail->AddReplyTo($reply ,"Nonmoving Inventory");
+		
 	}
-}
-
+	$mail->addAddress($to);
+	
+		if(!$mail->Send()) {
+			$error = 'Mail error: '.$mail->ErrorInfo;
+			return false;
+		} else {
+			$error = 'Message sent!';
+			return true;
+		}
+	}
+	public function send_sms($sms,$mobile_no)
+	{ 	
+		$working_key='A1d987e6da856f0d2de06aa0456dcb04b';
+		$sms_sender='PHPHTL';
+		$sms=str_replace(' ', '+', 'Thank you for choosing us for your stay.');
+		file_get_contents('http://alerts.sinfini.com/api/web2sms.php?workingkey='.$working_key.'&sender='.$sms_sender.'&to='.$mobile_no.'&message='.$sms.'');
+	}
 ///////////////////////////////////
 	
 	public function fetch_data_for_kot($room_id)
