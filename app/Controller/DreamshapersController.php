@@ -9905,11 +9905,9 @@ $this->pos_kot_item_temp->saveAll(array('user_id'=> $user_id,'master_items_id' =
 		if($this->request->query('Bill_settleing_replace_form')==1)
         {
             $id=$this->request->query("q");
-            
           	  $this->loadmodel('pos_kot');
-			
 				$conditions=array('id' => $id);
-				$fetch_table_no=$this->pos_kot->find('all',array('conditions'=>$conditions,'fields'=>array('master_tables_id','guest_name','id', 'session', 'master_roomnos_id', 'card_no','user_id')));
+				$fetch_table_no=$this->pos_kot->find('all',array('conditions'=>$conditions,'fields'=>array('master_tables_id','guest_name','id', 'session', 'master_roomnos_id', 'card_no','user_id','club_member_id', 'foo_discount')));
                 foreach($fetch_table_no as $key)
                 {	
 					foreach($key as $item_tax=>$tax_data)
@@ -9922,6 +9920,8 @@ $this->pos_kot_item_temp->saveAll(array('user_id'=> $user_id,'master_items_id' =
 						$card_no=$tax_data['card_no'];
 						$session=$tax_data['session'];
 						$user_id=$tax_data['user_id'];
+						$club_member_id=$tax_data['club_member_id'];
+						$foo_discount=$tax_data['foo_discount'];
 					}
 				}
 				?>
@@ -9956,7 +9956,8 @@ $this->pos_kot_item_temp->saveAll(array('user_id'=> $user_id,'master_items_id' =
                 </td>
                 <td>
                 <input type="hidden" value="<?php echo $card_no; ?>" name="card_n" />
-                <input type="hidden" value="<?php echo $user_id; ?>" name="p_user_id" /></td>
+                <input type="hidden" value="<?php echo $user_id; ?>" name="p_user_id" />
+                 <input type="hidden" value="<?php echo $club_member_id; ?>" name="c_member_id" /></td>
                 <td>
                 
                 </tr>
@@ -10068,9 +10069,16 @@ $this->pos_kot_item_temp->saveAll(array('user_id'=> $user_id,'master_items_id' =
                      <td align="center">
                     Discount
                 </td>
+               
+                   <?php if($foo_discount>0){?>
                 <td align="center">
-                  <div class="form-group" ><input type="text" class="form-control input-inline input-xsmall" value="0"  id="discount_id" name="discount" onkeyup="add_discount();" /></div>
+                  <div class="form-group" ><input type="text" disabled="disabled" class="form-control input-inline input-xsmall" value="<?php echo $foo_discount;?>"  id="discount_id" name="discount" onkeyup="add_discount();"/></div>
                 </td>
+                <?php } else {?>
+                <td align="center">
+                  <div class="form-group" ><input type="text" class="form-control input-inline input-xsmall" value="<?php echo $foo_discount;?>"  id="discount_id" name="discount" onkeyup="add_discount();"/></div>
+                </td>
+                <?php }?>
                 <td align="center">
                     Net Amount
                 </td>

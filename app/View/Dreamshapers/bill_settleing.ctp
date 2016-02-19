@@ -307,7 +307,7 @@ foreach($fatch_billing_kot_query_string as $data){
                 
                 
                 <table class="table" style=" width:100% !important;">
-             <thead>
+                <thead>
                 <tr>
                 <td style="width:50%;" align="center">
                                      <div class="form-group" >
