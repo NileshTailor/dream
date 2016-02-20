@@ -237,10 +237,10 @@ if(empty($active))
                     <td><div class="form-group"><input type="text" class="form-control input-inline input-small" value="1"  placeholder="Duration" name="duration" id="duration" ></div></td>
                        </tr>
                          <tr>
-                    <td><label>Telephone</label></td>
+                    <td><label>Mobile No.</label></td>
                     <td colspan="0">
                     <div class="form-group">
-                    <input class="form-control input-small"  name="telephone"  onkeypress="javascript:return isNumber (event)" maxlength="10" placeholder="Telephone" type="text">
+        <input class="form-control input-small"  name="telephone"  onkeypress="javascript:return isNumber (event)" maxlength="10" placeholder="Telephone" type="text">
                     </div>
                     </td>
                     

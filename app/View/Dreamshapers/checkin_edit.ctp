@@ -21,6 +21,8 @@ if(empty($active))
         $duration=$data['room_checkin_checkout']['duration']; 
         $plan_id=$data['room_checkin_checkout']['plan_id']; 
         $arrival_date=$data['room_checkin_checkout']['arrival_date'];
+		 $mobile_no=$data['room_checkin_checkout']['mobile_no'];
+		  $email_id=$data['room_checkin_checkout']['email_id'];
         
         if($arrival_date=='0000-00-00')
         {	$arrival_date='';}
@@ -225,18 +227,21 @@ if(empty($active))
                     <option <?php if($nationality=='Zimbabwean'){ echo 'selected'; } ?>>Zimbabwean</option>
                     </select></div></td>
                         
-                        
-                        
-                        
-                        
-                       <td><label>Duration<span style="color:#E02222">* </span></label></td>
+                    <td><label>Duration<span style="color:#E02222">* </span></label></td>
                     <td><div class="form-group"><input type="text" class="form-control input-inline input-small" value="<?php echo $duration; ?>" placeholder="Duration" name="duration" id="duration" ></div></td>
-                       
-                       </tr>
+                        </tr>
                         <tr>
                         <td><label>Permanent Address</label></td> 
-                        <td colspan="5"><input type="text" class="form-control input-inline" style="width:860px" value="<?php echo $permanent_address; ?>" placeholder="Permanent Address" name="permanent_address" ></td>
-                        </tr>
+                        <td><input type="text" class="form-control input-small" value="<?php echo $permanent_address; ?>" placeholder="Permanent Address" name="permanent_address" ></td>
+                    <td><label>Mobile No.</label></td>
+                    <td>
+                    <input class="form-control input-small"  name="mobile_no" value="<?php echo $mobile_no; ?>"  onkeypress="javascript:return isNumber (event)" maxlength="10" placeholder="Mobile No." type="text">
+                    </td>
+                    <td><label>Email Id</label></td>
+                    <td>
+                    <input class="form-control input-small" value="<?php echo $email_id; ?>"  name="email_id" placeholder="Email ID" type="text">
+                    </td>
+                    </tr>
                         
                         
                       <tr><td colspan="6">
@@ -668,7 +673,8 @@ if(empty($active))
 		$("#b_ins_id").val(da[9]);
 		$("#rate").val(da[10]);
 		$("#traveller_name").val(da[11]);
-		$("#id_proof_no").val(da[12])
+		$("#id_proof_no").val(da[12]);
+		
 		//$("#room_charge_id").val(da[10]);
 		room_rate();
 	}		

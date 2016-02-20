@@ -163,7 +163,7 @@ $de=0;
 							$dk=0;
 							$dkk=0;
 							foreach($fetch_pos_nooo as $ftc){
-				$bill_settle_due=$ftc['pos_kot']['bill_settle_due'];
+				$bill_settle_due=$ftc['pos_kot']['due_amount'];
 							@$dee=$dee+$bill_settle_due;
 							}
 							echo $dee;
@@ -177,7 +177,7 @@ $de=0;
 							$dk=0;
 							$dkk=0;
 							foreach($fetch_pos_noooo as $ftcc){
-				$hkhk=$ftcc['house_keeping']['total_amount'];
+				$hkhk=$ftcc['house_keeping']['due_amount'];
 							@$deee=$deee+$hkhk;
 							}
 							echo $deee;

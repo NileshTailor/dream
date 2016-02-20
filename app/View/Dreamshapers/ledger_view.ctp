@@ -11,6 +11,8 @@ $default_date_to = date('d-m-Y')
         <table style="width:60%;">
         <tr>
         
+        
+        <tr><td colspan="4"><p align="center" style="background-color:#C33; color:#FFF"><strong>LEDGER VIEW</strong></p></td></tr>
 				<td>
 						<select class="form-control input-medium" name="ledger_category_id" required id="ledger_account">
                                     <option value="">-- Select Category --</option>

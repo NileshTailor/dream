@@ -206,7 +206,16 @@ if(empty($active))
                        </tr>
                         <tr>
                         <td><label>Address</label></td> 
-                        <td colspan="7"><input type="text" class="form-control input-inline" style="width:500px" placeholder="Permanent Address" name="permanent_address" ></td>
+                        <td><input type="text" class="form-control input-small" placeholder="Permanent Address" name="permanent_address" ></td>
+                        <td><label>Mobile No.</label></td>
+                    <td>
+                    <input class="form-control input-small"  name="mobile_no" id="mobile_no"  onkeypress="javascript:return isNumber (event)" maxlength="10" placeholder="Mobile No." type="text">
+                    </td>
+                    <td><label>Email Id</label></td>
+                    <td>
+                    <input class="form-control input-small"  name="email_id" id="email_id" placeholder="Email ID" type="text">
+                    </td>
+                        </tr>
                         <!--<td><label>ExtraBed</label></td>
                             <td>
                             <div class="form-group">
@@ -726,6 +735,8 @@ if(empty($active))
 		$("#room_charge_id1").val(da[10]);
 		$("#traveller_name").val(da[11]);
 		$("#id_proof_no").val(da[12]);
+		$("#mobile_no").val(da[13]);
+		$("#email_id").val(da[14]);
 		
 	
 //$("#room_charge_id").val(da[10]);
@@ -887,6 +898,14 @@ if(empty($active))
 		
 		
 	}
+	function isNumber(evt) {
+        var iKeyCode = (evt.which) ? evt.which : evt.keyCode
+        if (iKeyCode != 46 && iKeyCode > 31 && (iKeyCode < 48 || iKeyCode > 57))
+            return false;
+
+        return true;
+    }    
+		
 	///////////////////////////////////	
 	function checkin_data_deleterow(id)
 	{ 

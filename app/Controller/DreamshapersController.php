@@ -359,7 +359,7 @@ function house_keeping_bill()
 		 $this->set('fetch_house_keeping', $this->house_keeping->find('all', array('conditions' => $conditions)));
 		 $this->set('fetch_address', $this->address->find('all',array('conditions' => array('flag' => "0"), 'order'=>'id DESC','limit'=>1)) );
 
-			//$this->set('fetch_receipt_checkout', $this->receipt_checkout->find('all', array('conditions' => $conditions)));
+		//$this->set('fetch_receipt_checkout', $this->receipt_checkout->find('all', array('conditions' => $conditions)));
 		}
 	//////////////////////
 	function user_infobill()
@@ -380,14 +380,18 @@ function house_keeping_bill()
 		 
 		 	$this->loadmodel('room_checkin_checkout');
 			$conditions=array('id' => $id, 'flag' => "0", 'status'=>0);
-			$fetch_pos_check=$this->room_checkin_checkout->find('all',array('fields' => array('master_roomno_id'),'conditions'=>$conditions));
+			$fetch_pos_check=$this->room_checkin_checkout->find('all',array('fields' => array('master_roomno_id', 'card_no'),'conditions'=>$conditions));
 				@$rnno=$fetch_pos_check[0]['room_checkin_checkout']['master_roomno_id'];
+				@$card_no=$fetch_pos_check[0]['room_checkin_checkout']['card_no'];
 			    $this->loadmodel('pos_kot');
-			    $conditions=array('master_roomnos_id' => $rnno, 'flag' => "0", 'flag1'=>0);
-				 $this->set('fetch_pos_nooo',$this->pos_kot->find('all',array('fields' => array('bill_settle_due'),'conditions'=>$conditions)));
-				  $this->loadmodel('house_keeping');
-			    $conditions=array('master_roomno_id' => $rnno, 'flag' => "0", 'flag1'=>0);
-				 $this->set('fetch_pos_noooo',$this->house_keeping->find('all',array('fields' => array('total_amount'),'conditions'=>$conditions)));
+			    $conditions=array('master_roomnos_id' => $rnno,'card_no' => $card_no, 'flag' => "0", 'flag1'=>0);
+				 $this->set('fetch_pos_nooo',$this->pos_kot->find('all',array('fields' => array('due_amount'),'conditions'=>$conditions)));
+				 $this->loadmodel('house_keeping');
+			    $conditions=array('master_roomno_id' => $rnno,'card_no' => $card_no, 'flag' => "0",'status'=>0);
+				$this->set('fetch_pos_noooo',$this->house_keeping->find('all',array('fields' => array('due_amount'),'conditions'=>$conditions)));
+					$this->loadmodel('other_service');
+			    $conditions=array('master_roomno_id' => $rnno,'card_no' => $card_no, 'flag' => "0", 'status'=>0);
+				$this->set('fetch_pos_noooo',$this->other_service->find('all',array('fields' => array('due_amount'),'conditions'=>$conditions)));
 							
 			
 		 $this->set('fetch_room_checkin_checkout', $this->room_checkin_checkout->find('all', array('conditions' => array('flag' => 0, 'status' => 0, 'id' =>$id))));
@@ -397,7 +401,6 @@ function house_keeping_bill()
 		 $this->set('fetch_address', $this->address->find('all',array('conditions' => array('flag' => "0"), 'order'=>'id DESC','limit'=>1)) );
 		}
 		////////////////////////////////
-		
 		function infobill()
 	 {
 		$id=$this->request->query("id");	
@@ -2105,6 +2108,7 @@ $conditions =array('or' => array(
 		    $guest_name=$this->data["guest_name"];	
 			$bill_no=$this->data["bill_no"];
 			$p_user_id=$this->data["p_user_id"];
+			$c_member_id=$this->data["c_member_id"];
 			$amountt=$this->request->data["amountt"];
 			$pos_due_zero=0;
 			$pos_due_amount=$amountt-$amount-$pos_due_zero;
@@ -2150,9 +2154,22 @@ $conditions =array('or' => array(
 			$this->pos_kot->updateAll(array('status1' =>0,'status' =>1, 'guest_name'=> "'$guest_name'", 'pos_gross' => "'$gross'",'pos_taxes' => "'$taxes'", 'service_charge' => "'$service_charge'", 'tips' => "'$tips'", 'pos_discount'=>"'$discount'", 'pos_net_amount' =>"'$amountt'",'received_amount' =>"'$amount'",'due_amount' =>"'$pos_due_amount'"), array('id' => $bill_no));	
 			
 //////////////////////////receipt////////////////
-
-
-///////////////////////////////end//////////////				
+               /* $this->loadModel('card_amount');
+				$registration_id=$this->request->data["registration_id"];
+				$conditions=array(array('registration_id' => $registration_id, 'flag' => 0), 'order'=>'id DESC','limit'=>1);
+				$fetch_card_balance=$this->card_amount->find('all',array('conditions'=>array('registration_id' => $registration_id,'flag' => "0"), 'order'=>'id DESC','limit'=>1,'fields'=>array('balance_amount')));
+				if(!empty($fetch_card_balance)){
+				$ftc_balance=$fetch_card_balance[0]['card_amount']['balance_amount'];
+				@$main_balance=$ftc_balance-$amount;
+				}
+				else
+				{
+					$main_balance=$amount;
+				}
+				$this->card_amount->saveAll(array('registration_id' => $registration_id,'recharge_amount' => $recharge_amount,
+				'balance_amount' => $main_balance,'date' => $date,'time' => $time));
+                $this->redirect(array('action' => 'card_amount'));*/
+                ///////////////////////////////end//////////////				
 	
 				
 				$service_charge=$this->data["service_charge"];
@@ -3884,6 +3901,8 @@ $conditions =array('or' => array(
   				
 				@$rtype_id=$this->request->data["master_roomno_id"];
 				@$room_reservation_id=$this->request->data["room_reservation_id"];
+				@$mobile_no=$this->request->data["mobile_no"];
+				@$email_id=$this->request->data["email_id"];
 				@$rtype_id1=$this->request->data["room_type_id"];
 				@$rtype_id2=$this->request->data["total_room"];
 				@$rtype_id25=$this->request->data["plan_id"];
@@ -3959,6 +3978,8 @@ $conditions =array('or' => array(
 					'company_id' => @(int)$pos_company_id,
 					'guest_name' => @$this->request->data["guest_name"],
 					'permanent_address' => @$this->request->data["permanent_address"],
+					'mobile_no' => @$this->request->data["mobile_no"],
+					'email_id' => @$this->request->data["email_id"],
 					'arriving_from' => @$this->request->data["arriving_from"],
 					'next_destination' => @$this->request->data["next_destination"],
 					'nationality' => @$this->request->data["nationality"],
@@ -4385,6 +4406,8 @@ public function checkin_edit()
 				$advance_taken=$this->request->data['advance_taken'];
 				$child=$this->request->data['child'];
 				$id_proof=$this->request->data['id_proof'];
+				@$mobile_no=$this->request->data['mobile_no'];
+				@$email_id=$this->request->data['email_id'];
 				$billing_instruction=$this->request->data['billing_instruction'];
 				//$apply_special_rates=$this->request->data['apply_special_rates'];
 				@$rtype_id=$this->request->data["master_roomno_id"];
@@ -4456,12 +4479,12 @@ public function checkin_edit()
 					$excet_tg=$duration * $room_charge; 
 					
 					if(!empty($edit_id)){ //echo $edit_id;
-					$this->room_checkin_checkout->updateAll(array('card_no' =>"'$card_no'",'room_reservation_id' => "'$room_reservation_id'",'arrival_date' => "'$arrival_date'",'arrival_time' => "'$arrival_time'",'company_id' => "'$company_id'",'guest_name' => "'$guest_name'",'permanent_address' => "'$permanent_address'",'arriving_from' => "'$arriving_from'",'nationality' => "'$nationality'",'city' => "'$city'",'duration' => "'$duration'",'checkout_date' => "'$checkout_date'",'master_roomno_id' =>"'$master_room_no'",'room_type_id' => "'$room_type'",'plan_id' => "'$plan_type'",'room_charge' => "'$room_charge'",'total_room' => 1 ,'pax' => "'$pax'",'source_of_booking' => "'$source_of_booking'",'taxes' => "'$taxes_type'",'room_discount' => "'$discount_type'",'tg' => "'$excet_tg'",'advance_taken' => "'$advance_taken'",'child' => "'$child'",'id_proof' => "'$id_proof'",'billing_instruction' => "'$billing_instruction'", 'traveller_name' => "'$traveller_name'",'id_proof_no' => "'$id_proof_no'", 'combine_room_id' => "'$jj'"), array('id' => $edit_id));	
+					$this->room_checkin_checkout->updateAll(array('card_no' =>"'$card_no'",'room_reservation_id' => "'$room_reservation_id'",'arrival_date' => "'$arrival_date'",'arrival_time' => "'$arrival_time'",'company_id' => "'$company_id'",'guest_name' => "'$guest_name'",'permanent_address' => "'$permanent_address'",'mobile_no' => "'$mobile_no'",'email_id' => "'$email_id'",'arriving_from' => "'$arriving_from'",'nationality' => "'$nationality'",'city' => "'$city'",'duration' => "'$duration'",'checkout_date' => "'$checkout_date'",'master_roomno_id' =>"'$master_room_no'",'room_type_id' => "'$room_type'",'plan_id' => "'$plan_type'",'room_charge' => "'$room_charge'",'total_room' => 1 ,'pax' => "'$pax'",'source_of_booking' => "'$source_of_booking'",'taxes' => "'$taxes_type'",'room_discount' => "'$discount_type'",'tg' => "'$excet_tg'",'advance_taken' => "'$advance_taken'",'child' => "'$child'",'id_proof' => "'$id_proof'",'billing_instruction' => "'$billing_instruction'", 'traveller_name' => "'$traveller_name'",'id_proof_no' => "'$id_proof_no'", 'combine_room_id' => "'$jj'"), array('id' => $edit_id));	
 					}
 					
 					else
 					{
-						$this->room_checkin_checkout->saveAll(array('card_no' =>@(string)$this->request->data["card_no"],'room_reservation_id' => @(int)$this->request->data["room_reservation_id"],'arrival_date' => $date,'arrival_time' => @$this->request->data["arrival_time"],'company_id' => @(int)$this->request->data["company_id"],'guest_name' => @$this->request->data["guest_name"],'permanent_address' => @$this->request->data["permanent_address"],'arriving_from' => @$this->request->data["arriving_from"],'next_destination' => @$this->request->data["next_destination"],'nationality' => @$this->request->data["nationality"],'city' => @$this->request->data["city"],'gross_amount' => @$this->request->data["gross_amount"],'duration' => @$duration,'checkout_date' => @date('Y-m-d', strtotime($this->request->data["checkout_date"])),'master_roomno_id' =>@$master_room_no,'room_type_id' => @$room_type,'plan_id' => @$plan_type,'room_charge' => @$room_charge,'total_room' => 1,'pax' => @$this->request->data["pax"],'source_of_booking' => @$this->request->data["source_of_booking"],'taxes' => @$taxes_type,'room_discount' => @$discount_type,'tg' => @$excet_tg,'advance_taken' => @$this->request->data["advance_taken"],'child' => @$this->request->data["child"],'id_proof' => @(string)$this->request->data["id_proof"],'billing_instruction' => @$this->request->data["billing_instruction"], 'traveller_name' => @(string)$this->request->data["traveller_name"], 'id_proof_no' => @(string)$this->request->data["id_proof_no"], 'combine_room_id' => "'$jj'"));
+						$this->room_checkin_checkout->saveAll(array('card_no' =>@(string)$this->request->data["card_no"],'room_reservation_id' => @(int)$this->request->data["room_reservation_id"],'arrival_date' => $date,'arrival_time' => @$this->request->data["arrival_time"],'company_id' => @(int)$this->request->data["company_id"],'guest_name' => @$this->request->data["guest_name"],'permanent_address' => @$this->request->data["permanent_address"],'mobile_no' => @$this->request->data["mobile_no"],'email_id' => @$this->request->data["email_id"],'arriving_from' => @$this->request->data["arriving_from"],'next_destination' => @$this->request->data["next_destination"],'nationality' => @$this->request->data["nationality"],'city' => @$this->request->data["city"],'gross_amount' => @$this->request->data["gross_amount"],'duration' => @$duration,'checkout_date' => @date('Y-m-d', strtotime($this->request->data["checkout_date"])),'master_roomno_id' =>@$master_room_no,'room_type_id' => @$room_type,'plan_id' => @$plan_type,'room_charge' => @$room_charge,'total_room' => 1,'pax' => @$this->request->data["pax"],'source_of_booking' => @$this->request->data["source_of_booking"],'taxes' => @$taxes_type,'room_discount' => @$discount_type,'tg' => @$excet_tg,'advance_taken' => @$this->request->data["advance_taken"],'child' => @$this->request->data["child"],'id_proof' => @(string)$this->request->data["id_proof"],'billing_instruction' => @$this->request->data["billing_instruction"], 'traveller_name' => @(string)$this->request->data["traveller_name"], 'id_proof_no' => @(string)$this->request->data["id_proof_no"], 'combine_room_id' => "'$jj'"));
 					}
 						
 						
@@ -6431,10 +6454,9 @@ public function outstanding()
            
                  $conditionss=array('ledger_category_id' => $ledger_category_id);
                 $fetch_ledger_receipt=$this->ledger_master->find('all',array('conditions'=>$conditionss,'fields'=>array('user_id','name')));
-                echo '<option value="">--- Select ---</option>';
+                echo '<option value="">--- Select Master ---</option>';
                 foreach($fetch_ledger_receipt as $ledger_data)
                 {
-                   
                     ?><option  value="<?php echo $ledger_data['ledger_master']['user_id']; ?>"><?php echo  $ledger_data['ledger_master']['name']; ?></option> <?php
                        
                 }
@@ -8538,7 +8560,8 @@ $fo_room_booking=$this->fo_room_booking->find('all',array('conditions' => array(
 				echo $room_charge_id1=$ftc_data['room_reservation']['rate_per_night'].",";
 				echo $traveller_name=$ftc_data['room_reservation']['traveller_name'].",";
 				echo $id_proof_no=$ftc_data['room_reservation']['id_proof_no'].",";
-				
+				echo $telephone=$ftc_data['room_reservation']['telephone'].",";
+				echo $email_id=$ftc_data['room_reservation']['email_id'].",";
 				}
 				
 			}
@@ -10070,20 +10093,27 @@ $this->pos_kot_item_temp->saveAll(array('user_id'=> $user_id,'master_items_id' =
                     Discount
                 </td>
                
-                   <?php if($foo_discount>0){?>
+                   <?php if($foo_discount>0){
+					   
+					   $tt=($total_amt*$foo_discount)/100;
+					   $Totamt_dis=$total_amt-$tt;
+					   ?>
                 <td align="center">
-                  <div class="form-group" ><input type="text" disabled="disabled" class="form-control input-inline input-xsmall" value="<?php echo $foo_discount;?>"  id="discount_id" name="discount" onkeyup="add_discount();"/></div>
+                  <div class="form-group" ><input type="text" disabled="disabled" class="form-control input-inline input-xsmall" value="<?php echo $tt;?>"  id="discount_id" name="discount" onkeyup="add_discount();"/></div>
                 </td>
-                <?php } else {?>
+                <?php } else {
+					$Totamt_dis=$total_amt;
+					?>
                 <td align="center">
                   <div class="form-group" ><input type="text" class="form-control input-inline input-xsmall" value="<?php echo $foo_discount;?>"  id="discount_id" name="discount" onkeyup="add_discount();"/></div>
                 </td>
                 <?php }?>
+                
                 <td align="center">
                     Net Amount
                 </td>
                 <td align="center">
-                <input type="text" class="form-control input-inline input-xsmall" value="<?php echo $total_amt; ?>" name="amountt" id="amount_idd" />
+                <input type="text" class="form-control input-inline input-xsmall" value="<?php echo $Totamt_dis; ?>" name="amountt" id="amount_idd" />
                 </td>
                      
                      
@@ -15740,8 +15770,6 @@ function group_category(){
 						$this->redirect(array('action' => 'group_category'));
 				}
 			}
-			
-			
 		}
 		$this->loadmodel('group_category');
 	   $this->set('fetch_group_category', $this->group_category->find('all'));
