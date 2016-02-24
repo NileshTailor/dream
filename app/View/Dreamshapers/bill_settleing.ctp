@@ -289,7 +289,7 @@ foreach($fatch_billing_kot_query_string as $data){
                 
                 <table width="100%" border="0">
                      <tr><td width="25%"><label> Select Club Member Card No.</label></td>
-                <td><select class="form-control select2 select2_sample2 input-medium" placeholder="Select..."  name="registration_id" id="registration_id" onchange="balance_amt();" required>
+                <td><select class="form-control select2 select2_sample2 input-medium" placeholder="Select..."  name="registration_id" id="registration_id" onchange="balance_amt();">
                 <option value="">--Select--</option>
                 <?php
                 foreach($fetch_registration as $data)

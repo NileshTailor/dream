@@ -60,7 +60,7 @@
 							<div class="number">
 								  <?php  $gg=sizeof($fetch_master_roomno);
 							   $hh=sizeof($fetch_room_checkin_checkout);?>
-                               <font size="+1"><b><?php echo 'Total Room Vacant';   ?> <?php echo '&nbsp;&nbsp;';?><?php echo $rr=$gg-$hh;   ?></b></font>
+                               <font size="+1"><b><?php echo 'Total Room Vacant';   ?> <?php echo '&nbsp;&nbsp;';?><?php echo $rr=$gg-$hh;?></b></font>
 							</div>
 							<div class="desc">
 								 

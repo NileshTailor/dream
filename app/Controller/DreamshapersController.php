@@ -654,12 +654,33 @@ function house_keeping_bill()
 		//$this->set('fetch_master_item', $this->master_item->find('all', array('conditions' => $conditions)));
 		//$this->loadmodel('master_item_type');
 	//	$this->set('fetch_master_item_type', $this->master_item_type->find('all', array('conditions' => $conditions)));
-		
-		
-		
 				}
-	/////
-			//////////////////////
+	/////////////////////////////////////
+	public function tax_ledger_report()
+	{
+		if($this->RequestHandler->isAjax())
+		{
+			$this->layout='ajax_layout';
+		}
+		else
+		{
+			$this->layout='index_layout';
+		}
+		if(isset($this->request->data['submit1']))
+		{
+			$start_date=$this->data["start_date"];	
+			$end_date=$this->data["end_date"];
+			$start_date=date("Y-m-d",strtotime($start_date));
+			$end_date=date("Y-m-d",strtotime($end_date));
+			$tax_report=$this->data["tax_report"];
+			echo "<script>
+			location='tax_ledger_report';
+			window.open('taxreport?start_date=$start_date&end_date=$end_date','_newtab');
+			</script>";
+		}
+	}
+	
+	///////////////////////////////////////////////
 	public function kot_bill_datewise()
 	{
 		if($this->RequestHandler->isAjax())
@@ -726,7 +747,7 @@ function house_keeping_bill()
 		$start_date=$this->request->query("start_date");
 	 	$end_date=$this->request->query("end_date");
 		
-		$conditions =array ('current_date between ? and ?' => array($start_date, $end_date), 'kot_type'=>4);
+		$conditions =array ('date between ? and ?' => array($start_date, $end_date), 'kot_type'=>4);
           // pr($conditions);
 		   //exit;
 		   $this->loadmodel('invoiceadd');
@@ -761,8 +782,8 @@ function house_keeping_bill()
 		//$conditions =array ('current_date between ? and ?' => array($start_date, $end_date), 'kot_type'=>1);
 
 $conditions =array('or' => array(
-    array("kot_type" => 1, 'current_date between ? and ?' => array($start_date, $end_date)),
-      array("kot_type" => 3, 'current_date between ? and ?' => array($start_date, $end_date))
+    array("kot_type" => 1, 'date between ? and ?' => array($start_date, $end_date)),
+      array("kot_type" => 3, 'date between ? and ?' => array($start_date, $end_date))
     ));
 
 
@@ -795,7 +816,7 @@ $conditions =array('or' => array(
 		$start_date=$this->request->query("start_date");
 	 	$end_date=$this->request->query("end_date");
 		
-		$conditions =array ('current_date between ? and ?' => array($start_date, $end_date), 'kot_type'=>2);
+		$conditions =array ('date between ? and ?' => array($start_date, $end_date), 'kot_type'=>2);
           // pr($conditions);
 		   //exit;
 		   $this->loadmodel('invoiceadd');
@@ -827,7 +848,7 @@ $conditions =array('or' => array(
 		$start_date=$this->request->query("start_date");
 	 	$end_date=$this->request->query("end_date");
 		
-		$conditions =array ('current_date between ? and ?' => array($start_date, $end_date), 'kot_type'=>3);
+		$conditions =array ('date between ? and ?' => array($start_date, $end_date), 'kot_type'=>3);
           // pr($conditions);
 		   //exit;
 		   $this->loadmodel('invoiceadd');
@@ -855,11 +876,11 @@ $conditions =array('or' => array(
 		
 		//$conditions =array ('current_date between ? and ?' => array($start_date, $end_date), 'kot_type'=>1);
 $conditions =array('or' => array(
-    array("kot_type" => 1, 'current_date between ? and ?' => array($start_date, $end_date)),
-      array("kot_type" => 3, 'current_date between ? and ?' => array($start_date, $end_date))
+    array("kot_type" => 1,'status'=>1, 'date between ? and ?' => array($start_date, $end_date)),
+      array("kot_type" => 3,'status'=>1, 'date between ? and ?' => array($start_date, $end_date))
     ));
-		$conditions1 =array ('current_date between ? and ?' => array($start_date, $end_date), 'kot_type'=>2);
-		$conditions2 =array ('current_date between ? and ?' => array($start_date, $end_date), 'kot_type'=>4);
+		$conditions1 =array ('date between ? and ?' => array($start_date, $end_date), 'kot_type'=>2,'status'=>1);
+		$conditions2 =array ('date between ? and ?' => array($start_date, $end_date), 'kot_type'=>4,'status'=>1);
           // pr($conditions);
 		   //exit;
 		   $this->loadmodel('invoiceadd');
@@ -2198,9 +2219,9 @@ $conditions =array('or' => array(
 				$t_date=date('Y-m-d', strtotime($date));
                
 			   
-			    $fetch_transaction_id_bill=$this->ledger->find('count',array('conditions'=>array('transaction_type'=>' ')));
+			    $fetch_transaction_id_bill=$this->ledger->find('count',array('conditions'=>array('transaction_type'=>'Invoice')));
                 $t_id_b=$fetch_transaction_id_bill+1;
-				$this->ledger->saveAll(array('ledger_category_id'=>4,'user_id'=> $p_user_id,'transaction_id'=> $t_id_b,'receipt_type'=> 'POS','invoice_id' => $bill_no, 'receipt_mode' => $payment_mode, 'transaction_date' => $t_date,'cheque_no'=>$cheque_no,'neft_no'=>$neft_no, 'cheque_date'=>$cheque_date,'bank_name'=>$bank_name,'neft_no'=>$neft_no,'credit_card_name'=>$credit_card_name,'credit_card_no'=>$credit_card_no,'narration'=>$narration,'date'=>$date,'status'=>0));
+				$this->ledger->saveAll(array('ledger_category_id'=>4,'user_id'=> $p_user_id,'transaction_type'=>'Invoice','transaction_id'=> $t_id_b,'receipt_type'=> 'POS','invoice_id' => $bill_no, 'receipt_mode' => $payment_mode, 'transaction_date' => $t_date,'cheque_no'=>$cheque_no,'neft_no'=>$neft_no, 'cheque_date'=>$cheque_date,'bank_name'=>$bank_name,'neft_no'=>$neft_no,'credit_card_name'=>$credit_card_name,'credit_card_no'=>$credit_card_no,'narration'=>$narration,'date'=>$date,'status'=>0));
 				    $last_ledger_id=$this->ledger->getLastInsertID(); 
 				//
 				$kot_m_ledger=$this->ledger_master->find('all', array('conditions'=>array('ledger_category_id' =>'1','user_id' =>$p_user_id)));
@@ -4942,8 +4963,8 @@ public function debtor_receipt()
         if(isset($this->request->data["add_room_checkin_checkout"]))
         {
 				$checkout_no=$this->request->data["checkout_no"];
-				$mobile_no=$this->request->data["mobile_no"];
-				$email_id=$this->request->data["email_id"];
+				$mobile_no=$this->request->data["edit_mobile_no"];
+				$email_id=$this->request->data["edit_email_id"];
 				$this->loadmodel('room_checkin_checkout');
 			  $room_checkin_checkout_flagg = $this->room_checkin_checkout->find('all', array('fields' => array('MAX(multi_flag)')));
 	          $room_checkin_checkout_flag=$room_checkin_checkout_flagg[0][0]['MAX(multi_flag)']+1;
@@ -5032,9 +5053,9 @@ public function debtor_receipt()
 			 $multiple_transferto_idd=$multiple_transferto_id;
 			}
 
-			$this->room_checkin_checkout->updateAll(array('transfer_due_amount' => "'$multiple_transferamount_idd'", 'transfer_due_amount_roomno' => "'$multiple_transferto_idd'"), array('id' => $edit_transfer_dueamount_to));
+			$this->room_checkin_checkout->updateAll(array('transfer_due_amount' => "'$multiple_transferamount_idd'", 'transfer_due_amount_roomno' => "'$multiple_transferto_idd'"), array('id' => $edit_transfer_dueamount_to));                                                                                                                                                                                                                                                                                                                                                                       
 				  
-				  //////////////// FINAL  UPDaTE
+				  /////////////////////// FINAL  UPDaTE
 				$cash=$this->request->data["rec_amount"];
 				@$given_amount=$cash;
 				$recpt_type=$this->request->data["payment_mode"];
@@ -5124,7 +5145,7 @@ public function debtor_receipt()
 			   
 			    $fetch_transaction_id_bill2=$this->ledger->find('count',array('conditions'=>array('transaction_type'=>' ')));
                 $t_id_b=$fetch_transaction_id_bill2+1;
-				$this->ledger->saveAll(array('ledger_category_id'=>1,'user_id'=> $edit_company_id,'transaction_id'=> $t_id_b,'receipt_type'=> 'Room','invoice_id' => $last_record_id_checkout, 'receipt_mode' => $payment_mode, 'transaction_date' => $t_date,'cheque_no'=>$cheque_no,'neft_no'=>$neft_no, 'cheque_date'=>$cheque_date,'bank_name'=>$bank_name,'neft_no'=>$neft_no,'credit_card_name'=>$credit_card_name,'credit_card_no'=>$credit_card_no,'narration'=>$narration,'date'=>$date,'status'=>0));
+				$this->ledger->saveAll(array('ledger_category_id'=>1,'user_id'=> $edit_company_id,'transaction_type'=> 'Invoice','transaction_id'=> $t_id_b,'transaction_id'=> $t_id_b,'receipt_type'=> 'Room','invoice_id' => $last_record_id_checkout, 'receipt_mode' => $payment_mode, 'transaction_date' => $t_date,'cheque_no'=>$cheque_no,'neft_no'=>$neft_no, 'cheque_date'=>$cheque_date,'bank_name'=>$bank_name,'neft_no'=>$neft_no,'credit_card_name'=>$credit_card_name,'credit_card_no'=>$credit_card_no,'narration'=>$narration,'date'=>$date,'status'=>0));
 				$last_ledger_id=$this->ledger->getLastInsertID(); 
 				$kot_m_ledger_checkout=$this->ledger_master->find('all', array('conditions'=>array('ledger_category_id' =>'1','user_id' =>$edit_company_id)));
 				$l_id=$kot_m_ledger_checkout[0]['ledger_master']['id'];
@@ -5138,7 +5159,7 @@ public function debtor_receipt()
 				@$edit_other_discount=$this->request->data["edit_other_discount"];
                 $edit_advance_taken=$this->request->data["edit_advance_taken"];
 				@$edit_tg=$this->request->data["edit_tg".$i];
-                $edit_foo_discount=$this->request->data["edit_foo_discount".$i];
+               // $edit_foo_discount=$this->request->data["edit_foo_discount".$i];
 				//$totaly_charge=$this->request->data["totaly_charge".$i];
                 $edit_net_amount=$this->request->data["edit_net_amount".$i];
 				@$edit_totaltax=$this->request->data["edit_totaltax".$i];
@@ -5151,7 +5172,7 @@ public function debtor_receipt()
 				$this->ledger_cr_dr->saveAll(array('ledger_id'=>$last_ledger_id,'ledger_master_id'=> $l_id,'dr' => $edit_net_amount));
 				if($edit_room_discount>0){
 				$this->ledger_cr_dr->saveAll(array('ledger_id'=>$last_ledger_id,'ledger_master_id'=> '10','dr' => $edit_room_discountt));}
-				$this->ledger_cr_dr->saveAll(array('ledger_id'=>$last_ledger_id,'ledger_master_id'=> $l_id,'cr' => $edit_totaly_charge));
+				$this->ledger_cr_dr->saveAll(array('ledger_id'=>$last_ledger_id,'ledger_master_id'=> '41','cr' => $edit_totaly_charge));
 				////////// Rohit Joshi tax code //////
 				
 				if($edit_room_discountt==0 || $edit_room_discountt==''){
@@ -5159,12 +5180,7 @@ public function debtor_receipt()
 				}else{
 					$totcharge=$edit_totaly_charge-$edit_room_discountt;
 				}
-				
-				
-				
 	            $this->loadModel('room_checkin_checkout');
-					
-
                       @$edit_taxesed=$this->request->data["edit_taxesed".$i];
 					  $master_tax_id_modify= explode(' - ',$edit_taxesed);
 					  $master_tax_id_modify1=array_filter($master_tax_id_modify);
@@ -5259,7 +5275,8 @@ public function debtor_receipt()
 				
 				$sms=str_replace(' ', '+', 'Thank you for choosing us for your stay.');
 				$this->requestAction(array('controller' => 'Dreamshapers', 'action' => 'send_sms',$sms,$mobile_no), array());
-				$success=$this->smtpmailer($this->request->data["email_id"],'Dreamshapers','Enquiry', "hello" ,$this->request->data["email_id"]);
+				$this->smtpmailer($this->request->data["edit_email_id"],'Dreamshapers','Enquiry', "hello" ,$this->request->data["edit_email_id"]);
+				
 				///////////////////////////////////////////////////////////
 				//////////// RooM STATUS 
 				if(sizeof($id_chekin_ary)>1)
@@ -5620,14 +5637,12 @@ $file_name=@$_FILES["file"]["name"];
 			  echo "<meta http-equiv='Refresh' content='0 ;URL=outstanding_bill'>";
 			
 			}
-				  
 		$this->loadmodel('company_registration');
 		$this->loadmodel('bill');
 		$this->loadmodel('receipt_checkout');
 		$this->set('fetch_company_registration', $this->company_registration->find('all', array('conditions' => array('flag' => "0"), 'due_amount'=>'>0')));
 	    $this->set('fetch_receipt_checkout', $this->receipt_checkout->find('all'));
 		$this->set('fetch_bill', $this->bill->find('all'));
-
 	}
 ////
 public function outstanding()
@@ -5645,10 +5660,7 @@ public function outstanding()
 		$this->loadmodel('address');
 		$this->set('fetch_bill', $this->bill->find('all', array('conditions'=>array('company_id'=> $company_id))));
 		$this->set('fetch_address', $this->address->find('all',array('conditions' => array('flag' => "0"), 'order'=>'id DESC','limit'=>1)) );
-
 	}
-////
-
 //////////	
 	public function menu()
 	{
@@ -6458,18 +6470,25 @@ public function outstanding()
                 foreach($fetch_ledger_receipt as $ledger_data)
                 {
                     ?><option  value="<?php echo $ledger_data['ledger_master']['user_id']; ?>"><?php echo  $ledger_data['ledger_master']['name']; ?></option> <?php
-                       
                 }
                 exit;
         }
-		
-		
-		
-		
 		/////////////////////////////////////////Ashish ji////////////////////////////
-		
-		
-		
+		if($this->request->query('receipt_payment_mode_fetch_report1')==1)             /////// Ashish
+        {
+            $ledger_category_id=$this->request->query("q");
+            $this->loadmodel('ledger_master');
+           
+                 $conditionss=array('ledger_category_id' => $ledger_category_id);
+                $fetch_ledger_receipt=$this->ledger_master->find('all',array('conditions'=>$conditionss,'fields'=>array('id','name')));
+                echo '<option value="">--- Select Master ---</option>';
+                foreach($fetch_ledger_receipt as $ledger_data)
+                {
+                    ?><option  value="<?php echo $ledger_data['ledger_master']['id']; ?>"><?php echo  $ledger_data['ledger_master']['name']; ?></option> <?php
+                }
+                exit;
+        }
+		////////////////////////////////////////////////////////////
 		if(@$this->request->data['add_plan_in_roomresveration']==1)
         {
             $this->loadmodel('master_room_plan');
@@ -8598,6 +8617,9 @@ $fo_room_booking=$this->fo_room_booking->find('all',array('conditions' => array(
 				echo  $company_id=$ftc_data['room_checkin_checkout']['company_id'].",";
 				echo $rn=$ftc_data['room_checkin_checkout']['master_roomno_id'].",";
 				//echo $xtrabed=$ftc_data['room_checkin_checkout']['extra_bed_tot'].",";
+				
+				echo $edit_mobile_no=$ftc_data['room_checkin_checkout']['mobile_no'].",";
+				echo $edit_email_id=$ftc_data['room_checkin_checkout']['email_id'].",";
 				$edit_taxes=$ftc_data['room_checkin_checkout']['taxes'];
 				$edit_room_type_id=$ftc_data['room_checkin_checkout']['room_type_id'];
 				
@@ -15975,6 +15997,36 @@ public function ledger_master()
 			$result_ledger=$this->ledger->find('all',array('conditions'=>$conditions));
 		
 	}
+	//////////////////////////////////
+	function reports_format(){
+		
+		 if($this->RequestHandler->isAjax()){
+			$this->layout='ajax_layout';
+		}
+		else{
+			$this->layout='index_layout';
+		}
+			$this->loadmodel('ledger_category');
+			$this->set('fetch_ledger_category', $this->ledger_category->find('all', array('conditions'=>array('OR'=>array(array('id'=>9), array('id'=>11), array('id'=>12))))));
+	}
+	function ledger_report_ajax(){
+		$this->layout='ajax_layout';
+			
+			 echo  $ledger_category_id=$this->request->query('ledger_master_id');
+			  echo $ledger_cat_id=$this->request->query('ledger_cat_id');
+			  exit;
+			  
+			  $from=date('Y-m-d', strtotime($this->request->query('from')));
+			  $to=date('Y-m-d', strtotime($this->request->query('to')));
+$conditions=array ('transaction_date between ? and ?' => array($from, $to), array('transaction_type'=>'Bill','ledger_category_id'=>$ledger_category_id,'user_id'=>$user_id));
+			  $this->loadmodel('ledger'); 
+      		  $result_ledger=$this->ledger->find('all',array('conditions'=>$conditions));
+			  $this->set('result_ledger',$result_ledger);
+		
+	}
+	
+	///////////////////////////////////
+
 	function ledger_view(){
 		
 		 if($this->RequestHandler->isAjax()){
@@ -15990,24 +16042,18 @@ public function ledger_master()
 	function ledger_view_ajax(){
 		$this->layout='ajax_layout';
 			
-			 $ledger_category_id=$this->request->query('ledger_master_id');
-			 $user_id=$this->request->query('user_id');
-			 $from=$this->request->query('from');
-			 $to=$this->request->query('to');
-				$conditions =array ('transaction_date between ? and ?' => array($from, $to), array('transaction_type'=>'Receipt','ledger_category_id'=>$ledger_category_id,'user_id'=>$user_id));
-					
-			$this->loadmodel('ledger'); 
-			
-			$result_ledger=$this->ledger->find('all',array('conditions'=>$conditions));
-			$this->set('result_ledger',$result_ledger);
+			  $ledger_category_id=$this->request->query('ledger_master_id');
+			  $user_id=$this->request->query('user_id');
+			  
+			  $from=date('Y-m-d', strtotime($this->request->query('from')));
+			  $to=date('Y-m-d', strtotime($this->request->query('to')));
+$conditions=array ('transaction_date between ? and ?' => array($from, $to), array('transaction_type'=>'Receipt','ledger_category_id'=>$ledger_category_id,'user_id'=>$user_id));
+			  $this->loadmodel('ledger'); 
+      		  $result_ledger=$this->ledger->find('all',array('conditions'=>$conditions));
+			  $this->set('result_ledger',$result_ledger);
 		
 	}
-	
-////////////////....................../////////////////.....
-
 ////// rohit end ////////////////////////
-
-
 ////////////////................Ashish....../////////////////.....///////////////////////////////////////////////
 
 
@@ -16764,7 +16810,7 @@ public function receipt_payment()              ////////  Ashish
         $end_date=$this->request->query("end_date");
         $this->set('start_date',$start_date);
 		$this->set('end_date',$end_date);
-        $conditions =array ('current_date between ? and ?' => array($start_date, $end_date), array('kot_type !='=>4));
+        $conditions =array ('date between ? and ?' => array($start_date, $end_date), array('kot_type !='=>4));
           
             $this->loadmodel('pos_kot');
             $this->loadmodel('master_item');
@@ -17126,7 +17172,7 @@ public function receipt_payment()              ////////  Ashish
 		$this->loadmodel('company_registration');
 		$conditions=array('id' => $company_reg_id);
 		$company_registration_fetch_id=$this->company_registration->find('all',array('conditions'=>$conditions,'fields'=>array('company_name')));
-		return $company_registration_fetch_id[0]['company_registration']['company_name'];
+		return @$company_registration_fetch_id[0]['company_registration']['company_name'];
 	}
 	
 	public function caretaker_fetch($caretaker_id)
@@ -17237,14 +17283,14 @@ public function receipt_payment()              ////////  Ashish
 			$mail->Host = 'smtp.gmail.com';
 			$mail->Port = 465;  
 			$mail->Username = 'ankit.sisodiya@spsu.ac.in';  
-			$mail->Password = 'sanjay.gupta#123';
+			$mail->Password = '!QAZSPSU@WSX';
 			$mail->SMTPDebug = 1; 
 		} else {
 			$mail->SMTPSecure = 'ssl'; 
 			$mail->Host = 'smtp.gmail.com';
 			$mail->Port = 465;  
 			$mail->Username = 'ankit.sisodiya@spsu.ac.in';  
-			$mail->Password = 'sanjay.gupta#123';    
+			$mail->Password = '!QAZSPSU@WSX';    
 		}        
 		$HTML = true;	 
 		$mail->WordWrap = 50; // set word wrap

@@ -84,8 +84,6 @@ if(empty($active))
                 <td align="center"><label>G.R. No.</label></td> 
                 <td>
                 <input type="text" class="form-control input-inline input-small" placeholder="Card No." name="edit_card_no" id="edit_card_no" readonly="readonly" ></td>
-                
-                
                 <td align="right"><label>Booking</label></td>
                 <td colspan="3" align="left"><div class="form-group" style="display:hidden">
                 <div class="radio-list">
@@ -129,13 +127,24 @@ if(empty($active))
                 <td align="center"><label>Child</label></td> 
                 <td><input type="text" class="form-control input-inline input-small" placeholder="Child" name="edit_child" id="edit_child" ></td>
                 <td><label>Billing Inst.</label></td> 
-                <td colspan="3"><input type="text" class="form-control input-inline" style="width:400px" placeholder="Billing Inst." name="edit_billing_instruction" id="edit_billing_instruction"></td>
+                <td colspan="3"><input type="text" class="form-control input-inline" style="width:200px" placeholder="Billing Inst." name="edit_billing_instruction" id="edit_billing_instruction"></td>
                 </tr>
                 <tr>
                 <td><label>Remark</label></td> 
                 <td colspan="3">
-                <input type="text" class="form-control input-inline" style="width:400px" placeholder="Text your remarks here..." 
-                name="edit_remarks" id="edit_remarks"></td></tr>
+                <input type="text" class="form-control input-medium" style="width:400px" placeholder="Text your remarks here..." 
+                name="edit_remarks" id="edit_remarks"></td>
+                
+                <td><label>Mobile NO.</label></td> 
+                <td>
+                <input type="text" class="form-control input-small" placeholder="Mobile No." 
+                name="edit_mobile_no" id="edit_mobile_no"></td>
+                
+                <td><label>Remark</label></td> 
+                <td>
+                <input type="text" class="form-control input-small"  placeholder="Email Id" 
+                name="edit_email_id" id="edit_email_id"></td>
+                </tr>
                 
                 
                 <!--<td colspan="2" align="center"><label>Extra Bed Amount</label></td>
@@ -509,7 +518,9 @@ function pos_entry()
 				$("#edit_card_no").val(da[11]);
 				$("#company_id").val(da[15]);
 				$("#room_n_id").val(da[16]);
-				$("#edit_extra_bed_tot").val(da[17]);
+				//$("#edit_extra_bed_tot").val(da[17]);
+				$("#edit_mobile_no").val(da[17]);
+				$("#edit_email_id").val(da[18]);
 				room_view_data(id);
 				check_card_no(id);
 			}

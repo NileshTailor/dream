@@ -51,11 +51,11 @@
 		 foreach($fetch_pos_kot as $data){ 
 		 $i++;
 		 $id=$data['pos_kot'] ['id'];
-		 $discount=$data['pos_kot'] ['settle_discount'];
+		 $discount=$data['pos_kot'] ['pos_discount'];
 		 $tips=$data['pos_kot'] ['tips'];
 		 $service_charge=$data['pos_kot'] ['service_charge'];
-		 $bill_settle_amount=$data['pos_kot'] ['bill_settle_amount'];
-		 $bill_settle_due=$data['pos_kot'] ['bill_settle_due'];
+	 $bill_settle_amount=$data['pos_kot'] ['received_amount'];
+		 $bill_settle_due=$data['pos_kot'] ['due_amount'];
 		 //$settle_amount=$settle_amount+$bill_settle_amount;
 		 //$settle_due=$settle_due+$bill_settle_due;
 		 ?>
@@ -101,8 +101,8 @@
        <td align="center"><?php echo $service_chargee; ?></td>
        <td align="center"><?php echo $discountt?></td>
        <td align="center"><?php echo $grandamount;?></td>
-       <td align="center"><?php echo $data['pos_kot'] ['bill_settle_amount'] ?></td>
-       <td align="center"><?php echo $data['pos_kot'] ['bill_settle_due'] ?></td>
+       <!--<td align="center"><?php echo $data['pos_kot'] ['bill_settle_amount'] ?></td>
+       <td align="center"><?php echo $data['pos_kot'] ['bill_settle_due'] ?></td>-->
        
        
          

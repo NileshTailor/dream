@@ -1,3 +1,18 @@
+<style media="print">
+.print-hide
+{
+	display:none;
+}
+.print-show
+{
+	display:block !important;
+}
+
+</style>
+
+
+
+
 <?php
 if(empty($active))
 { $active=0;
@@ -10,7 +25,7 @@ if(empty($active))
 <div class="row">
     <div class="col-md-12">
         <div class="tabbable tabbable-custom tabbable-border">
-            <ul class="nav nav-tabs">
+            <ul class="nav nav-tabs print-hide">
                <li <?php if(empty($active) || $active==1){?> class="active"<?php } else {?>class=""<?php }?>  >
                     <a aria-expanded="true" href="#tab_1_1" data-toggle="tab">Add
                     
@@ -196,8 +211,8 @@ if(empty($active))
     <th>Quantity</th>
     <th>Charge</th>
     <th>total</th>
-    <th width="10%">Edit</th>
-    <th width="10%">Delete</th>
+    <th width="10%" class="print">Edit</th>
+    <th width="10%" class="print">Delete</th>
      </tr>
      </thead>
      <tbody>
@@ -315,7 +330,7 @@ if(empty($active))
 							<!-- /.modal -->
                                 </td>
         <td>
-<a class="btn red btn-xs" data-toggle="modal" href="#delete<?php echo $id; ?>"><i class="fa fa-trash-o"></i> Delete</a>
+<a class="btn red btn-xs print" data-toggle="modal" href="#delete<?php echo $id; ?>"><i class="fa fa-trash-o"></i> Delete</a>
 <div class="modal fade" id="delete<?php echo $id; ?>" tabindex="-1" role="delete" aria-hidden="true" style="padding-top:35px">
 <div class="modal-dialog">
 <div class="modal-content">
