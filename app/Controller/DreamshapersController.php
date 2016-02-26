@@ -6406,6 +6406,18 @@ public function outstanding()
         if(@$this->request->query['receipt_type_data']==1)
         {
             $user_id=$this->request->query['user_id'];
+			if($this->request->query['receipt_type']=='Room')
+            {
+                $this->loadmodel('checkout');
+                $conditions=array('status' => 0,'user_id'=>$user_id);
+                $invoice_data=$this->checkout->find('all',array('fields'=>array('id','guest_name','master_roomno_id','card_no','due_amount'),'conditions'=>$conditions));
+                foreach($invoice_data as $data)
+                {
+                    @$due_amount=$data['checkout']['due_amount'];
+                   
+                    echo '<option class="tooltips" data-container="body" data-placement="right" data-original-title="Guest Name-'.$data['checkout']['guest_name'].', Room No.-'.$data['checkout']['master_roomno_id'].', Card No.-'.$data['checkout']['card_no'].'" pos_net_amount="'.$due_amount.'" value="'.$data['checkout']['id'].'">'.$data['checkout']['id'].'</option>';
+                }
+            }
             if($this->request->query['receipt_type']=='POS')
             {
                 $this->loadmodel('pos_kot');
@@ -16128,7 +16140,12 @@ public function receipt_payment()              ////////  Ashish
                     {
                         $status=1;
                     }
-                    if($this->request->data['receipt_type']=='POS')
+					if($this->request->data['receipt_type']=='Room')
+                    {
+                        $this->loadmodel('checkout');
+                        $this->checkout->updateAll(array("status"=>"'$status'","due_amount"=>"'$due_amount'"),array('id' => $invoice_id));
+                    }
+                    else if($this->request->data['receipt_type']=='POS')
                     {
                         $this->loadmodel('pos_kot');
                         $this->pos_kot->updateAll(array("flag1"=>"'$status'","due_amount"=>"'$due_amount'"),array('id' => $invoice_id));
