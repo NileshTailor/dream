@@ -2508,9 +2508,9 @@ $conditions =array('or' => array(
 				$this->loadModel('ledger_cr_dr');
 				$t_date=date('Y-m-d', strtotime($date));
 			   
-			    $fetch_transaction_id_bill2=$this->ledger->find('count',array('conditions'=>array('transaction_type'=>' ')));
+			    $fetch_transaction_id_bill2=$this->ledger->find('count',array('conditions'=>array('transaction_type'=>'Invoice')));
                 $t_id_b=$fetch_transaction_id_bill2+1;
-				$this->ledger->saveAll(array('ledger_category_id'=>13,'user_id'=> $pos_user_id,'transaction_id'=> $t_id_b,'receipt_type'=> 'POS','invoice_id' => $last_record_id, 'receipt_mode' => $payment_mode, 'transaction_date' => $t_date,'cheque_no'=>$cheque_no,'neft_no'=>$neft_no, 'cheque_date'=>$cheque_date,'bank_name'=>$bank_name,'neft_no'=>$neft_no,'credit_card_name'=>$credit_card_name,'credit_card_no'=>$credit_card_no,'narration'=>$narration,'date'=>$date,'status'=>0));
+				$this->ledger->saveAll(array('ledger_category_id'=>13,'user_id'=> $pos_user_id, 'transaction_type'=>'Invoice','transaction_id'=> $t_id_b,'receipt_type'=> 'POS','invoice_id' => $last_record_id, 'receipt_mode' => $payment_mode, 'transaction_date' => $t_date,'cheque_no'=>$cheque_no,'neft_no'=>$neft_no, 'cheque_date'=>$cheque_date,'bank_name'=>$bank_name,'neft_no'=>$neft_no,'credit_card_name'=>$credit_card_name,'credit_card_no'=>$credit_card_no,'narration'=>$narration,'date'=>$date,'status'=>0));
 				    $last_ledger_id=$this->ledger->getLastInsertID(); 
 				//
 				$kot_m_ledger=$this->ledger_master->find('all', array('conditions'=>array('ledger_category_id' =>'1','user_id' =>$pos_user_id)));
@@ -3774,7 +3774,7 @@ $conditions =array('or' => array(
 				$this->loadModel('ledger_cr_dr');
 				$t_date=date('Y-m-d', strtotime($date));
 			   
-			    $fetch_transaction_id_house=$this->ledger->find('count',array('conditions'=>array('transaction_type'=>' ')));
+			    $fetch_transaction_id_house=$this->ledger->find('count',array('conditions'=>array('transaction_type'=>'Invoice')));
                 $t_id_b=$fetch_transaction_id_house+1;
 				$this->ledger->saveAll(array('ledger_category_id'=>10,'user_id'=> 1,'transaction_id'=> $t_id_b,'receipt_type'=> 'Function Booking','invoice_id' => $last_record_id,'transaction_date' => $t_date,'date'=>$date,'status'=>0));
 				    $last_ledger_id=$this->ledger->getLastInsertID(); 
@@ -5143,7 +5143,7 @@ public function debtor_receipt()
 				$this->loadModel('ledger_cr_dr');
 				$t_date=date('Y-m-d', strtotime($date));
 			   
-			    $fetch_transaction_id_bill2=$this->ledger->find('count',array('conditions'=>array('transaction_type'=>' ')));
+			    $fetch_transaction_id_bill2=$this->ledger->find('count',array('conditions'=>array('transaction_type'=>'Invoice')));
                 $t_id_b=$fetch_transaction_id_bill2+1;
 				$this->ledger->saveAll(array('ledger_category_id'=>1,'user_id'=> $edit_company_id,'transaction_type'=> 'Invoice','transaction_id'=> $t_id_b,'transaction_id'=> $t_id_b,'receipt_type'=> 'Room','invoice_id' => $last_record_id_checkout, 'receipt_mode' => $payment_mode, 'transaction_date' => $t_date,'cheque_no'=>$cheque_no,'neft_no'=>$neft_no, 'cheque_date'=>$cheque_date,'bank_name'=>$bank_name,'neft_no'=>$neft_no,'credit_card_name'=>$credit_card_name,'credit_card_no'=>$credit_card_no,'narration'=>$narration,'date'=>$date,'status'=>0));
 				$last_ledger_id=$this->ledger->getLastInsertID(); 
@@ -6465,11 +6465,11 @@ public function outstanding()
             $this->loadmodel('ledger_master');
            
                  $conditionss=array('ledger_category_id' => $ledger_category_id);
-                $fetch_ledger_receipt=$this->ledger_master->find('all',array('conditions'=>$conditionss,'fields'=>array('user_id','name')));
+                $fetch_ledger_receipt=$this->ledger_master->find('all',array('conditions'=>$conditionss,'fields'=>array('id','name')));
                 echo '<option value="">--- Select Master ---</option>';
                 foreach($fetch_ledger_receipt as $ledger_data)
                 {
-                    ?><option  value="<?php echo $ledger_data['ledger_master']['user_id']; ?>"><?php echo  $ledger_data['ledger_master']['name']; ?></option> <?php
+                    ?><option  value="<?php echo $ledger_data['ledger_master']['id']; ?>"><?php echo  $ledger_data['ledger_master']['name']; ?></option> <?php
                 }
                 exit;
         }
@@ -14289,16 +14289,16 @@ $this->set('active_delete',1);
 				$this->loadModel('ledger_cr_dr');
 				$t_date=date('Y-m-d', strtotime($date));
 			   
-			    $fetch_transaction_id_house=$this->ledger->find('count',array('conditions'=>array('transaction_type'=>' ')));
+			    $fetch_transaction_id_house=$this->ledger->find('count',array('conditions'=>array('transaction_type'=>'Invoice')));
                 $t_id_b=$fetch_transaction_id_house+1;
-				$this->ledger->saveAll(array('ledger_category_id'=>6,'user_id'=> $house_user_id,'transaction_id'=> $t_id_b,'receipt_type'=> 'House Keeping','invoice_id' => $last_record_id, 'receipt_mode' => $payment_mode, 'transaction_date' => $t_date,'cheque_no'=>$cheque_no,'neft_no'=>$neft_no, 'cheque_date'=>$cheque_date,'bank_name'=>$bank_name,'neft_no'=>$neft_no,'credit_card_name'=>$credit_card_name,'credit_card_no'=>$credit_card_no,'narration'=>$narration,'date'=>$date,'status'=>0));
+				$this->ledger->saveAll(array('ledger_category_id'=>6,'user_id'=> $house_user_id, 'transaction_type'=>'Invoice','transaction_id'=> $t_id_b,'receipt_type'=> 'House Keeping','invoice_id' => $last_record_id, 'receipt_mode' => $payment_mode, 'transaction_date' => $t_date,'cheque_no'=>$cheque_no,'neft_no'=>$neft_no, 'cheque_date'=>$cheque_date,'bank_name'=>$bank_name,'neft_no'=>$neft_no,'credit_card_name'=>$credit_card_name,'credit_card_no'=>$credit_card_no,'narration'=>$narration,'date'=>$date,'status'=>0));
 				    $last_ledger_id=$this->ledger->getLastInsertID(); 
 				//
 				$house_m_ledger=$this->ledger_master->find('all', array('conditions'=>array('ledger_category_id' =>'1','user_id' =>$house_user_id)));
 				$l_id=$house_m_ledger[0]['ledger_master']['id'];
 				//
 				$this->ledger_cr_dr->saveAll(array('ledger_id'=>$last_ledger_id,'ledger_master_id'=> $l_id,'dr' => $total_amount));
-				$this->ledger_cr_dr->saveAll(array('ledger_id'=>$last_ledger_id,'ledger_master_id'=> $l_id,'cr' => $total_amount));
+				$this->ledger_cr_dr->saveAll(array('ledger_id'=>$last_ledger_id,'ledger_master_id'=> '22','cr' => $total_amount));
 			
 			
 			 $fetch_transaction_id_house=$this->ledger->find('count',array('conditions'=>array('transaction_type'=>'Receipt')));
@@ -14702,14 +14702,14 @@ public function masterroom()
 				
 				
 			   
-			    $fetch_transaction_id_other=$this->ledger->find('count',array('conditions'=>array('transaction_type'=>' ')));
+			    $fetch_transaction_id_other=$this->ledger->find('count',array('conditions'=>array('transaction_type'=>'Invoice')));
                 $t_id_b_o=$fetch_transaction_id_other+1;
 				
 				$fetch_ledger_master_service=$this->ledger_master->find('all', array('conditions'=>array('user_id'=>$service_name_id, 'ledger_category_id'=>'8')));
 				$id_o_s=$fetch_ledger_master_service[0]['ledger_master']['id'];
 				
 				
-				$this->ledger->saveAll(array('ledger_category_id'=>8,'user_id'=> $other_user_id,'transaction_id'=> $t_id_b_o,'receipt_type'=> 'Other Service','invoice_id' => $last_record_id, 'receipt_mode' => $payment_mode, 'transaction_date' => $t_date,'cheque_no'=>$cheque_no,'neft_no'=>$neft_no, 'cheque_date'=>$cheque_date,'bank_name'=>$bank_name,'neft_no'=>$neft_no,'credit_card_name'=>$credit_card_name,'credit_card_no'=>$credit_card_no,'narration'=>$narration,'date'=>$date,'status'=>0));
+				$this->ledger->saveAll(array('ledger_category_id'=>8,'user_id'=> $other_user_id,'transaction_type'=>'Invoice','transaction_id'=> $t_id_b_o,'receipt_type'=> 'Other Service','invoice_id' => $last_record_id, 'receipt_mode' => $payment_mode, 'transaction_date' => $t_date,'cheque_no'=>$cheque_no,'neft_no'=>$neft_no, 'cheque_date'=>$cheque_date,'bank_name'=>$bank_name,'neft_no'=>$neft_no,'credit_card_name'=>$credit_card_name,'credit_card_no'=>$credit_card_no,'narration'=>$narration,'date'=>$date,'status'=>0));
 				    $last_ledger_id=$this->ledger->getLastInsertID(); 
 				//
 				$house_m_ledger=$this->ledger_master->find('all', array('conditions'=>array('ledger_category_id' =>'1','user_id' =>$other_user_id)));
@@ -15871,10 +15871,10 @@ function fetch_ledger_master_id($id){
 }
 
 
-function fetch_ledger_cr_dr_id($id){
+function fetch_ledger_cr_dr_id($id, $ledger_m_id){
 	
 	$this->loadmodel('ledger_cr_dr');
-	$conditions=array('ledger_id'=>(int)$id);
+	$conditions=array('ledger_id'=>(int)$id,'ledger_master_id'=>(int)$ledger_m_id);
 	
 	return $this->ledger_cr_dr->find('all',array('conditions'=>$conditions));
 	
@@ -15988,18 +15988,15 @@ public function ledger_master()
 			$this->set('fetch_ledger_category', $this->ledger_category->find('all'));
 			$this->set('fetch_ledger_master', $this->ledger_master->find('all'));
 	}
-	
 	function fetch_ledger_cr_dr_ledger_id($led_id){
 		
 			$this->loadmodel('ledger');
 			$conditions=array('transaction_type'=>'Receipt');
-
 			$result_ledger=$this->ledger->find('all',array('conditions'=>$conditions));
 		
 	}
 	//////////////////////////////////
-	function reports_format(){
-		
+	function pos_ledger_report(){
 		 if($this->RequestHandler->isAjax()){
 			$this->layout='ajax_layout';
 		}
@@ -16007,24 +16004,56 @@ public function ledger_master()
 			$this->layout='index_layout';
 		}
 			$this->loadmodel('ledger_category');
-			$this->set('fetch_ledger_category', $this->ledger_category->find('all', array('conditions'=>array('OR'=>array(array('id'=>9), array('id'=>11), array('id'=>12))))));
+			$this->set('fetch_ledger_category', $this->ledger_category->find('all', array('conditions'=>array('OR'=>array(array('id'=>4))))));
 	}
-	function ledger_report_ajax(){
+	    function pos_report_ajax(){
 		$this->layout='ajax_layout';
 			
-			 echo  $ledger_category_id=$this->request->query('ledger_master_id');
-			  echo $ledger_cat_id=$this->request->query('ledger_cat_id');
-			  exit;
-			  
+			  $ledger_category_id=$this->request->query('ledger_master_id');
 			  $from=date('Y-m-d', strtotime($this->request->query('from')));
 			  $to=date('Y-m-d', strtotime($this->request->query('to')));
-$conditions=array ('transaction_date between ? and ?' => array($from, $to), array('transaction_type'=>'Bill','ledger_category_id'=>$ledger_category_id,'user_id'=>$user_id));
+              $conditions=array ('transaction_date between ? and ?' => array($from, $to));
 			  $this->loadmodel('ledger'); 
-      		  $result_ledger=$this->ledger->find('all',array('conditions'=>$conditions));
+			  $result_ledger=$this->ledger->find('all',array('conditions'=>$conditions));
 			  $this->set('result_ledger',$result_ledger);
-		
+			 $this->loadmodel('ledger_master');
+			 $fetch_ledger_category=$this->ledger_master->find('all', array('conditions'=>array('ledger_category_id'=>$ledger_category_id,'id'=>$ledger_cat_id)));
+			//pr($fetch_ledger_category);
+			 $this->set('fetch_ledger_category',$fetch_ledger_category);
+			 $this->set('from',$from);
+			 $this->set('to',$to);
 	}
-	
+	///////////////////////////////////
+
+	//////////////////////////////////
+	function reports_format(){
+		 if($this->RequestHandler->isAjax()){
+			$this->layout='ajax_layout';
+		}
+		else{
+			$this->layout='index_layout';
+		}
+			$this->loadmodel('ledger_category');
+			$this->set('fetch_ledger_category', $this->ledger_category->find('all', array('conditions'=>array('OR'=>array(array('id'=>9), array('id'=>11), array('id'=>12),array('id'=>4),array('id'=>13),array('id'=>8),array('id'=>7))))));
+	}
+	    function ledger_report_ajax(){
+		$this->layout='ajax_layout';
+			
+			  $ledger_category_id=$this->request->query('ledger_master_id');
+			  $ledger_cat_id=$this->request->query('ledger_cat_id');
+			  $from=date('Y-m-d', strtotime($this->request->query('from')));
+			  $to=date('Y-m-d', strtotime($this->request->query('to')));
+              $conditions=array ('transaction_date between ? and ?' => array($from, $to));
+			  $this->loadmodel('ledger'); 
+			  $result_ledger=$this->ledger->find('all',array('conditions'=>$conditions));
+			  $this->set('result_ledger',$result_ledger);
+			 $this->loadmodel('ledger_master');
+			 $fetch_ledger_category=$this->ledger_master->find('all', array('conditions'=>array('ledger_category_id'=>$ledger_category_id,'id'=>$ledger_cat_id)));
+			//pr($fetch_ledger_category);
+			 $this->set('fetch_ledger_category',$fetch_ledger_category);
+			 $this->set('from',$from);
+			 $this->set('to',$to);
+	}
 	///////////////////////////////////
 
 	function ledger_view(){
@@ -16033,7 +16062,7 @@ $conditions=array ('transaction_date between ? and ?' => array($from, $to), arra
 			$this->layout='ajax_layout';
 		}
 		else{
-			$this->layout='index_layout';
+				$this->layout='index_layout';
 		}
 			$this->loadmodel('ledger_category');
 			$this->set('fetch_ledger_category', $this->ledger_category->find('all'));
@@ -16042,16 +16071,28 @@ $conditions=array ('transaction_date between ? and ?' => array($from, $to), arra
 	function ledger_view_ajax(){
 		$this->layout='ajax_layout';
 			
-			  $ledger_category_id=$this->request->query('ledger_master_id');
-			  $user_id=$this->request->query('user_id');
+			 $ledger_category_id=$this->request->query('ledger_master_id');
+			 $user_id=$this->request->query('user_id');
+			  
 			  
 			  $from=date('Y-m-d', strtotime($this->request->query('from')));
 			  $to=date('Y-m-d', strtotime($this->request->query('to')));
-$conditions=array ('transaction_date between ? and ?' => array($from, $to), array('transaction_type'=>'Receipt','ledger_category_id'=>$ledger_category_id,'user_id'=>$user_id));
+              $conditions=array ('transaction_date between ? and ?' => array($from, $to));
 			  $this->loadmodel('ledger'); 
-      		  $result_ledger=$this->ledger->find('all',array('conditions'=>$conditions));
+			  $result_ledger=$this->ledger->find('all',array('conditions'=>$conditions));
 			  $this->set('result_ledger',$result_ledger);
-		
+			  
+			   $this->loadmodel('ledger_master');
+			 $fetch_ledger_category=$this->ledger_master->find('all', array('conditions'=>array('ledger_category_id'=>$ledger_category_id,'id'=>$user_id)));
+			// pr($fetch_ledger_category);
+			 $this->set('fetch_ledger_category',$fetch_ledger_category);
+			 $this->set('from',$from);
+			 $this->set('to',$to);	
+			 $this->set('user_id',$user_id);
+			  $conditions1=array ('transaction_date <' =>$from);
+			  $result_ledger1=$this->ledger->find('all',array('conditions'=>$conditions1));
+			  $this->set('result_ledger1',$result_ledger1);
+			  
 	}
 ////// rohit end ////////////////////////
 ////////////////................Ashish....../////////////////.....///////////////////////////////////////////////

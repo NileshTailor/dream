@@ -1,4 +1,10 @@
-
+<style media="print">
+.print-hide
+{
+	display:none;
+}
+</style>
+		
 		
 <!-------------------------------Start Ledger Form ------------------------------------------------->
 <?php  
@@ -7,7 +13,7 @@ $default_date_to = date('d-m-Y')
 ?> 
 <center>
 <form method="post" onSubmit="return valid()">
-<div  class="hide_at_print">
+<div class="print-hide">
         <table style="width:60%;">
         <tr>
         

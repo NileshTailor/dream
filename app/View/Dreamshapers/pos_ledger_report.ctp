@@ -15,7 +15,7 @@ $default_date_to = date('d-m-Y')
 <div class="print-hide">
         <table style="width:60%;">
         
-        <tr><td colspan="4"><p align="center" style="background-color:#C33; color:#FFF"><strong>LEDGER VIEW</strong></p></td></tr>
+        <tr><td colspan="4"><p align="center" style="background-color:#C33; color:#FFF"><strong>POS Ledger</strong></p></td></tr>
 				<tr><td>
 						<select class="form-control input-medium" name="ledger_category_id" required id="ledger_account">
                                     <option value="">-- Select Category --</option>
@@ -29,14 +29,6 @@ $default_date_to = date('d-m-Y')
                                     ?>
                             </select>
 				</td>
-		
-		
-				<td id="sub_ledger_ajax_view">
-						<select class="form-control input-medium" name="user_id" id="user_id" required>
-                                    <option value=""></option>
-                          </select>
-				</td>
-
 				<td>
 					
 					<input type="text" class="form-control  input-medium date-picker" data-date-format="dd-mm-yyyy" placeholder="From" value="" name="from" id="date1">
@@ -57,7 +49,7 @@ $default_date_to = date('d-m-Y')
 </div>
 </form>
 </center>
-		
+		123
 <div id="ledger_view" style="width:100%;">
 </div>
 <!-----------------------------------End Ledger Form ------------------------------------------>
@@ -86,10 +78,9 @@ $(document).ready(function() {
 	
 	    $("#go").live('click',function(){
 				var ledger_account_id = $('#ledger_account').val();
-				var user_id = $('#user_id').val();
 				var from=$('#date1').val();
 				var to=$('#date2').val();
-				$("#ledger_view").html('loading.....').load("ledger_view_ajax?ledger_master_id="+ledger_account_id+"&user_id="+user_id+"&from="+from+"&to="+to);
+				$("#ledger_view").html('loading.....').load("pos_report_ajax?ledger_master_id="+ledger_account_id+"&from="+from+"&to="+to);
 
 	});
 });

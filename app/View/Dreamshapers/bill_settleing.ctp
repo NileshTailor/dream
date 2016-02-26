@@ -305,7 +305,6 @@ foreach($fatch_billing_kot_query_string as $data){
                 <td><input type="text" name="balance_amount" class="form-control input-inline input-small" id="balance_amount" disabled placeholder="Balance"/></td>
                 </tr></table><br />
                 
-                
                 <table class="table" style=" width:100% !important;">
                 <thead>
                 <tr>
