@@ -6477,11 +6477,11 @@ public function outstanding()
             $this->loadmodel('ledger_master');
            
                  $conditionss=array('ledger_category_id' => $ledger_category_id);
-                $fetch_ledger_receipt=$this->ledger_master->find('all',array('conditions'=>$conditionss,'fields'=>array('id','name')));
+                $fetch_ledger_receipt=$this->ledger_master->find('all',array('conditions'=>$conditionss,'fields'=>array('id','user_id','name')));
                 echo '<option value="">--- Select Master ---</option>';
                 foreach($fetch_ledger_receipt as $ledger_data)
                 {
-                    ?><option  value="<?php echo $ledger_data['ledger_master']['id']; ?>"><?php echo  $ledger_data['ledger_master']['name']; ?></option> <?php
+                    ?><option  value="<?php echo $ledger_data['ledger_master']['user_id']; ?>"><?php echo  $ledger_data['ledger_master']['name']; ?></option> <?php
                 }
                 exit;
         }

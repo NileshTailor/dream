@@ -282,7 +282,7 @@ $(document).ready(function()
 			amount+=eval($(this).attr('pos_net_amount'))
 			
 		});
-		$('input[name=amount]').val(amount);
+		$(this).closest('form').find('input[name="amount"]').val(amount);
 		$('input[name=gross_amount]').val(amount);
 		
 		var discount=eval($('input[name=discount]').val());
@@ -307,7 +307,7 @@ $(document).ready(function()
 		{
 			discount=0;
 		}
-		var amount=eval($('input[name=amount]').val());
+		var amount=eval($(this).closest('form').find('input[name="amount"]').val());
 		var tds=eval($('input[name=tds]').val());
 		if(tds==undefined)
 		{
