@@ -5018,7 +5018,6 @@ public function debtor_receipt()
 					$this->room_checkin_checkout->updateAll(array('advance_taken' => "'$edit_advance_taken'" ),array('id' => $id_chekin ));
 					}
 				///// ADVANCE UPDATE
-				 
 				 @$card_name=$this->request->data["card_name"];
 				 $edit_transfer_dueamount_to=$this->request->data["edit_transfer_dueamount_to"];
 				 @$transfer_due_amount=$this->request->data["transfer_due_amount"]; 
