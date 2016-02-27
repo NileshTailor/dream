@@ -21,11 +21,6 @@
             <?php }?>
 			<?php
 			 $total_cat_cr=0;$total_cat_cr1=0;$total_cat_cr2=0;
-			 
-				$id125=35;
-				$id126=36;
-				$id127=37;
-				$id128=38;
 			    foreach($result_ledger as $data){
 				// pr($result_ledger);
 				$ledger_id=$data['ledger']['id'];
@@ -46,7 +41,7 @@
 				  $result_ledger_category=$this->requestAction(array('controller' => 'Dreamshapers', 'action' => 'fetch_ledger_category_name_by_id'), 
 				  array($ledger_category_id));
 				 $result_ledger_cr_dr=$this->requestAction(array('controller' => 'Dreamshapers', 'action' => 'fetch_ledger_cr_dr_id121'), 
-				 array($id125,$id126,$id127,$id128));
+				 array($ledger_id));
 							
 							foreach($result_ledger_cr_dr as $data){
 							$ledger_master_id=$data['ledger_cr_dr']['ledger_master_id'];
@@ -56,15 +51,27 @@
 							array($ledger_master_id));
 							$ledger_master_name=$result_ledger_master_id[0]['ledger_master']['name'];
 							?>
+                            
+                            <?php if($ledger_master_id==35 || $ledger_master_id==36 || $ledger_master_id==37 || $ledger_master_id==38) {?> 
 			<tr>
+            <td><?php echo $transaction_date; ?></td>
+            <td><b><?php echo $invoice_id; ?></td>
+			<td><?php echo $ledger_master_name; ?></td>
+            <td><?php echo $receipt_mode; ?></td>
+            <td><?php echo $bank_name; ?></td>
+             <td><?php echo $narration; ?></td>
             <td><?php echo $dr; $total_cat_cr1+=$dr; ?></td>
 			</tr>
+            <?php } ?>
+            
+            
+            
+            <?php }?>
+            
+            
 			<?php 
 			} ?>
 			<?php 
 			}?>
-       
-       
-       
          </tbody>
          </table>

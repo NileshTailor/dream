@@ -6383,7 +6383,7 @@ public function outstanding()
                 echo '<option value="">--- Select Master ---</option>';
                 foreach($fetch_ledger_receipt as $ledger_data)
                 {
-                    ?><option  value="<?php echo $ledger_data['ledger_master']['user_id']; ?>"><?php echo  $ledger_data['ledger_master']['name']; ?></option> <?php
+                    ?><option  value="<?php echo $ledger_data['ledger_master']['id']; ?>"><?php echo  $ledger_data['ledger_master']['name']; ?></option> <?php
                 }
                 exit;
         }
@@ -15781,8 +15781,6 @@ function fetch_ledger_master_id($id){
 	$conditions=array('id'=>(int)$id);
 	return $this->ledger_master->find('all',array('conditions'=>$conditions));
 }
-
-
 function fetch_ledger_cr_dr_id($ledger_id, $ledger_m_id){
 	$this->loadmodel('ledger_cr_dr');
 	$conditions=array('ledger_id'=>(int)$ledger_id,'ledger_master_id'=>(int)$ledger_m_id);
@@ -15791,9 +15789,9 @@ function fetch_ledger_cr_dr_id($ledger_id, $ledger_m_id){
 	
 }
 
-function fetch_ledger_cr_dr_id121($id125,$id126,$id127,$id128){
+function fetch_ledger_cr_dr_id121($ledger_id){
 	$this->loadmodel('ledger_cr_dr');
-	return $this->ledger_cr_dr->find('all',array('conditions'=>array('OR'=>array(array('ledger_master_id'=>$id125),array('ledger_master_id'=>$id126),array('ledger_master_id'=>$id127),array('ledger_master_id'=>$id128)))));
+	return $this->ledger_cr_dr->find('all',array('conditions'=>array('ledger_id'=>$ledger_id)));
 	
 }
 
@@ -16034,7 +16032,6 @@ public function ledger_master()
 			  
 			   $this->loadmodel('ledger_master');
 			 $fetch_ledger_category=$this->ledger_master->find('all', array('conditions'=>array('ledger_category_id'=>$ledger_category_id,'id'=>$user_id)));
-			// pr($fetch_ledger_category);
 			 $this->set('fetch_ledger_category',$fetch_ledger_category);
 			 $this->set('from',$from);
 			 $this->set('to',$to);	
