@@ -46,7 +46,7 @@ if(empty($active))
             </ul>
             <div class="tab-content">
                 <div <?php if(empty($active) || $active==1){?> class="tab-pane fade active in"<?php } else {?>class="tab-pane fade"<?php }?>  id="tab_1_1">
-                    <form method="post" name="add" id="checkinaddform">
+                    <form method="post" name="add" id="roomreservation">
                    
                    	 <div class="table-responsive">
                      <table class="table self-table" style=" width:100% !important;" border="0">
@@ -92,8 +92,7 @@ if(empty($active))
                             <td>
                             <div class="form-group"><input type="text" class="form-control input-inline input-xsmall" placeholder="Reservation No." name="reservation_gr_no" value="<?php echo $reservation_gr_no; ?>" readonly/></div>
                             </td>
-                        
-                        </tr>
+                            </tr>
                             
                             <tr> 
                             <td id="a_date"><label>Arrival Date<span style="color:#E02222">* </span></label></td>
@@ -200,12 +199,10 @@ if(empty($active))
                                             <td id="rate"><label>Rate Per Night</label></td>
                             <td id="rate1"><div class="form-group">
                                 <input name="rate_per_night" class="form-control input-small" id="rate_per_night" placeholder="Rate Per Night" type="text">
-                                </div></td
-                                            
-                        ></tr>
+                                </div></td></tr>
                         <tr>
                         <td><label>City</label></td> 
-                        <td><input type="text" class="form-control input-inline input-small" placeholder="City" name="city" ></td> 
+                        <td><div class="form-group"><input type="text" class="form-control input-inline input-small" placeholder="City" name="city"></div></td> 
                         <td><label>Nationality</label></td> 
                        <td>
                     <div class="form-group">

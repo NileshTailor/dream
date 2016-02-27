@@ -100,7 +100,7 @@ foreach($fte_room_reservation as $view_data)
     <div style="width:88%; margin-left:50px">
         <div class="tabbable tabbable-custom tabbable-border">
             <div class="tab-content">
-                    <form method="post" name="add" id="checkinaddform">
+                    <form method="post" name="add" id="roomreservation">
                    
                    	 <div class="table-responsive">
                      <table class="table self-table" style=" width:100% !important;" border="0">
@@ -257,7 +257,7 @@ foreach($fte_room_reservation as $view_data)
                         
                         <tr>
                         <td><label>City</label></td> 
-                        <td><input type="text" value="<?php echo $city; ?>" class="form-control input-inline input-small" placeholder="City" name="city" ></td> 
+                        <td><div class="form-group"><input type="text" value="<?php echo $city; ?>" class="form-control input-inline input-small" placeholder="City" name="city"></div></td> 
                         <td><label>Nationality</label></td> 
                         
                         <td>

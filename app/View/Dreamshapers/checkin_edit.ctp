@@ -176,11 +176,7 @@ if(empty($active))
                     <input class="form-control input-small" id="traveller_name" value="<?php echo $traveller_name;?>"  name="traveller_name" placeholder="Traveller" type="text">
                     </div>
                     </td>
-                    
                         </tr>
-                        
-                        
-                        
                         <tr>
                         <td><label>Arrival Time<span style="color:#E02222">* </span></label></td> 
                             <td><div class="input-group">
@@ -198,7 +194,7 @@ if(empty($active))
                         </tr>
                         <tr>
                         <td><label>City</label></td> 
-                        <td><input type="text" value="<?php echo $city; ?>" class="form-control input-inline input-small" placeholder="City" name="city" ></td> 
+                        <td><div class="form-group"><input type="text" value="<?php echo $city; ?>" class="form-control input-inline input-small" placeholder="City" name="city"></div></td> 
                         <td><label>Nationality</label></td> 
                         
                         <td>
@@ -235,7 +231,7 @@ if(empty($active))
                         <td><input type="text" class="form-control input-small" value="<?php echo $permanent_address; ?>" placeholder="Permanent Address" name="permanent_address" ></td>
                     <td><label>Mobile No.</label></td>
                     <td>
-                    <input class="form-control input-small"  name="mobile_no" value="<?php echo $mobile_no; ?>"  onkeypress="javascript:return isNumber (event)" maxlength="10" placeholder="Mobile No." type="text">
+                    <div class="form-group"><input class="form-control input-small"  name="mobile_no" value="<?php echo $mobile_no; ?>"  onkeypress="javascript:return isNumber (event)" maxlength="10" placeholder="Mobile No." type="text"></div>
                     </td>
                     <td><label>Email Id</label></td>
                     <td>
@@ -349,7 +345,7 @@ if(empty($active))
                     <td><input type="text" class="form-control input-inline input-small" value="<?php echo $advance_taken;?>" placeholder="Advance" name="advance_taken" id="ad_taken"></td>
                    
                     <td><label>PAX</label></td> 
-                    <td><input type="text" class="form-control input-inline input-small" placeholder="Pax"  value="<?php echo $pax;?>" name="pax" ></td>                            
+                    <td><div class="form-group"><input type="text" class="form-control input-inline input-small" placeholder="Pax"  value="<?php echo $pax;?>" name="pax"></div></td>                            
                     <td><label>Child</label></td> 
                     <td><input type="text" class="form-control input-inline input-small" placeholder="Child" name="child" value="<?php echo $child;?>"></td></tr>
                     

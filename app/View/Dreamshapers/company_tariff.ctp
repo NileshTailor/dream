@@ -79,7 +79,7 @@ if(empty($active))
                         
                         <tr>
                         <td><label>Tax Applicable<span style="color:#E02222">* </span></label></td>
-                        <td colspan="3"> <select class="form-control select2 select2_sample2 input-large" placeholder="Select Tax..."  name="master_tax_id[]" multiple="multiple" required>
+                        <td colspan="3"> <div class="form-group"><select class="form-control select2 select2_sample2 input-large" placeholder="Select Tax..."  name="master_tax_id[]" multiple="multiple" required>
                                 
                                 <?php
                                 foreach($fetch_master_tax as $data)
@@ -91,7 +91,7 @@ if(empty($active))
                                 <?php
                                 }
                                 ?>
-                            </select></td>
+                            </select></div></td>
                         <td><label>Discount(%)<span style="color:#E02222">* </span></label></td>
                         <td><div class="form-group"><input type="text" class="form-control input-inline input-small" required="required" placeholder="Discount (%)" name="discount" id="discount"></div></td>
                         <td><label>Food Discount(%)</label></td>
@@ -107,7 +107,7 @@ if(empty($active))
                       <table width="100%" style="margin-top:5px;" border="0" id="add_data">
                        <tr id="1">
                    <td><label>Room Type</label></td>
-                    <td class="form-group"><label><div style="float:left; width:60%"><select class=" form-control input-small select2me" 
+                    <td class="form-group"><div class="form-group"><label><div style="float:left; width:60%"><select class=" form-control input-small select2me" 
                     name="master_room_type_id[]" onchange="room_tariff();"  id="rtid1" placeholder="Select...">
                     <option value=""></option>
                     <?php
@@ -118,7 +118,7 @@ if(empty($active))
                     <?php
                     }
                     ?>
-                    </select></div></label>
+                    </select></div></label></div>
                     </td>
                     
                     <td><label>Tarriff Rate</label></td>

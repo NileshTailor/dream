@@ -47,8 +47,7 @@ if(empty($active))
                               <input type="text" class="form-control input-inline input-medium" placeholder="Company Name" name="company_name"  >
                               </div></td>
                         <td width="20%"><div class="form-group"><label>Company Category <span style="color:#E02222">* </span></label></div></td>
-                      	<td width="30%"><div class="form-group" style="float:left; width:60%"><select class="form-control" style="width:120%" name="company_category_id">
-                                            <option value="">-- Select Category --</option>
+                      	<td width="30%"><div class="form-group" style="float:left; width:60%"><select class="form-control" style="width:120%" name="company_category_id">         <option value="">-- Select Category --</option>
                                             <?php
                                             foreach($fetch_company_category as $data)
                                             {
@@ -72,7 +71,7 @@ if(empty($active))
                         </tr>
                         <tr>
                         <td><label>Authorized Person Name</label></td>
-                        <td><input type="text" class="form-control input-inline input-medium" placeholder="Authorized Person Name" name="authorized_person_name"  ></td>
+                        <td><div class="form-group"><input type="text" class="form-control input-inline input-medium" placeholder="Authorized Person Name" name="authorized_person_name"></div></td>
                         
                         <td><label>Contact No.</label></td>
                         <td>

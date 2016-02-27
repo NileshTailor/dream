@@ -69,7 +69,6 @@ if(empty($active))
                                 <input type="radio" name="source_of_booking" value="Company"  id="company" checked="checked"> Company </label>
                                 <label class="radio-inline">							
                                 <input type="radio" name="source_of_booking" value="Direct"  id="direct"> Direct </label>
-                                
                                 <label class="radio-inline">
                                 <input type="radio" name="source_of_booking" value="Travel Agent" id="travelagent"> Travel Agent  </label>
                                 <label class="radio-inline">
@@ -101,7 +100,7 @@ if(empty($active))
                             
                             <tr>
                              <td><label>Guest Name<span style="color:#E02222">* </span></label></td> 
-                        <td><div class="form-group"><input type="text" class="form-control input-inline input-small" placeholder="Guest Name" name="guest_name" id="gname_id"></div>                          </td>
+                        <td><div class="form-group"><input type="text" class="form-control input-inline input-small" placeholder="Guest Name" name="guest_name" id="gname_id"></div></td>
                             
                         <td id="cnameid1"><label>Company Name<span style="color:#E02222">* </span></label></td> 
                         <td id="cnameid2"><div style="float:left; width:60%"><select class=" form-control input-small" name="company_id" onchange="room_rate();" id="cp_id" placeholder="Company">
@@ -167,14 +166,14 @@ if(empty($active))
                             </td>
                        
                         <td><label>Arriving From</label></td> 
-                        <td><input type="text" class="form-control input-inline input-small" placeholder="Arriving From" name="arriving_from" ></td>
+                        <td><div class="form-group"><input type="text" class="form-control input-inline input-small" placeholder="Arriving From" name="arriving_from"></div></td>
                         
                         <td><label>Next Destination</label></td> 
                         <td><input type="text" class="form-control input-inline input-small" placeholder="Next Destination" name="next_destination" ></td>
                         </tr>
                         <tr>
                         <td><label>City</label></td> 
-                        <td><input type="text" class="form-control input-inline input-small" placeholder="City" name="city" id="city" ></td> 
+                        <td><div class="form-group"><input type="text" class="form-control input-inline input-small" placeholder="City" name="city" id="city"></div></td> 
                         <td><label>Nationality</label></td> 
                        <td>
                     <div class="form-group">
@@ -209,7 +208,7 @@ if(empty($active))
                         <td><input type="text" class="form-control input-small" placeholder="Permanent Address" name="permanent_address" ></td>
                         <td><label>Mobile No.</label></td>
                     <td>
-                    <input class="form-control input-small"  name="mobile_no" id="mobile_no"  onkeypress="javascript:return isNumber (event)" maxlength="10" placeholder="Mobile No." type="text">
+                    <div class="form-group"><input class="form-control input-small"  name="mobile_no" id="mobile_no"  onkeypress="javascript:return isNumber (event)" maxlength="10" placeholder="Mobile No." type="text"></div>
                     </td>
                     <td><label>Email Id</label></td>
                     <td>
@@ -345,7 +344,7 @@ if(empty($active))
                     <td align="left"><label>Advance</label></td> 
                     <td><input type="text" class="form-control input-inline input-small" placeholder="Advance" name="advance_taken" id="ad_taken"></td>
                     <td><label>PAX</label></td> 
-                    <td><input type="text" class="form-control input-inline input-small" placeholder="Pax" name="pax" ></td>                            
+                    <td><div class="form-group"><input type="text" class="form-control input-inline input-small" placeholder="Pax" name="pax"></div></td>                            
                     <td><label>Child</label></td> 
                     <td><input type="text" class="form-control input-inline input-small" placeholder="Child" name="child" ></td></tr>
                     

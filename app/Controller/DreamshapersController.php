@@ -16055,10 +16055,8 @@ public function receipt_payment()              ////////  Ashish
         {
             $this->layout='index_layout';
         }
-       
         $this->loadmodel('ledger_category');
         $this->loadmodel('room_reservation');
-       
         if($this->request->is('post'))
         {
             $this->loadmodel('ledger_master');
