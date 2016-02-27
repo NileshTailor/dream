@@ -46,7 +46,7 @@ if(empty($active))
                             </td>
                             <td width="35"><div class="form-group">
 										<div class="col-md-8">
-											<input type="text" placeholder="Category Name" name="category_name" class="form-control input-medium"/>
+											<input type="text" placeholder="Category Name" name="category_name" required class="form-control input-medium"/>
 										</div>
 									</div></td>
         <td colspan="2"><center><button type="submit" name="add_category_name" class="btn green" value="add_category_name"><i class="fa fa-plus"></i> Add</button></center></td>

@@ -15924,8 +15924,8 @@ public function ledger_master()
 		function cashierreport_ajax()
 	{
 		$this->layout='ajax_layout';
-			  echo $from=date('Y-m-d', strtotime($this->request->query('from')));
-			  echo $to=date('Y-m-d', strtotime($this->request->query('to')));
+			  $from=date('Y-m-d', strtotime($this->request->query('from')));
+			  $to=date('Y-m-d', strtotime($this->request->query('to')));
               $conditions=array ('transaction_date between ? and ?' => array($from, $to), array('transaction_type'=>'Receipt'));
 			  $this->loadmodel('ledger'); 
 			  $result_ledger=$this->ledger->find('all',array('conditions'=>$conditions));

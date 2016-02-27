@@ -263,7 +263,7 @@ $(document).ready(function()
 			$('form[name=add]').submit();
 		}
 		else
-		{
+		{	
 			 e.preventDefault();
 		}
 		
@@ -320,6 +320,7 @@ $(document).ready(function()
 	$('select[name=receipt_type]').live('change',function(){
 		var receipt_type=$(this).val();
 		var user_id=$('#user_id').val();
+		alert(user_id);
 		$.ajax({ 
 			url: "ajax_php_file?receipt_type_data=1&receipt_type="+receipt_type+"&user_id="+user_id,
 			type: "POST", 

@@ -16,6 +16,7 @@ $default_date_to = date('d-m-Y')
         <table style="width:60%;">
         
 				<tr>
+                <td><p style="font-size:14px"><b>Cashier Report&nbsp;&nbsp;</b></p></td>
 				<td>
 					<input type="text" class="form-control  input-medium date-picker" data-date-format="dd-mm-yyyy" placeholder="From" value="" name="from" id="date1">
 				</td>
