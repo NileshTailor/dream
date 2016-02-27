@@ -30,17 +30,11 @@ $default_date_to = date('d-m-Y')
                             </select>
 				</td>
 				<td>
-					
 					<input type="text" class="form-control  input-medium date-picker" data-date-format="dd-mm-yyyy" placeholder="From" value="" name="from" id="date1">
-										
 				</td>
-
 				<td>
-							
 				<input type="text" class="form-control  input-medium date-picker" data-date-format="dd-mm-yyyy" placeholder="To" value="" name="to" id="date2">
-				
 				</td>
-		
 				<td valign="top">
 				<button type="button" id="go" name="sub" class="btn blue" style="">Go</button>
 				</td>
@@ -49,7 +43,7 @@ $default_date_to = date('d-m-Y')
 </div>
 </form>
 </center>
-		123
+		
 <div id="ledger_view" style="width:100%;">
 </div>
 <!-----------------------------------End Ledger Form ------------------------------------------>

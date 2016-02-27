@@ -541,60 +541,6 @@ function house_keeping_bill()
 			
 		}
 
-	///////////////////////////////////////////////Company Report///////////////
-	////////////////////////////////
-	public function cashierreport_datewise()
-	{
-		if($this->RequestHandler->isAjax())
-		{
-			$this->layout='ajax_layout';
-		}
-		else
-		{
-			$this->layout='index_layout';
-		}
-		if(isset($this->request->data['submit1']))
-		{
-			$start_date=$this->data["start_date"];
-			$cash_report=$this->data["cash_report"];
-			//pr($cash_report);
-			//exit;	
-			$end_date=$this->data["end_date"];
-			$start_date=date("Y-m-d",strtotime($start_date));
-			$end_date=date("Y-m-d",strtotime($end_date));
-			//echo $start_date;
-			//echo $end_date;
-			$cash_report=$this->data["cash_report"];
-			if($cash_report==1)
-			{
-			echo "<script>
-			location='cashierreport_datewise';
-			window.open('pos_cashierreport?start_date=$start_date&end_date=$end_date','_newtab');
-			</script>";	
-			}
-			else if($cash_report==2){
-			echo "<script>
-			location='cashierreport_datewise';
-			window.open('cashierreport?start_date=$start_date&end_date=$end_date','_newtab');
-			</script>";
-			}
-			else if($cash_report==3){
-			echo "<script>
-			location='cashierreport_datewise';
-			window.open('function_cashierreport?start_date=$start_date&end_date=$end_date','_newtab');
-			</script>";	
-			}
-			else{
-			echo "<script>
-			location='cashierreport_datewise';
-			window.open('combine_cashierreport?start_date=$start_date&end_date=$end_date','_newtab');
-			</script>";	
-			}
-			
-			
-			}
-	}
-		/////////////////////
 		///////////////////////////////////////////////////
 	public function menu_item_report()
 	{
@@ -1105,29 +1051,6 @@ $conditions =array('or' => array(
 		}
 
 	//////////////////////////////////////////////////////////////
-	
-	/////////////////////
-		function pos_cashierreport()
-	{
-		$id=$this->request->query("id");
-		if($this->RequestHandler->isAjax())
-		{
-			$this->layout='ajax_layout';
-		}
-		else
-		{
-			$this->layout='index_layout';
-		}
-		$start_date=$this->request->query("start_date");
-	 	$end_date=$this->request->query("end_date");
-		$conditions =array ('date_to between ? and ?' => array($start_date, $end_date), 'flag1' => 1);
-        $this->loadmodel('room_checkin_checkout');
-		$this->loadmodel('invoiceadd');
-		$this->loadmodel('receipt_checkout');
-		$this->set('fetch_receipt_checkout', $this->receipt_checkout->find('all', array('conditions' => $conditions)));
-		$this->set('fetch_invoiceadd', $this->invoiceadd->find('all'));
-		}
-	//////////////////////////////////////////////////////////////
 	public function room_reservation_report()
         {
 			if($this->RequestHandler->isAjax())
@@ -1264,26 +1187,6 @@ $conditions =array('or' => array(
 		
 	/////////////////////
 	
-		function combine_cashierreport()
-	{
-		$id=$this->request->query("id");
-		if($this->RequestHandler->isAjax())
-		{
-			$this->layout='ajax_layout';
-		}
-		else
-		{
-			$this->layout='index_layout';
-		}
-		$start_date=$this->request->query("start_date");
-	 	$end_date=$this->request->query("end_date");
-		$conditions =array ('date_to between ? and ?' => array($start_date, $end_date));
-        $this->loadmodel('room_checkin_checkout');
-		$this->loadmodel('invoiceadd');
-		$this->loadmodel('receipt_checkout');
-		$this->set('fetch_receipt_checkout', $this->receipt_checkout->find('all', array('conditions' => $conditions)));
-		$this->set('fetch_invoiceadd', $this->invoiceadd->find('all'));
-		}
 	//////////////////////////////////////////////////////////////
 	
 		function account_sheet()
@@ -15876,18 +15779,21 @@ function fetch_ledger_master_id($id){
 	
 	$this->loadmodel('ledger_master');
 	$conditions=array('id'=>(int)$id);
-	
 	return $this->ledger_master->find('all',array('conditions'=>$conditions));
-	
 }
 
 
-function fetch_ledger_cr_dr_id($id, $ledger_m_id){
-	
+function fetch_ledger_cr_dr_id($ledger_id, $ledger_m_id){
 	$this->loadmodel('ledger_cr_dr');
-	$conditions=array('ledger_id'=>(int)$id,'ledger_master_id'=>(int)$ledger_m_id);
+	$conditions=array('ledger_id'=>(int)$ledger_id,'ledger_master_id'=>(int)$ledger_m_id);
 	
 	return $this->ledger_cr_dr->find('all',array('conditions'=>$conditions));
+	
+}
+
+function fetch_ledger_cr_dr_id121($id125,$id126,$id127,$id128){
+	$this->loadmodel('ledger_cr_dr');
+	return $this->ledger_cr_dr->find('all',array('conditions'=>array('OR'=>array(array('ledger_master_id'=>$id125),array('ledger_master_id'=>$id126),array('ledger_master_id'=>$id127),array('ledger_master_id'=>$id128)))));
 	
 }
 
@@ -16006,6 +15912,37 @@ public function ledger_master()
 			$result_ledger=$this->ledger->find('all',array('conditions'=>$conditions));
 		
 	}
+	///////////////////////////////////
+	public function cashierreport_datewise()
+	{
+		if($this->RequestHandler->isAjax()){
+			$this->layout='ajax_layout';
+		}
+		else{
+			$this->layout='index_layout';
+		    }
+	}
+	
+		function cashierreport_ajax()
+	{
+		$this->layout='ajax_layout';
+			  echo $from=date('Y-m-d', strtotime($this->request->query('from')));
+			  echo $to=date('Y-m-d', strtotime($this->request->query('to')));
+              $conditions=array ('transaction_date between ? and ?' => array($from, $to), array('transaction_type'=>'Receipt'));
+			  $this->loadmodel('ledger'); 
+			  $result_ledger=$this->ledger->find('all',array('conditions'=>$conditions));
+			  $this->set('result_ledger',$result_ledger);
+			 $this->loadmodel('ledger_master');
+			 $fetch_ledger_category=$this->ledger_master->find('all');
+			 $this->set('fetch_ledger_category',$fetch_ledger_category);
+			 $this->set('from',$from);
+			 $this->set('to',$to);
+		}
+
+	
+	
+	
+	
 	//////////////////////////////////
 	function pos_ledger_report(){
 		 if($this->RequestHandler->isAjax()){
@@ -16020,15 +15957,17 @@ public function ledger_master()
 	    function pos_report_ajax(){
 		$this->layout='ajax_layout';
 			
-			  $ledger_category_id=$this->request->query('ledger_master_id');
+			 $ledger_category_id=$this->request->query('ledger_master_id');
 			  $from=date('Y-m-d', strtotime($this->request->query('from')));
 			  $to=date('Y-m-d', strtotime($this->request->query('to')));
-              $conditions=array ('transaction_date between ? and ?' => array($from, $to));
+              $conditions=array ('transaction_date between ? and ?' => array($from, $to), array('ledger_category_id'=>$ledger_category_id));
 			  $this->loadmodel('ledger'); 
 			  $result_ledger=$this->ledger->find('all',array('conditions'=>$conditions));
+			 
+			  
 			  $this->set('result_ledger',$result_ledger);
 			 $this->loadmodel('ledger_master');
-			 $fetch_ledger_category=$this->ledger_master->find('all', array('conditions'=>array('ledger_category_id'=>$ledger_category_id,'id'=>$ledger_cat_id)));
+			 $fetch_ledger_category=$this->ledger_master->find('all', array('conditions'=>array('ledger_category_id'=>$ledger_category_id)));
 			//pr($fetch_ledger_category);
 			 $this->set('fetch_ledger_category',$fetch_ledger_category);
 			 $this->set('from',$from);

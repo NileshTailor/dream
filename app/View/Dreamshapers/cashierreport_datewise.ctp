@@ -1,56 +1,69 @@
-   <div class="table-responsive">
+<style media="print">
+.print-hide
+{
+	display:none;
+}
+</style>
+		
+<!-------------------------------Start Ledger Form ------------------------------------------------->
+<?php  
+$default_date_from = date('1-m-Y'); 
+$default_date_to = date('d-m-Y')
+?> 
+<center>
+<form method="post" onSubmit="return valid()">
+<div class="print-hide">
+        <table style="width:60%;">
+        
+				<tr>
+				<td>
+					<input type="text" class="form-control  input-medium date-picker" data-date-format="dd-mm-yyyy" placeholder="From" value="" name="from" id="date1">
+				</td>
+				<td>
+				<input type="text" class="form-control  input-medium date-picker" data-date-format="dd-mm-yyyy" placeholder="To" value="" name="to" id="date2">
+				</td>
+				<td valign="top">
+				<button type="button" id="go" name="sub" class="btn blue" style="">Go</button>
+				</td>
+		</tr>
+</table>
+</div>
+</form>
+</center>
+		
+<div id="ledger_view" style="width:100%;">
+</div>
+<!-----------------------------------End Ledger Form ------------------------------------------>
+ 		
+<!------------------------------------ Start Java Script --------------------------------->
+<script>
+$(document).ready(function(){
+	
+	   $('select[name=ledger_category_id]').live('change',function(){
+		var ledger_category_id=$(this).val();
+		$('select[name="invoice_id[]"]').empty();
+		$.ajax({ 
+			url: "ajax_php_file?receipt_payment_mode_fetch=1&q="+ledger_category_id,
+			success: function(data)
+			{ 
+				$("#user_id").html(data);
+			}
+			});
+	});
+	
+});
+</script>			
+		
+<script>
+$(document).ready(function() {
+	
+	    $("#go").live('click',function(){
+				var from=$('#date1').val();
+				var to=$('#date2').val();
+				$("#ledger_view").html('loading.....').load("cashierreport_ajax?&from="+from+"&to="+to);
 
-                        <div class="portlet box blue" style="border:#FFF !important">
-                            <div class="portlet-title box white">
-                                <div class="caption">
-                                    <i class="fa fa-book"></i><strong>Cashier Report</strong>
-                                </div>
-                            </div>
-                                <div class="portlet-body">
-                                <form method="post" enctype="multipart/form-data">
-                                <table border="0" width="100%">
-                                <tr><td align="center" style="padding-left:295px">
-                                
-                                
-                                <table border="0" width="100%" align="center">
-                                <tr>
-                                <td>
-                            <div class="radio-list">
-                            <label class="radio-inline">
-                            <input type="radio" name="cash_report" value="0"  id="room_service2" checked="checked">Combine Report</label>
-                                <label class="radio-inline">		
-                               <input type="radio" name="cash_report" value="1"  id="room_service1">POS Report</label>
-                               <label class="radio-inline">		
-                               <input type="radio" name="cash_report" value="2"  id="room_service1">Room Report</label>
-                               <label class="radio-inline">		
-                               <input type="radio" name="cash_report" value="3"  id="room_service1">Function Report</label>
-                               
-                                </div>
-                                </td>
-                                </tr>
-                                </table></td></tr>
-                                <tr><td style="padding-left:100px">
-                                
-                               
-                                <table align="center" width="50%" border="0" style="margin-top:20px"><tr class="print-hide"><td>
-                                <div class="form-group">
-                                    <div class="col-md-4">
-                                            <div class="input-group input-large date-picker input-daterange" data-date-format="dd-mm-yyyy">
-                                                <input type="text"  name="start_date"value="<?php echo date('d-m-Y'); ?>" placeholder="Start Date" class="form-control">
-                                                <span class="input-group-addon">
-                                                to </span>
-                                                <input type="text" name="end_date" value="<?php echo date('d-m-Y'); ?>" placeholder="End Date" class="form-control">
-                                            </div>
-                                        </div>
-                                    </div>
-                                </td>
-                               <td><label style="margin-left:0px;"><button type="submit1" name="submit1" class="btn red btn-sm"><i class="fa fa-print"></i> Report</button></label></td>
-            <!-- <td><label style="margin-left:10px;"><button class="btn red btn-sm" onclick="window.print()"><i class="fa fa-print"></i> Report</button></label></td>
-             <td><label style="margin-left:10px;"><a class="btn blue btn-sm"  href="excel_companyreport" target="_blank"><i class="fa fa-file-excel-o"></i> Excel</a></label></td>-->
-                                </tr>
-                                </table></td></tr></table>
-                                </form>
-                                <span style="margin-top:20px" id="view_data"></span>
-                                </div>
-                            </div>
-                        </div>
+	});
+});
+</script>			
+
+<!------------------------------------End Java Script Code------------------------------------->
