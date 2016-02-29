@@ -16177,7 +16177,6 @@ public function receipt_payment()              ////////  Ashish
                     $this->ledger_cr_dr->saveAll(array('ledger_id'=>$ledger_id,'ledger_master_id'=>37,'dr'=>$this->request->data['amount']));
                 }
 				
-               
             }
         }
         $this->set('fetch_ledger_category', $this->ledger_category->find('all'));
