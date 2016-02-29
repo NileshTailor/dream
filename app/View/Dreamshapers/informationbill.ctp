@@ -510,12 +510,11 @@ $crsubtotal=$grandsub-$receive_amount;
          
 <tr>
 <?php 
-       
         $i=0;
-		 foreach($fetch_room_checkin_checkout as $data){ 
+		 foreach($fetch_data_for_receiptt as $data1){ 
 		 $i++;
-		 $id=$data['room_checkin_checkout'] ['id'];
-          $master_roomno_id=$data['room_checkin_checkout'] ['master_roomno_id'];
+		 $id=$data1['checkout'] ['id'];
+         $check_id=$data1['checkout']['check_id'];
 		 ?>
 <td colspan="5" style="padding-top:10px; padding-bottom:10px">
 <table border="1" style="width:60%; padding-top:10px;" align="center">
@@ -527,26 +526,33 @@ $crsubtotal=$grandsub-$receive_amount;
 <td style=" background-color:#36F; padding-left:5px; font-family:Georgia, 'Times New Roman', Times, serif"><b>Date</b></td>
 </tr>
 
-<?php $fetch_data_for_receiptt=$this->requestAction(array('controller' => 'Dreamshapers', 'action' => 'fetch_data_for_receiptt',$data['room_checkin_checkout']['card_no'],$master_roomno_id, $id), array());
-       
-		$total=0;
-		 foreach($fetch_data_for_receiptt as $data1){ 
-		 $id_receipt=$data1['receipt_checkout'] ['id'];
+<?php $fetch_data_for_receipt_checkouttt=$this->requestAction(array('controller' => 'Dreamshapers', 'action' => 'fetch_data_for_receipt_checkouttt',$id), array());
+	   
+		 $total=0;
+		 foreach($fetch_data_for_receipt_checkouttt as $data1){ 
+		 $id_receipt=$data1['ledger'] ['id'];
+		 $receipt_mode=$data1['ledger'] ['receipt_mode'];
+		 $bank_name=$data1['ledger'] ['bank_name'];
+		 $credit_card_name=$data1['ledger'] ['credit_card_name'];
+		 $credit_card_no=$data1['ledger'] ['credit_card_no'];
+		 $credit_card_no=$data1['ledger'] ['transaction_date'];
 		 ?>
-<tr><td style="padding-left:5px;"><?php echo $data1['receipt_checkout']['recpt_type'];?></td>
+<tr><td style="padding-left:5px;"><?php echo $data1['ledger']['receipt_mode'];?></td>
 
 <td style="padding-left:5px;">
-<?php echo $data1['receipt_checkout']['credit_card_no'];?>	
-<?php echo $data1['receipt_checkout']['cheque_no'];?>
-<?php echo $data1['receipt_checkout']['neft_no'];?>
-</td>
+<?php echo $data1['ledger']['bank_name'];?> - <?php echo $data1['ledger']['credit_card_name'];?> - <?php echo $data1['ledger']['credit_card_no'];?></td>
 
+<?php $fetch_data_for_receipt_checkout=$this->requestAction(array('controller' => 'Dreamshapers', 'action' => 'fetch_data_for_receipt_checkout',$id), array());
+	   
+		 $total=0;
+		 foreach($fetch_data_for_receipt_checkout as $data1){ 
+		 $id_receipt=$data1['ledger_cr_dr'] ['id'];
+		 ?>
 
-<td style="padding-left:5px;"><?php echo $data1['receipt_checkout']['cash'];?>
-<?php echo $data1['receipt_checkout']['credit_card_amt'];?>
-<?php echo $data1['receipt_checkout']['cheque_amt'];?>
-<?php echo $data1['receipt_checkout']['neft_amt'];?>
+<td style="padding-left:5px;"><?php echo $data1['ledger_cr_dr']['dr'];?>
 </td>
+<?php 
+}?>	
 <td style="padding-left:5px;">&nbsp;
 </td>
 </tr>

@@ -50,19 +50,14 @@
 		$xyz=0;
 		$cool=0;
 		$zero=0;
-		 foreach($fetch_bill as $data){ 
+		 foreach($fetch_checkout as $data){ 
 		 $i++;
-		 $id=$data['bill'] ['id'];
-         $company_id=$data['bill']['company_id'];
-		 $total=$data['bill']['total'];
-		
-		 $cash=$data['bill']['cash'];
-		 $neft_amt=$data['bill']['neft_amt'];
-		 $cheque_amt=$data['bill']['cheque_amt'];
-		 $credit_card_amt=$data['bill']['credit_card_amt'];
+		 $id=$data['checkout'] ['id'];
+         $company_id=$data['checkout']['user_id'];
+		 $total_amount=$data['checkout']['total_amount'];
+		 $receive_amount=$data['checkout']['receive_amount'];
+		 $due_amount=$data['checkout']['due_amount'];
 
-		    $xyz=$cash+$neft_amt+$cheque_amt+$credit_card_amt+$zero;
-		    $cool=$total-$xyz;
 			
 			
 			
@@ -140,68 +135,63 @@
 		$xyz=0;
 		$zero=0;
 		$cool=0;
-		 foreach($fetch_bill as $data){ 
+		 foreach($fetch_checkout as $data){ 
 		 
-	     $id=$data['bill'] ['id'];
-		 $company_id=$data['bill']['company_id'];
-		 $date=$data['bill']['date'];
-		 $guest_name=$data['bill']['guest_name'];
-		 $bill_no_id=$data['bill']['bill_no_id'];
-		 $card_no=$data['bill']['card_no'];
-		  $total=$data['bill']['total'];
-		 $cash=$data['bill']['cash'];
-		 $neft_amt=$data['bill']['neft_amt'];
-		 $cheque_amt=$data['bill']['cheque_amt'];
-		 $credit_card_amt=$data['bill']['credit_card_amt'];
+	     $id=$data['checkout'] ['id'];
+		 $company_id=$data['checkout']['user_id'];
+		 $date=$data['checkout']['date'];
+		 $guest_name=$data['checkout']['guest_name'];
+		 $card_no=$data['checkout']['card_no'];
+		  $total_amount=$data['checkout']['total_amount'];
+		 $receive_amount=$data['checkout']['receive_amount'];
+		 $due_amount=$data['checkout']['due_amount'];
 
-		    $xyz=$cash+$neft_amt+$cheque_amt+$credit_card_amt+$zero;
-		    $cool=$total-$xyz;
 		 
-		 if($cool>0)
+		 if($due_amount>0)
 		 {
 			 $i++;
-			 $cool;
-		 $company_id=$data['bill']['company_id'];
-		 $date=$data['bill']['date'];
-		 $guest_name=$data['bill']['guest_name'];
-		 $bill_no_id=$data['bill']['bill_no_id'];
-		 $card_no=$data['bill']['card_no'];
+			 $due_amount;
+		 $company_id=$data['checkout']['user_id'];
+		 $date=$data['checkout']['date'];
+		 $guest_name=$data['checkout']['guest_name'];
+		 $bill_no_id=$data['checkout']['id'];
+		 $card_no=$data['checkout']['card_no'];
 
 		 }
 		 else
 		 {
 			
-		 $cool=''; 
+		 $due_amount=''; 
 		 $company_id='';
 		 $date='';
 		 $guest_name='';
-		 $bill_no_id='';
+		 $id='';
 		 $card_no='';
 		 }
-		if($cool>0){ ?>
+		if($due_amount>0){ ?>
 <tr>
 <td style="text-align:left; padding-left:10px; width:5%;"><?php echo $i;?>
-<td style="text-align:left; padding-left:10px; width:10%;"><?php echo $bill_no_id;?>
+<td style="text-align:left; padding-left:10px; width:10%;"><?php echo $id;?>
 <td style="text-align:right;padding-right: 10px; width:10%;"><?php echo $date;?></td>
-<td style="text-align:right;padding-right: 10px; width:10%;"><?php echo @$cool;?></td>
-<td style="text-align:right;padding-right: 10px; width:10%;"><?php echo $cool;?></td>
+<td style="text-align:right;padding-right: 10px; width:10%;"><?php echo @$due_amount;?></td>
+<td style="text-align:right;padding-right: 10px; width:10%;"><?php echo $due_amount;?></td>
 <td style="text-align:right;padding-right: 15px; width:10%;"></td>
 <td style="text-align:right;padding-right: 15px; width:10%;"></td>
 <td style="text-align:right;padding-right: 15px; width:10%;"></td>
-<td style="text-align:right;padding-right: 10px; width:10%;"><?php echo $cool;?></td>
+<td style="text-align:right;padding-right: 10px; width:10%;"><?php echo $due_amount;?></td>
 </tr>
 
 <tr>
 <td style="text-align:left; padding-left:10px; width:80%;" colspan="9">
-<div align="center" style="padding: 0px;font-size: 12px; font-family:'Trebuchet MS', Arial, Helvetica, sans-serif;">"Bill No.:<?php echo $bill_no_id;?>,
-Reg. Card No:<?php echo $data['bill']['card_no'];?>,
-Guest Name:<?php echo $data['bill']['guest_name'];?>&nbsp;/&nbsp;<?php
+<div align="center" style="padding: 0px;font-size: 12px; font-family:'Trebuchet MS', Arial, Helvetica, sans-serif;">"Bill No.:<?php echo $id;?>,
+Reg. Card No:<?php echo $data['checkout']['card_no'];?>,
+Guest Name:<?php echo $data['checkout']['guest_name'];?>&nbsp;/&nbsp;<?php
 echo @$company_registration_fetch_id=$this->requestAction(array('controller' => 'Dreamshapers', 'action' => 'company_registration_fetch', $company_id), array()); ?>&nbsp;
 Checkout:<?php echo $date;?>,
 </div></td></tr>
 
 <?php 
-$totalll=$totalll+$cool; 
+$totalll=$totalll+$due_amount; 
 		}
  }?>
 
