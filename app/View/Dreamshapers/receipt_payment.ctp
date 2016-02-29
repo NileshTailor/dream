@@ -228,7 +228,7 @@ $(document).ready(function()
 		$(this).closest('form').find('input[name="amount"]').val(amount);
 		$(this).closest('form').find('input[name="user_id"]').val(user_id);
 	});
-	$('select[name=ledger_category_id]').live('change',function(){
+	$('select[name=ledger_category_id]').die().live('change',function(){
 		var ledger_category_id=$(this).val();
 		$('select[name="invoice_id[]"]').empty();
 		$.ajax({ 
@@ -317,10 +317,9 @@ $(document).ready(function()
 		$('input[name=received_amount]').val(amount-(discount+tds));
 	});
 	
-	$('select[name=receipt_type]').live('change',function(){
+	$('select[name=receipt_type]').die().live('change',function(){
 		var receipt_type=$(this).val();
 		var user_id=$('#user_id').val();
-		alert(user_id);
 		$.ajax({ 
 			url: "ajax_php_file?receipt_type_data=1&receipt_type="+receipt_type+"&user_id="+user_id,
 			type: "POST", 

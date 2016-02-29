@@ -6383,7 +6383,7 @@ public function outstanding()
                 echo '<option value="">--- Select Master ---</option>';
                 foreach($fetch_ledger_receipt as $ledger_data)
                 {
-                    ?><option  value="<?php echo $ledger_data['ledger_master']['id']; ?>"><?php echo  $ledger_data['ledger_master']['name']; ?></option> <?php
+                    ?><option  value="<?php echo $ledger_data['ledger_master']['user_id']; ?>"><?php echo  $ledger_data['ledger_master']['name']; ?></option> <?php
                 }
                 exit;
         }
