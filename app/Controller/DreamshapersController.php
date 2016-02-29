@@ -16077,6 +16077,18 @@ public function receipt_payment()              ////////  Ashish
                     {
                         $this->loadmodel('checkout');
                         $this->checkout->updateAll(array("status"=>"'$status'","due_amount"=>"'$due_amount'"),array('id' => $invoice_id));
+						/////////////// SMS+EMail /////////////////
+						$fetch_checkout_id=$this->checkout->find('all',array('fields'=>array('check_id'),'conditions'=>array('id'=> $this->request->data['invoice_id'])));
+						
+						$this->loadmodel('room_checkin_checkout');
+						$fetch_room_checkin_checkout=$this->room_checkin_checkout->find('all',array('fields'=>array('mobile_no','email_id'),'conditions'=>array('id'=> $fetch_checkout_id[0]['checkout']['check_id'])));
+						
+						$mobile_no=$fetch_room_checkin_checkout[0]['room_checkin_checkout']['mobile_no'];
+						$email_id=$fetch_room_checkin_checkout[0]['room_checkin_checkout']['email_id'];
+						$sms=str_replace(' ', '+', 'We have received payment. Thank you.');
+						$this->requestAction(array('controller' => 'Dreamshapers', 'action' => 'send_money_sms',$sms,$mobile_no), array());
+						$this->smtpmailer($email_id,'Dreamshapers','Enquiry', "hello" ,$email_id);
+						/////////////// --- /////////////////
                     }
                     else if($this->request->data['receipt_type']=='POS')
                     {
@@ -16177,6 +16189,13 @@ public function receipt_payment()              ////////  Ashish
                     $this->ledger_cr_dr->saveAll(array('ledger_id'=>$ledger_id,'ledger_master_id'=>37,'dr'=>$this->request->data['amount']));
                 }
 				
+				$fetch_room_reservation_id=$this->room_reservation->find('all',array('fields'=>array('telephone','email_id'),'conditions'=>array('id'=> $this->request->data['invoice_id'])));
+				
+				$mobile_no=$fetch_room_reservation_id[0]['room_reservation']['telephone'];
+				$email_id=$fetch_room_reservation_id[0]['room_reservation']['email_id'];
+				$sms=str_replace(' ', '+', 'We have received payment. Thank you.');
+				$this->requestAction(array('controller' => 'Dreamshapers', 'action' => 'send_money_sms',$sms,$mobile_no), array());
+				$this->smtpmailer($email_id,'Dreamshapers','Enquiry', "hello" ,$email_id);
             }
         }
         $this->set('fetch_ledger_category', $this->ledger_category->find('all'));
@@ -16195,51 +16214,15 @@ public function receipt_payment()              ////////  Ashish
         }
        
         $this->loadmodel('ledger_category');
-        $this->loadmodel('room_reservation');
        
         if($this->request->is('post'))
         {
             $this->loadmodel('ledger_master');
             $this->loadmodel('ledger');
             $this->loadmodel('ledger_cr_dr');
-            if(isset($this->request->data["add_receipt_payment"]))
+            if(isset($this->request->data["add_payment"]))
             {
-                foreach($this->request->data['invoice_id'] as $invoice_id)
-                {
-                    $status=0;
-                     $due_amount=$this->request->data['gross_amount']-$this->request->data['received_amount'];
-                   
-                    if($this->request->data['gross_amount']==$this->request->data['received_amount'])
-                    {
-                        $status=1;
-                    }
-					if($this->request->data['receipt_type']=='Room')
-                    {
-                        $this->loadmodel('checkout');
-                        $this->checkout->updateAll(array("status"=>"'$status'","due_amount"=>"'$due_amount'"),array('id' => $invoice_id));
-                    }
-                    else if($this->request->data['receipt_type']=='POS')
-                    {
-                        $this->loadmodel('pos_kot');
-                        $this->pos_kot->updateAll(array("flag1"=>"'$status'","due_amount"=>"'$due_amount'"),array('id' => $invoice_id));
-                    }
-                    else if($this->request->data['receipt_type']=='House Keeping')
-                    {
-                        $this->loadmodel('house_keeping');
-                        $this->house_keeping->updateAll(array("status"=>"'$status'","due_amount"=>"'$due_amount'"),array('id' => $invoice_id));
-                    }
-                    else if($this->request->data['receipt_type']=='Other Service')
-                    {
-                        $this->loadmodel('other_service');
-                        $this->other_service->updateAll(array("status"=>"'$status'","due_amount"=>"'$due_amount'"),array('id' => $invoice_id));
-                    }
-                    else if($this->request->data['receipt_type']=='Outlet')
-                    {
-                        $this->loadmodel('function_booking');
-                        $this->function_booking->updateAll(array("status"=>"'$status'","due_amount"=>"'$due_amount'"),array('id' => $invoice_id));
-                    }
-                   
-                }
+               
                 $this->request->data["date"]=date('Y-m-d');
                 $this->request->data['invoice_id']=implode(',',$this->request->data['invoice_id']);
                 if(!empty($this->request->data["cheque_date"]))
@@ -16248,80 +16231,40 @@ public function receipt_payment()              ////////  Ashish
                 }
                
                 $this->request->data["transaction_date"]=date('Y-m-d', strtotime($this->request->data["transaction_date"]));
-                $fetch_transaction_id=$this->ledger->find('count',array('conditions'=>array('transaction_type'=>'Receipt')));
+                $fetch_transaction_id=$this->ledger->find('count',array('conditions'=>array('transaction_type'=>'Payment')));
                 $this->request->data['transaction_id']=$fetch_transaction_id+1;
-                $this->request->data['transaction_type']='Receipt';
+                $this->request->data['transaction_type']='Payment';
                 $this->request->data=array_filter($this->request->data);
                 $this->ledger->saveAll($this->request->data);
                
                 $ledger_id=$this->ledger->getLastInsertID();
                 $fetch_ledger_master_id=$this->ledger_master->find('all',array('conditions'=>array('ledger_category_id'=>$this->request->data["ledger_category_id"],'user_id'=>$this->request->data["user_id"])));
                
-                $this->ledger_cr_dr->saveAll(array('ledger_id'=>$ledger_id,'ledger_master_id'=>$fetch_ledger_master_id[0]['ledger_master']['id'],'cr'=>$this->request->data['received_amount']));
-                if(empty($this->request->data['discount']))
-                {
-                    $this->request->data['discount']=0;
-                }
+                $this->ledger_cr_dr->saveAll(array('ledger_id'=>$ledger_id,'ledger_master_id'=>$fetch_ledger_master_id[0]['ledger_master']['id'],'dr'=>$this->request->data['gross_amount']));
+               
                 if(empty($this->request->data['tds']))
                 {
                     $this->request->data['tds']=0;
                 }
-                $amount=$this->request->data['received_amount']-($this->request->data['discount']+$this->request->data['tds']);
+                $amount=$this->request->data['gross_amount']-$this->request->data['tds'];
                 if($this->request->data['receipt_mode']=='Cash')
                 {
-                    $this->ledger_cr_dr->saveAll(array('ledger_id'=>$ledger_id,'ledger_master_id'=>35,'dr'=>$amount));
+                    $this->ledger_cr_dr->saveAll(array('ledger_id'=>$ledger_id,'ledger_master_id'=>35,'cr'=>$amount));
                 }
                 else
                 {
-                    $this->ledger_cr_dr->saveAll(array('ledger_id'=>$ledger_id,'ledger_master_id'=>37,'dr'=>$amount));
+                    $this->ledger_cr_dr->saveAll(array('ledger_id'=>$ledger_id,'ledger_master_id'=>37,'cr'=>$amount));
                 }
-                if($this->request->data['discount']>0)
-                {
-                    $this->ledger_cr_dr->saveAll(array('ledger_id'=>$ledger_id,'ledger_master_id'=>10,'dr'=>$this->request->data['discount']));
-                }
+               
                 if($this->request->data['tds']>0)
                 {
-                    $this->ledger_cr_dr->saveAll(array('ledger_id'=>$ledger_id,'ledger_master_id'=>30,'dr'=>$this->request->data['tds']));
+                    $this->ledger_cr_dr->saveAll(array('ledger_id'=>$ledger_id,'ledger_master_id'=>30,'cr'=>$this->request->data['tds']));
                 }
            	}
-			if(isset($this->request->data["advance"]))
-            {
-                
-			    $status=1;
-			    $this->loadmodel('room_reservation');
-			    $this->room_reservation->updateAll(array("receipt_status"=>"'$status'"),array('id' => $this->request->data['invoice_id']));
-				
-                $this->request->data["date"]=date('Y-m-d');
-                if(!empty($this->request->data["cheque_date"]))
-                {
-                    $this->request->data["cheque_date"]=date('Y-m-d', strtotime($this->request->data["cheque_date"]));
-                }
-                $this->request->data["ledger_category_id"]='1';
-                $this->request->data["transaction_date"]=date('Y-m-d', strtotime($this->request->data["transaction_date"]));
-                $fetch_transaction_id=$this->ledger->find('count',array('conditions'=>array('transaction_type'=>'Receipt')));
-                $this->request->data['transaction_id']=$fetch_transaction_id+1;
-                $this->request->data['transaction_type']='Receipt';
-                $this->request->data=array_filter($this->request->data);
-                $this->ledger->saveAll($this->request->data);
-               
-                $ledger_id=$this->ledger->getLastInsertID();
-                $fetch_ledger_master_id=$this->ledger_master->find('all',array('conditions'=>array('ledger_category_id'=>$this->request->data["ledger_category_id"],'user_id'=>$this->request->data["user_id"])));
-               
-                $this->ledger_cr_dr->saveAll(array('ledger_id'=>$ledger_id,'ledger_master_id'=>$fetch_ledger_master_id[0]['ledger_master']['id'],'cr'=>$this->request->data['amount']));
-				if($this->request->data['receipt_mode']=='Cash')
-                {
-                    $this->ledger_cr_dr->saveAll(array('ledger_id'=>$ledger_id,'ledger_master_id'=>35,'dr'=>$this->request->data['amount']));
-                }
-                else
-                {
-                    $this->ledger_cr_dr->saveAll(array('ledger_id'=>$ledger_id,'ledger_master_id'=>37,'dr'=>$this->request->data['amount']));
-                }
-				
-               
-            }
+			
         }
         $this->set('fetch_ledger_category', $this->ledger_category->find('all'));
-		$this->set('fetch_room_reservation', $this->room_reservation->find('all',array('fields'=>array('advance','id','company_id','name_person'),'conditions'=>array('receipt_status'=>0,'advance >'=>0))));
+		
            
     }
 	
@@ -17452,6 +17395,13 @@ public function receipt_payment()              ////////  Ashish
 		$working_key='A1d987e6da856f0d2de06aa0456dcb04b';
 		$sms_sender='PHPHTL';
 		$sms=str_replace(' ', '+', 'Thank you for choosing us for your stay.');
+		file_get_contents('http://alerts.sinfini.com/api/web2sms.php?workingkey='.$working_key.'&sender='.$sms_sender.'&to='.$mobile_no.'&message='.$sms.'');
+	}
+	public function send_money_sms($sms,$mobile_no)
+	{ 	
+		$working_key='A1d987e6da856f0d2de06aa0456dcb04b';
+		$sms_sender='PHPHTL';
+		
 		file_get_contents('http://alerts.sinfini.com/api/web2sms.php?workingkey='.$working_key.'&sender='.$sms_sender.'&to='.$mobile_no.'&message='.$sms.'');
 	}
 ///////////////////////////////////

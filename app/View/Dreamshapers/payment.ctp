@@ -50,7 +50,7 @@ if(empty($active))
                             </td>
                            <td>Invoice Reference</td>
                             <td>
-                            <div class="form-group"><input type="text" class="form-control input-medium" placeholder="Invoice Reference" name="invoice_reference" ></div>
+                            <div class="form-group"><input type="text" class="form-control input-medium" placeholder="Invoice Reference" name="invoice_id[]" ></div>
                             </td>
                         </tr>
                     	
@@ -102,7 +102,7 @@ if(empty($active))
                         <td><div class="form-group"><input type="text" class="form-control input-medium" placeholder="NEFT No." name="neft_no"></div></td>
                         </tr>
                         <tr>
-                        <td colspan="6"><center><button name="add_receipt_payment"  type="submit" class="btn green"><i class="fa fa-plus"></i> Submit</button></center></td>
+                        <td colspan="6"><center><button name="add_payment"  type="submit" class="btn green"><i class="fa fa-plus"></i> Submit</button></center></td>
                         </tr>
                         </table>
                      </div>
@@ -123,15 +123,9 @@ $(document).ready(function()
 	{
 		$("#success").hide();
 	}
-	$('select[name=invoice_id]').live('change',function(){
-		var amount=$('option:selected',this).attr('advance');
-		var user_id=$('option:selected',this).attr('user_id');
-		$(this).closest('form').find('input[name="amount"]').val(amount);
-		$(this).closest('form').find('input[name="user_id"]').val(user_id);
-	});
-	$('select[name=ledger_category_id]').live('change',function(){
+	
+	$('select[name=ledger_category_id]').die().live('change',function(){
 		var ledger_category_id=$(this).val();
-		$('select[name="invoice_id[]"]').empty();
 		$.ajax({ 
 			url: "ajax_php_file?receipt_payment_mode_fetch=1&q="+ledger_category_id,
 			success: function(data)
@@ -141,33 +135,12 @@ $(document).ready(function()
 			});
 	});
 	$('form[name=add]').submit(function(e){
-		var count=0;
-		 $('select[name="invoice_id[]"] option:selected').each(function(){
-			
-			count++;
-		});
-		if(count>1)
-		{
-			var gross_amount=eval($('input[name=gross_amount]').val());
-			var received_amount=eval($('input[name=received_amount]').val());
-			if(gross_amount==received_amount)
-			{
-				$('form[name=add]').submit();
-			}
-			else
-			{
-				 e.preventDefault();
-			}
-		}
-		else if(count==1)
-		{
-			$('form[name=add]').submit();
-		}
-		else
+		var data=$('input[name="invoice_id[]"]').val();
+		var count=data.split(',').length;
+		if(count==0)
 		{
 			 e.preventDefault();
 		}
-		
 	});	
 	
 	$('input[name=receipt_mode]').live('change',function(){
@@ -177,60 +150,33 @@ $(document).ready(function()
 		$(this).closest('form').find('#'+cls).removeAttr('style');
 		
 	});
-	$('select[name="invoice_id[]"]').live('change',function(){
-		var amount=0;
-		$('option:selected',this).each(function(){
-			amount+=eval($(this).attr('pos_net_amount'))
-			
-		});
-		$(this).closest('form').find('input[name="amount"]').val(amount);
-		$('input[name=gross_amount]').val(amount);
+	$('input[name=amount]').live('keypress',function(){
 		
-		var discount=eval($('input[name=discount]').val());
-		if(discount==undefined)
-		{
-			discount=0;
-		}
+		var amount=$(this).val();
 		var tds=eval($('input[name=tds]').val());
 		if(tds==undefined)
 		{
 			tds=0;
 		}
-		$('input[name=gross_amount]').val(amount-(discount+tds));
-		$('input[name=received_amount]').val(amount-(discount+tds));
+		$('input[name=gross_amount]').val(amount-tds);
+		
 	});
+	
 	
 	
 	$('.tds_discount').live('keyup',function(){
 		
-		var discount=eval($('input[name=discount]').val());
-		if(discount==undefined)
-		{
-			discount=0;
-		}
+		
 		var amount=eval($(this).closest('form').find('input[name="amount"]').val());
 		var tds=eval($('input[name=tds]').val());
 		if(tds==undefined)
 		{
 			tds=0;
 		}
-		$('input[name=gross_amount]').val(amount-(discount+tds));
-		$('input[name=received_amount]').val(amount-(discount+tds));
+		$('input[name=gross_amount]').val(amount-tds);
+		
 	});
 	
-	$('select[name=receipt_type]').live('change',function(){
-		var receipt_type=$(this).val();
-		var user_id=$('#user_id').val();
-		$.ajax({ 
-			url: "ajax_php_file?receipt_type_data=1&receipt_type="+receipt_type+"&user_id="+user_id,
-			type: "POST", 
-			success: function(response)
-			{ 
-				$('select[name="invoice_id[]"]').empty().append(response);
-				$('.tooltips').tooltip();
-			}
-			});
-	});
 
 });
 
