@@ -102,7 +102,7 @@ if(empty($active))
                         <td><div class="form-group"><input type="text" class="form-control input-medium" placeholder="NEFT No." name="neft_no"></div></td>
                         </tr>
                         <tr>
-                        <td colspan="6"><center><button name="add_receipt_payment"  type="submit" class="btn green"><i class="fa fa-plus"></i> Add</button></center></td>
+                        <td colspan="6"><center><button name="add_receipt_payment"  type="submit" class="btn green"><i class="fa fa-plus"></i> Submit</button></center></td>
                         </tr>
                         </table>
                      </div>
